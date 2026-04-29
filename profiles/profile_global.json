@@ -1,0 +1,54 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.5424000000000001,
+      "confidence": 95.5088
+    },
+    "politeness": {
+      "score": 0.92272,
+      "confidence": 97.98400000000001
+    },
+    "verbosity": {
+      "score": 0.435392,
+      "confidence": 92.0256
+    },
+    "optimism": {
+      "score": 0.8526079999999999,
+      "confidence": 95.03840000000001
+    }
+  },
+  "patterns": [
+    "Use of emoticons (\ud83d\ude0a)",
+    "Repeated phrases ('Hey', 'Let me know when you're free')",
+    "Repetitive requests ('quick check-in', 'send the report by EOD')",
+    "Expressions of gratitude ('Thanks so much!', 'Appreciate your help!')",
+    "Good afternoon greeting",
+    "Document attached request",
+    "Request for review",
+    "Thank you phrase",
+    "Support mention",
+    "Acknowledgement of feedback",
+    "use of emojis",
+    "informal greetings (heyy)",
+    "use of abbreviations (lol, omg, no rush)",
+    "repetitive phrases (guess what, talk later)",
+    "Quick check-in",
+    "Please send the report by EOD",
+    "Thanks so much!",
+    "Let me know when you're free.",
+    "Appreciate your help!",
+    "Review request when convenient",
+    "Thank you for support",
+    "Let me know if changes required",
+    "I appreciate your feedback",
+    "omg",
+    "heyy",
+    "guess what",
+    "lol",
+    "send it when u can no rush",
+    "thanksss bestie"
+  ],
+  "overall_confidence": 0.7893696000000001,
+  "message_count": 450,
+  "batch_count": 9
+}

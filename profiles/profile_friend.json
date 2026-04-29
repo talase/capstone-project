@@ -1,0 +1,33 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.010000000000000002,
+      "confidence": 98.0
+    },
+    "politeness": {
+      "score": 0.536,
+      "confidence": 98.0
+    },
+    "verbosity": {
+      "score": 0.33999999999999997,
+      "confidence": 98.0
+    },
+    "optimism": {
+      "score": 0.9720000000000001,
+      "confidence": 98.0
+    }
+  },
+  "patterns": [
+    "abbreviations (heyy, lol)",
+    "informal greetings (heyy)",
+    "exclamation marks (omg, \ud83d\ude02, okayyy)",
+    "emojis (\ud83d\ude02)",
+    "Using emojis (e.g., laughing face)",
+    "Abbreviations (e.g., omg, lol)",
+    "Repetition (e.g., heyy, okayyy)",
+    "Informal greeting (hey instead of hello)"
+  ],
+  "overall_confidence": 0.7350000000000001,
+  "message_count": 150,
+  "batch_count": 3
+}
