@@ -1,4 +1,3 @@
-Conversation 1: car maintenance
 Me: Dad, the engine light came on in the sedan this morning. I'm going to take it to the garage after work.
 Dad: Which light exactly? Steady or blinking?
 Me: Steady. No weird noises. I'll run a quick check on the oil and coolant levels first.
@@ -12,7 +11,6 @@ Dad: Smart. Better safe than sorry. Keep me posted on the scanner result.
 Me: Sure. I'll message you around 1pm with the code. Thanks for the tip.
 Dad: No problem. Drive carefully.
 
-Conversation 2: bank payment
 Me: Dad, I'm about to transfer the remaining amount for the home insurance. Just double-checking the account number you sent last week.
 Dad: Yes, it's still the same. The one ending in the number. Make sure it's the business account.
 Me: Ok. Amount is 1,200. I'll put your name as reference. Should I do it now or wait until tomorrow morning?
@@ -29,7 +27,6 @@ Me: Ok. Keeping the screenshot. Once you confirm, I'll proceed with the home ins
 Dad: Perfect. Thanks for handling this.
 Me: No problem. Let me know what the agent says.
 
-Conversation 3: car maintenance
 Me: Dad, I’m taking the car for an oil change this Saturday morning—just a heads up.
 Dad: Good. Did you check the engine oil level last week like I told you?
 Me: Yes, I did. It was a bit low, so I topped it off. That’s partly why I booked the service.
@@ -44,7 +41,6 @@ Me: Will do. I’ll update you after the service.
 Dad: Appreciate it. Drive safe.
 Me: Thanks, Dad. I’ll let you know if they find anything serious.
 
-Conversation 4: bank payment
 Me: Dad, I just checked the bank statement—our car insurance payment hasn’t gone through yet.
 Dad: What? I thought I set up an auto-debit. When was it due?
 Me: Due date was two days ago, but the system shows it’s still pending. I’ll call the insurance company now.
@@ -59,7 +55,6 @@ Me: No need yet—the account has enough balance. I’ll send you a screenshot o
 Dad: Great. Thanks for handling that.
 Me: No problem. I’ll update you tomorrow afternoon.
 
-Conversation 5: car maintenance
 Me: Dad, I’m taking the car for an oil change tomorrow morning.
 Dad: Good. Have you checked the tire pressure lately?
 Me: Not yet, but they usually check it during service.
@@ -75,7 +70,6 @@ Dad: Great. Drive safe.
 Me: Thanks, Dad. I'll update you after.
 Dad: Okay, sounds good.
 
-Conversation 6: bank payment
 Me: Dad, I've initiated the loan payment for this month.
 Dad: Good. Did you check the amount?
 Me: Yes, it's the same as last month. Should be deducted tomorrow.
@@ -90,7 +84,6 @@ Me: I won't. I'll add a reminder.
 Dad: Good. Let me know if you need help.
 Me: Thanks, Dad. I should be fine.
 
-Conversation 7: car maintenance checkup
 Me: Hey Dad, just got the car back from the service center. They did the oil change and checked the brakes.
 Dad: Good to hear. What did they say about the brakes? Any issues?
 Me: They said the front pads are at about 40%, still okay for a few months. Rear ones are fine.
@@ -106,7 +99,6 @@ Dad: Perfect. You’re on top of it. Just keep an ear out for any squeaks the ne
 Me: Will do. I’ll let you know if anything comes up. Thanks for the reminder.
 Dad: Anytime, son. Drive safe.
 
-Conversation 8: bank payment issue
 Me: Dad, I’m trying to send the tuition payment online but the bank says the transaction is pending.
 Dad: Pending? Did you enter the account number correctly? Sometimes that holds it up.
 Me: Yes, I double-checked the routing and account numbers. The money shows as deducted from my balance but not posted yet.
@@ -122,7 +114,6 @@ Dad: Exactly. Let me know what they say. I can transfer you the funds if needed.
 Me: Thanks, Dad. I’ll call now and text you right after.
 Dad: Sounds good. Keep calm—it’ll work out.
 
-Conversation 9: garage cleanup
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
@@ -136,7 +127,6 @@ Dad: Write it clearly. We’ll forget otherwise.
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 
-Conversation 10: appointment reminder
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
@@ -150,7 +140,6 @@ Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
 
-Conversation 11: utility bill review
 Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
@@ -164,7 +153,6 @@ Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
 
-Conversation 12: documents folder
 Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
@@ -178,7 +166,6 @@ Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
 
-Conversation 13: checking the tires
 Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
 Me: Let’s leave earlier so we don’t get stuck in traffic.
@@ -192,7 +179,6 @@ Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
 
-Conversation 14: small repair plan
 Dad: That would help. The settings menu is confusing.
 Me: Let’s leave earlier so we don’t get stuck in traffic.
 Dad: Good. Double-checking saves trouble.
@@ -206,7 +192,6 @@ Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
 Me: Let’s leave earlier so we don’t get stuck in traffic.
 
-Conversation 15: shopping list
 Me: Let’s leave earlier so we don’t get stuck in traffic.
 Dad: Good. Double-checking saves trouble.
 Me: I’ll call them in the morning if it still doesn’t update.
@@ -220,7 +205,6 @@ Dad: That would help. The settings menu is confusing.
 Me: Let’s leave earlier so we don’t get stuck in traffic.
 Dad: Good. Double-checking saves trouble.
 
-Conversation 16: travel timing
 Dad: Good. Double-checking saves trouble.
 Me: I’ll call them in the morning if it still doesn’t update.
 Dad: Write it clearly. We’ll forget otherwise.
@@ -234,7 +218,6 @@ Me: Let’s leave earlier so we don’t get stuck in traffic.
 Dad: Good. Double-checking saves trouble.
 Me: I’ll call them in the morning if it still doesn’t update.
 
-Conversation 17: receipt tracking
 Me: I’ll call them in the morning if it still doesn’t update.
 Dad: Write it clearly. We’ll forget otherwise.
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
@@ -248,7 +231,6 @@ Dad: Good. Double-checking saves trouble.
 Me: I’ll call them in the morning if it still doesn’t update.
 Dad: Write it clearly. We’ll forget otherwise.
 
-Conversation 18: maintenance follow-up
 Dad: Write it clearly. We’ll forget otherwise.
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
@@ -262,7 +244,6 @@ Me: I’ll call them in the morning if it still doesn’t update.
 Dad: Write it clearly. We’ll forget otherwise.
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 
-Conversation 19: checking the car noise
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
@@ -276,7 +257,6 @@ Dad: Write it clearly. We’ll forget otherwise.
 Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 
-Conversation 20: monthly budget update
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
@@ -290,7 +270,6 @@ Me: Thanks, Dad. I’ll be careful and message you when I arrive.
 Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
 
-Conversation 21: hardware store plan
 Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
@@ -304,7 +283,6 @@ Dad: Good. I wanted to make sure before it becomes a bigger problem.
 Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
 
-Conversation 22: insurance question
 Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
@@ -318,7 +296,6 @@ Me: I saved the receipt in the folder so we can find it later.
 Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
 
-Conversation 23: printer issue
 Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
 Me: Let’s leave earlier so we don’t get stuck in traffic.
@@ -332,7 +309,6 @@ Dad: Don’t rush it. Do it properly when you have time.
 Me: The payment went through, but I’ll keep the confirmation just in case.
 Dad: That would help. The settings menu is confusing.
 
-Conversation 24: family visit timing
 Dad: That would help. The settings menu is confusing.
 Me: Let’s leave earlier so we don’t get stuck in traffic.
 Dad: Good. Double-checking saves trouble.

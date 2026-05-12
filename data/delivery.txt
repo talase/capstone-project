@@ -1,4 +1,3 @@
-Conversation 1: confirming the entrance
 Delivery: Hey, I’m at the main entrance. Which entrance should I use?
 Me: Use the visitor entrance please.
 Delivery: Is that the one near the security desk?
@@ -10,7 +9,6 @@ Me: Yes. You can park in any visitor spot.
 Delivery: Awesome. See you in a minute.
 Me: Thanks.
 
-Conversation 2: asking to leave an order at the door
 Delivery: I’m here but no one’s answering the door.
 Me: Please leave it at the door.
 Delivery: Sure, any specific spot?
@@ -21,7 +19,6 @@ Delivery: Already did. Sending now.
 Me: Received. Thanks.
 Delivery: No problem. Have a good day.
 
-Conversation 3: sharing delivery instructions
 Me: Leave the package with the front desk.
 Delivery: Front desk of the office building?
 Me: Yes, the main lobby desk.
@@ -34,7 +31,6 @@ Me: Yes, that is correct.
 Delivery: Perfect. Dropping it off now.
 Me: Thanks.
 
-Conversation 5: answering a location call
 Delivery: Hey, I’m nearby but the pin seems a little off.
 Me: What do you see around you?
 Delivery: I see the visitor parking sign and the small garden area.
@@ -44,7 +40,6 @@ Me: Yes. I’ll meet you there.
 Delivery: Found it. Pulling up now.
 Me: See you. I’ll come out.
 
-Conversation 6: confirming the entrance again
 Delivery: Hi, I’m at the complex. Which entrance is for visitors?
 Me: Use the visitor entrance near the front desk.
 Delivery: I see a staff entrance and a visitor sign.
@@ -56,7 +51,6 @@ Me: Yes. That is perfect.
 Delivery: Will do. Be there shortly.
 Me: Perfect.
 
-Conversation 7: confirming payment status
 Delivery: Hi, the app says payment on delivery. Is that correct?
 Me: It should be prepaid. Could you refresh the order?
 Delivery: One second. I’m checking now.
@@ -68,7 +62,6 @@ Me: Thanks. Send a photo after drop-off, please.
 Delivery: Will do.
 Me: Appreciate it.
 
-Conversation 8: replacing an unavailable item
 Delivery: The store says one item is unavailable.
 Me: Which item is missing?
 Delivery: The sparkling water pack.
@@ -80,7 +73,6 @@ Me: No, that’s all. Thanks for checking.
 Delivery: I’ll head to checkout now.
 Me: Perfect.
 
-Conversation 9: adjusting drop-off time
 Delivery: I’m running a little late because the store was busy.
 Me: That’s okay. About how long?
 Delivery: Maybe fifteen more minutes.
@@ -92,7 +84,6 @@ Me: Thanks for letting me know.
 Delivery: Of course.
 Me: Drive safely.
 
-Conversation 10: confirming fragile package
 Delivery: Hi, this package is marked fragile.
 Me: Yes, please handle it carefully.
 Delivery: Should I leave it at the desk or hand it to you?
@@ -106,7 +97,6 @@ Me: See you soon.
 Delivery: I’ll keep it upright until then.
 Me: Thank you, that helps.
 
-Conversation 11: asking for a pickup note
 Delivery: The store asked me to confirm the pickup note.
 Me: It should say leave with reception.
 Delivery: I see it now. Just wanted to make sure.
@@ -118,7 +108,6 @@ Me: Perfect. Please keep the receipt in the bag.
 Delivery: Sure, no problem.
 Me: Thank you.
 
-Conversation 12: pickup note
 Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
@@ -132,7 +121,6 @@ Me: That replacement is fine, thank you for checking.
 Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
 
-Conversation 13: order bag count
 Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
 Me: No problem, thanks for letting me know.
@@ -146,7 +134,6 @@ Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
 
-Conversation 14: calling on arrival
 Delivery: This package is marked fragile.
 Me: No problem, thanks for letting me know.
 Delivery: Should I call when I reach the entrance?
@@ -160,7 +147,6 @@ Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
 Me: No problem, thanks for letting me know.
 
-Conversation 15: leaving at desk
 Me: No problem, thanks for letting me know.
 Delivery: Should I call when I reach the entrance?
 Me: Yes, that is the correct entrance.
@@ -174,7 +160,6 @@ Delivery: This package is marked fragile.
 Me: No problem, thanks for letting me know.
 Delivery: Should I call when I reach the entrance?
 
-Conversation 16: substitution approval
 Delivery: Should I call when I reach the entrance?
 Me: Yes, that is the correct entrance.
 Delivery: There are two bags for this order.
@@ -188,7 +173,6 @@ Me: No problem, thanks for letting me know.
 Delivery: Should I call when I reach the entrance?
 Me: Yes, that is the correct entrance.
 
-Conversation 17: late dispatch
 Me: Yes, that is the correct entrance.
 Delivery: There are two bags for this order.
 Me: Thanks, I appreciate the update.
@@ -202,7 +186,6 @@ Delivery: Should I call when I reach the entrance?
 Me: Yes, that is the correct entrance.
 Delivery: There are two bags for this order.
 
-Conversation 18: contactless delivery
 Delivery: There are two bags for this order.
 Me: Thanks, I appreciate the update.
 Delivery: Hi, I’m almost there with your order.
@@ -216,7 +199,6 @@ Me: Yes, that is the correct entrance.
 Delivery: There are two bags for this order.
 Me: Thanks, I appreciate the update.
 
-Conversation 19: drop-off confirmation
 Me: Thanks, I appreciate the update.
 Delivery: Hi, I’m almost there with your order.
 Me: That replacement is fine, thank you for checking.
@@ -230,7 +212,6 @@ Delivery: There are two bags for this order.
 Me: Thanks, I appreciate the update.
 Delivery: Hi, I’m almost there with your order.
 
-Conversation 20: replacement item
 Delivery: Hi, I’m almost there with your order.
 Me: That replacement is fine, thank you for checking.
 Delivery: I can leave it at reception if that works.
@@ -244,7 +225,6 @@ Me: Thanks, I appreciate the update.
 Delivery: Hi, I’m almost there with your order.
 Me: That replacement is fine, thank you for checking.
 
-Conversation 21: arrival update
 Me: That replacement is fine, thank you for checking.
 Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
@@ -258,7 +238,6 @@ Delivery: Hi, I’m almost there with your order.
 Me: That replacement is fine, thank you for checking.
 Delivery: I can leave it at reception if that works.
 
-Conversation 22: payment status
 Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
@@ -272,7 +251,6 @@ Me: That replacement is fine, thank you for checking.
 Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
 
-Conversation 23: fragile package
 Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
 Me: No problem, thanks for letting me know.
@@ -286,7 +264,6 @@ Delivery: I can leave it at reception if that works.
 Me: It should be prepaid. Could you refresh the order?
 Delivery: This package is marked fragile.
 
-Conversation 24: store delay
 Delivery: This package is marked fragile.
 Me: No problem, thanks for letting me know.
 Delivery: Should I call when I reach the entrance?

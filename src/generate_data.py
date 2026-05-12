@@ -119,8 +119,7 @@ Contact file: {contact}.txt
 Relationship: {spec["relationship"]}
 User writing style for lines by "Me": {spec["style"]}
 
-Create {count} realistic conversations, numbered Conversation {start_index} through Conversation {end_index}. Each conversation must:
-- Have a short title line in this exact format: Conversation N: topic.
+Create {count} realistic conversations. Each conversation must:
 - Include 12 to 16 message lines.
 - Include both speakers.
 - Include at least 6 lines from "Me:".
@@ -139,7 +138,7 @@ Return JSON only with this schema:
 {{
   "conversations": [
     {{
-      "title": "Conversation {start_index}: short topic",
+      "title": "short internal topic label",
       "messages": [
         {{"speaker": "Me", "text": "message text"}},
         {{"speaker": "{contact.title()}", "text": "message text"}}
@@ -182,11 +181,7 @@ def conversation_blocks(contact: str, data: dict[str, Any]) -> list[str]:
     blocks: list[str] = []
 
     for idx, conversation in enumerate(data.get("conversations", []), start=1):
-        title = _clean_line(conversation.get("title") or f"Conversation {idx}")
-        if not title.lower().startswith("conversation"):
-            title = f"Conversation {idx}: {title}"
-
-        lines = [title]
+        lines = []
         for message in conversation.get("messages", []):
             speaker = str(message.get("speaker", "")).strip()
             text = _clean_line(str(message.get("text", "")))
@@ -252,8 +247,6 @@ def format_raw_transcript(
     valid_blocks = []
     for idx, block in enumerate(blocks, start=1):
         lines = block.splitlines()
-        if not lines[0].lower().startswith("conversation "):
-            lines.insert(0, f"Conversation {idx}: chat")
         me_count = sum(1 for line in lines if line.startswith("Me:"))
         contact_count = sum(1 for line in lines if line.startswith(f"{contact_label}:"))
         if me_count >= 4 and contact_count >= 4:

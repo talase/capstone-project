@@ -1,4 +1,3 @@
-Conversation 1: making weekend plans
 Me: yoo finally friday!! got any epic plans for this weekend?
 Friend: haha i know right? nothing solid yet, maybe just chill. you?
 Me: was thinking we could do something fun! like a hike? the weather's supposed to be amazing.
@@ -14,7 +13,6 @@ Friend: 6:45 it is. don't forget the sunscreen!
 Me: gotcha! cant have us looking like lobsters haha
 Friend: lmao true. can't wait!
 
-Conversation 2: reacting to a funny story
 Me: okay i have to tell you what happened at work today 💀
 Friend: oh no what did you do now?
 Me: so i was on a zoom call and my cat jumped on the keyboard and sent a bunch of random emojis in the chat.
@@ -30,7 +28,6 @@ Friend: your cat is a icon. you need to frame those emojis.
 Me: right? maybe i'll get them as a tattoo hahaha
 Friend: do it!! i'll come with you to the parlor.
 
-Conversation 3: choosing a cafe
 Me: i'm craving a really good latte today. any cafe recs near us?
 Friend: oooh there's that new place on main street, 'Brew & Co'? heard their matcha is fire too.
 Me: matcha? you know i'm a basic vanilla latte girl but i could be tempted.
@@ -45,7 +42,6 @@ Me: sounds like a plan!! i'm already excited for that vanilla latte.
 Friend: and i'm getting a cinnamon roll no shame
 Me: now you're speaking my language. see you soon!
 
-Conversation 4: sharing photos
 Me: omg i just went through my camera roll and found gold from last weekend 🔥
 Friend: send them over right now!!
 Me: okay check your messages... i just sent like 5 pics
@@ -60,7 +56,6 @@ Me: on it! also there's a blurry one of a seagull that i think is art
 Friend: lmao that one's going on your wall for sure
 Me: high art only. seriously though these pics make me wanna go back asap.
 
-Conversation 5: planning a movie night
 Me: i need a movie night this week. my soul is craving popcorn and a good cry.
 Friend: say less. i'm free friday night. what genre we thinking?
 Me: honestly something tear-jerky but also uplifting? like a coming-of-age or a drama.
@@ -76,7 +71,6 @@ Friend: fine i'll be your guinea pig. should i bring a blanket?
 Me: bring ALL the blankets. we're building a fort.
 Friend: now you're talking. fort movie night >>>
 
-Conversation 6: making weekend plans (variant - lazy day)
 Me: i'm so exhausted from this week i just wanna do absolutely nothing this weekend.
 Friend: relatable. but also we haven't hung out in ages. compromise?
 Me: okay what if we do a lazy day? like order food, watch trash tv, nap.
@@ -91,7 +85,6 @@ Friend: pickle chips?? okay i'm intrigued and slightly scared.
 Me: that's the right attitude. see you saturday! no alarm clocks allowed.
 Friend: deals. sleep in and then pizza and dog cuddles. dream weekend.
 
-Conversation 7: reacting to a funny story (another)
 Me: you won't believe what my neighbor did last night 💀
 Friend: omg tell me everything. is it the one with the loud music?
 Me: yes!! so i'm trying to sleep and i hear this weird thumping. i look out the window and he's dancing outside in his underwear.
@@ -106,7 +99,6 @@ Me: okay but it's really bad quality. just a shadowy figure in tighty whities.
 Friend: even better. best story of the month hands down.
 Me: i swear this building is a sitcom. i'm never moving.
 
-Conversation 8: choosing a cafe (variant - study spot)
 Me: i need a cafe to work on my project this weekend. somewhere with wifi and good vibes.
 Friend: your place not cutting it?
 Me: too many distractions! i keep tidying instead of actually working.
@@ -122,7 +114,6 @@ Friend: sunday 9am? doors open at 8.
 Me: let's do 9. i'll bring my laptop and a dream.
 Friend: haha and a big cookie. see you then!
 
-Conversation 9: playlist debate
 Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
@@ -136,7 +127,6 @@ Me: no because that plot twist was actually insane
 Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
 
-Conversation 10: shopping trip
 Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
@@ -150,7 +140,6 @@ Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
 
-Conversation 11: rainy day plan
 Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
@@ -164,7 +153,6 @@ Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
 
-Conversation 12: voice note drama
 Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
@@ -178,7 +166,6 @@ Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
 
-Conversation 13: board game cafe
 Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
 Friend: finally, i thought you’d never say yes
@@ -192,7 +179,6 @@ Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
 
-Conversation 14: new restaurant
 Me: send pics immediately, i need the full context
 Friend: finally, i thought you’d never say yes
 Me: i’m laughing already and you haven’t even finished the story
@@ -206,7 +192,6 @@ Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
 Friend: finally, i thought you’d never say yes
 
-Conversation 15: trip idea
 Friend: finally, i thought you’d never say yes
 Me: i’m laughing already and you haven’t even finished the story
 Friend: fine but if it’s bad we both take responsibility
@@ -220,7 +205,6 @@ Me: send pics immediately, i need the full context
 Friend: finally, i thought you’d never say yes
 Me: i’m laughing already and you haven’t even finished the story
 
-Conversation 16: outfit panic
 Me: i’m laughing already and you haven’t even finished the story
 Friend: fine but if it’s bad we both take responsibility
 Me: no because that plot twist was actually insane
@@ -234,7 +218,6 @@ Friend: finally, i thought you’d never say yes
 Me: i’m laughing already and you haven’t even finished the story
 Friend: fine but if it’s bad we both take responsibility
 
-Conversation 17: random life update
 Friend: fine but if it’s bad we both take responsibility
 Me: no because that plot twist was actually insane
 Friend: exactly, we deserve a dramatic little outing
@@ -248,7 +231,6 @@ Me: i’m laughing already and you haven’t even finished the story
 Friend: fine but if it’s bad we both take responsibility
 Me: no because that plot twist was actually insane
 
-Conversation 18: show recommendation
 Me: no because that plot twist was actually insane
 Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
@@ -262,7 +244,6 @@ Friend: fine but if it’s bad we both take responsibility
 Me: no because that plot twist was actually insane
 Friend: exactly, we deserve a dramatic little outing
 
-Conversation 19: coffee plan
 Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
@@ -276,7 +257,6 @@ Me: no because that plot twist was actually insane
 Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
 
-Conversation 20: movie reaction
 Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
@@ -290,7 +270,6 @@ Friend: exactly, we deserve a dramatic little outing
 Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
 
-Conversation 21: weekend plan
 Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
@@ -304,7 +283,6 @@ Me: omg wait, tell me everything because that sounds chaotic
 Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
 
-Conversation 22: funny work story
 Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
@@ -318,7 +296,6 @@ Friend: same, i’ve been bored all week
 Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
 
-Conversation 23: photo dump
 Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
 Friend: finally, i thought you’d never say yes
@@ -332,7 +309,6 @@ Me: okay but we need snacks or i’m not emotionally prepared
 Friend: i swear it felt like a sitcom scene
 Me: send pics immediately, i need the full context
 
-Conversation 24: cafe study session
 Me: send pics immediately, i need the full context
 Friend: finally, i thought you’d never say yes
 Me: i’m laughing already and you haven’t even finished the story

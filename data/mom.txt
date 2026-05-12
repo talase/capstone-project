@@ -1,4 +1,3 @@
-Conversation 1: Checking if she ate and took medicine
 Me: Hi Mom! How are you feeling today?
 Mom: Hi beta, I'm okay. Just a little tired.
 Me: Did you have your lunch yet? You need to keep your energy up.
@@ -16,7 +15,6 @@ Mom: Alright, give me two minutes. I'll text you.
 Me: Thank you, Mom. Rest a bit after that. Don't strain yourself.
 Mom: Done! Tablet swallowed. Now you can focus on your project.
 
-Conversation 2: Helping her with an appointment
 Mom: Beta, I have that eye check-up tomorrow but I can't find the appointment slip.
 Me: Don't worry, Mom. I checked the hospital website earlier. Your appointment is at 10:30 AM with Dr. Nair.
 Mom: Oh, that's a relief. But how will I reach? You have class in the morning.
@@ -33,7 +31,6 @@ Mom: No, I'm fine. Just finish your project and get some sleep.
 Me: I will. See you in the morning. Love you!
 Mom: Love you too, beta. Goodnight.
 
-Conversation 3: checking if she ate and took medicine
 Me: Hey Mom, just checking in — did you have dinner already?
 Mom: Yes beta, I made some soup and had it a while ago.
 Me: That's good. And did you remember to take your medicine after eating?
@@ -50,7 +47,6 @@ Me: Good. Try to rest early tonight. I'll call you in the morning to remind you 
 Mom: Okay, beta. Thank you for always looking out for me. Goodnight.
 Me: Goodnight, Mom. Sleep well. Love you.
 
-Conversation 4: helping her with an appointment
 Mom: Beta, I have that doctor's appointment on Thursday and I'm a bit nervous about it.
 Me: Don't worry, I already bookmarked the time. It's at 11 AM, right?
 Mom: Yes, 11. But I'm not sure how to get there. The clinic is in the new building.
@@ -68,7 +64,6 @@ Me: I try. And don't be nervous — Dr. Sharma is very gentle. You'll be in and 
 Mom: Thanks, beta. That makes me feel better. I'll see you Thursday morning then.
 Me: See you then. Get a good night's sleep before that. Love you!
 
-Conversation 5: checking if she ate and took medicine
 Me: Hey Mom, just checking in. Did you have lunch yet?
 Mom: Oh yes, I made some soup. It was good.
 Me: That's great to hear! Did you take your afternoon medicine along with it?
@@ -84,7 +79,6 @@ Mom: I will. You take care of yourself too. Don't skip your own meals!
 Me: Promise I won't. Love you, Mom.
 Mom: Love you too, my child.
 
-Conversation 6: planning a family visit
 Me: Mom, I was thinking we could plan a visit to Aunt Ritu's place this weekend. What do you think?
 Mom: That would be lovely. I haven't seen her in weeks. But let me check if she's free.
 Me: Sure! I can call her later if you want. Saturday or Sunday work better for you?
@@ -102,7 +96,6 @@ Mom: Me too beta. Thank you for planning this.
 Me: Anything for you, Mom. Let's confirm with Aunt Ritu tonight, okay?
 Mom: Yes, do call her after dinner. I'll be right here.
 
-Conversation 7: Checking if you ate and took medicine
 Me: Hey Mom, just checking in – did you have your lunch yet?
 Mom: Oh beta, yes I had some rice and dal a little while ago.
 Me: Good, that’s great. And did you remember to take your blood pressure medicine after eating?
@@ -119,7 +112,6 @@ Me: That’s my sweet mom. And please keep your phone nearby in case I need to r
 Mom: I will, I will. Don’t worry so much, you’ll get wrinkles.
 Me: Ha ha, worth it for you. Love you, Mom. Talk later.
 
-Conversation 8: Coming home late after class
 Me: Hi Mom, just wanted to let you know that my evening class got extended. I’ll be home a bit late tonight.
 Mom: Oh? What time do you think you’ll be back? It’s already getting dark.
 Me: Probably around 8:30 or 9. The professor is finishing up a project demo. I’ll take the bus straight home.
@@ -135,7 +127,6 @@ Mom: Alright. Just promise me you’ll stay alert and keep your bag zipped.
 Me: Promise. I’ll see you soon. Love you!
 Mom: Love you too, my jaan. Take care.
 
-Conversation 9: evening call
 Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
@@ -149,7 +140,6 @@ Mom: You always make me feel better.
 Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
 
-Conversation 10: resting after errands
 Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
@@ -163,7 +153,6 @@ Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
 
-Conversation 11: sending photos
 Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
@@ -177,7 +166,6 @@ Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
 
-Conversation 12: checking blood pressure
 Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
@@ -191,7 +179,6 @@ Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
 
-Conversation 13: making soup together
 Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
 Me: Please rest for a little while. You already did enough today.
@@ -205,7 +192,6 @@ Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
 
-Conversation 14: visiting relatives
 Mom: That would make me happy. I miss sitting with you.
 Me: Please rest for a little while. You already did enough today.
 Mom: Please be careful on the way home.
@@ -219,7 +205,6 @@ Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
 Me: Please rest for a little while. You already did enough today.
 
-Conversation 15: reminding her to relax
 Me: Please rest for a little while. You already did enough today.
 Mom: Please be careful on the way home.
 Me: That sounds good. I’ll bring whatever you need from the store.
@@ -233,7 +218,6 @@ Mom: That would make me happy. I miss sitting with you.
 Me: Please rest for a little while. You already did enough today.
 Mom: Please be careful on the way home.
 
-Conversation 16: organizing appointments
 Mom: Please be careful on the way home.
 Me: That sounds good. I’ll bring whatever you need from the store.
 Mom: You always make me feel better.
@@ -247,7 +231,6 @@ Me: Please rest for a little while. You already did enough today.
 Mom: Please be careful on the way home.
 Me: That sounds good. I’ll bring whatever you need from the store.
 
-Conversation 17: late bus update
 Me: That sounds good. I’ll bring whatever you need from the store.
 Mom: You always make me feel better.
 Me: Love you, Mom. Message me if anything feels uncomfortable.
@@ -261,7 +244,6 @@ Mom: Please be careful on the way home.
 Me: That sounds good. I’ll bring whatever you need from the store.
 Mom: You always make me feel better.
 
-Conversation 18: small home repair
 Mom: You always make me feel better.
 Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
@@ -275,7 +257,6 @@ Me: That sounds good. I’ll bring whatever you need from the store.
 Mom: You always make me feel better.
 Me: Love you, Mom. Message me if anything feels uncomfortable.
 
-Conversation 19: morning medicine reminder
 Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
@@ -289,7 +270,6 @@ Mom: You always make me feel better.
 Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
 
-Conversation 20: planning groceries
 Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
@@ -303,7 +283,6 @@ Me: Love you, Mom. Message me if anything feels uncomfortable.
 Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
 
-Conversation 21: checking dinner plans
 Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
@@ -317,7 +296,6 @@ Mom: I’m okay, beta, just a little tired today.
 Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
 
-Conversation 22: helping with phone settings
 Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
@@ -331,7 +309,6 @@ Me: Please eat something light before you take the medicine.
 Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
 
-Conversation 23: weekend family lunch
 Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
 Me: Please rest for a little while. You already did enough today.
@@ -345,7 +322,6 @@ Mom: Are you sure you have time? You have so much work.
 Me: Send me a picture of the screen and I’ll tell you what to press.
 Mom: That would make me happy. I miss sitting with you.
 
-Conversation 24: doctor follow-up
 Mom: That would make me happy. I miss sitting with you.
 Me: Please rest for a little while. You already did enough today.
 Mom: Please be careful on the way home.

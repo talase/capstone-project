@@ -1,4 +1,3 @@
-Conversation 1: assignment deadline extension request
 Me: Good morning, Professor. I hope you are doing well. I am writing to discuss the upcoming assignment deadline.
 Teacher: Good morning. What seems to be the concern?
 Me: I was wondering if it might be possible to request an extension of a couple of days. I have been working on the project but encountered some unexpected challenges.
@@ -12,7 +11,6 @@ Teacher: You're welcome. Let me know if anything else comes up.
 Me: I will, thank you again. Have a great day.
 Teacher: You too, good luck with the preprocessing.
 
-Conversation 2: lecture notes request
 Me: Hello Professor, I hope this message finds you well. I missed the lecture last Tuesday due to a medical appointment.
 Teacher: Hello, I hope you are feeling better. Did you want to catch up on the notes?
 Me: Yes, if possible. I was wondering if you could share the lecture slides or any notes from that session.
@@ -25,7 +23,6 @@ Me: I will keep that in mind. Thank you again for your support.
 Teacher: You're welcome. Take care.
 Me: You as well, Professor.
 
-Conversation 3: project feedback request
 Me: Good afternoon, Professor. I hope you are having a productive day. I would like to request some feedback on my draft project proposal.
 Teacher: Good afternoon. I have received your draft. Let me take a look and get back to you by tomorrow.
 Me: Thank you. I would be grateful for any comments, especially on the methodology section.
@@ -39,7 +36,6 @@ Teacher: You’re welcome. I will send it via email by end of day tomorrow.
 Me: Thank you again. Have a great evening.
 Teacher: You too.
 
-Conversation 4: absence from class notification
 Me: Dear Professor, I am writing to inform you that I will be unable to attend the lecture this Thursday.
 Teacher: Thank you for letting me know. May I ask the reason?
 Me: Yes, I have a scheduled medical procedure that unfortunately coincides with the class time.
@@ -52,7 +48,6 @@ Me: I have already spoken to a peer about sharing notes. Thank you for the sugge
 Teacher: Excellent. I wish you a speedy recovery.
 Me: Thank you, Professor. I truly appreciate your support.
 
-Conversation 5: submission format clarification
 Me: Hello Professor, I have a quick question about the submission format for the final report.
 Teacher: Sure, what do you need clarified?
 Me: The guidelines mention both PDF and Word formats. Which one would you prefer?
@@ -67,7 +62,6 @@ Me: Got it. Thank you for your clear instructions.
 Teacher: You're welcome. Let me know if you have further questions.
 Me: I will. Have a good day.
 
-Conversation 6: assignment deadline conflict
 Me: Good evening, Professor. I hope it is not too late to reach out. I have a scheduling conflict with the assignment deadline.
 Teacher: Good evening. Tell me more about the conflict.
 Me: I have two other major submissions due on the same day, and I am concerned about the quality of work if I rush.
@@ -81,7 +75,6 @@ Teacher: You're welcome. Let me know if anything else comes up.
 Me: I will. Thank you again and good night.
 Teacher: Good night.
 
-Conversation 7: project feedback follow-up
 Me: Hello Professor, I received your feedback on my proposal draft. Thank you for the detailed comments.
 Teacher: You're welcome. Did you have any questions about the points I raised?
 Me: Yes, regarding the sample size — you mentioned it might be too small for statistical significance. How large should I aim for?
@@ -95,7 +88,6 @@ Teacher: Of course. Keep up the good work.
 Me: Thank you, Professor. I will update the proposal and resubmit.
 Teacher: I look forward to seeing the revised version.
 
-Conversation 8: lecture notes clarification
 Me: Hello Professor, I have been reviewing the lecture notes from last week and have a doubt about the concept of heteroscedasticity.
 Teacher: I am glad you are reviewing. What exactly is unclear?
 Me: The notes indicate that heteroscedasticity can be detected with a Breusch-Pagan test, but I am not sure how to interpret the results.
@@ -110,7 +102,6 @@ Me: Received, thank you. I will study it carefully.
 Teacher: Great. Let me know if you have further questions.
 Me: I will. Thank you for your time.
 
-Conversation 9: data analysis concern
 Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
@@ -124,7 +115,6 @@ Teacher: Good. The examples from class should help.
 Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
 
-Conversation 10: submission portal issue
 Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
@@ -138,7 +128,6 @@ Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
 
-Conversation 11: lecture recording question
 Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
@@ -152,7 +141,6 @@ Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
 
-Conversation 12: proposal revision
 Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
@@ -166,7 +154,6 @@ Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
 
-Conversation 13: methodology section
 Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
 Me: I will upload the corrected version before the deadline.
@@ -180,7 +167,6 @@ Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
 
-Conversation 14: exam preparation
 Teacher: You can send it, but please highlight the areas you want me to review.
 Me: I will upload the corrected version before the deadline.
 Teacher: Yes, that format is acceptable for this submission.
@@ -194,7 +180,6 @@ Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
 Me: I will upload the corrected version before the deadline.
 
-Conversation 15: attendance note
 Me: I will upload the corrected version before the deadline.
 Teacher: Yes, that format is acceptable for this submission.
 Me: Thank you for your time and guidance.
@@ -208,7 +193,6 @@ Teacher: You can send it, but please highlight the areas you want me to review.
 Me: I will upload the corrected version before the deadline.
 Teacher: Yes, that format is acceptable for this submission.
 
-Conversation 16: project scope
 Teacher: Yes, that format is acceptable for this submission.
 Me: Thank you for your time and guidance.
 Teacher: Good. The examples from class should help.
@@ -222,7 +206,6 @@ Me: I will upload the corrected version before the deadline.
 Teacher: Yes, that format is acceptable for this submission.
 Me: Thank you for your time and guidance.
 
-Conversation 17: reference formatting
 Me: Thank you for your time and guidance.
 Teacher: Good. The examples from class should help.
 Me: I appreciate your help. I will let you know if another question comes up.
@@ -236,7 +219,6 @@ Teacher: Yes, that format is acceptable for this submission.
 Me: Thank you for your time and guidance.
 Teacher: Good. The examples from class should help.
 
-Conversation 18: presentation slides
 Teacher: Good. The examples from class should help.
 Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
@@ -250,7 +232,6 @@ Me: Thank you for your time and guidance.
 Teacher: Good. The examples from class should help.
 Me: I appreciate your help. I will let you know if another question comes up.
 
-Conversation 19: research question clarification
 Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
@@ -264,7 +245,6 @@ Teacher: Good. The examples from class should help.
 Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
 
-Conversation 20: rubric question
 Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
@@ -278,7 +258,6 @@ Me: I appreciate your help. I will let you know if another question comes up.
 Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
 
-Conversation 21: group presentation timing
 Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
@@ -292,7 +271,6 @@ Teacher: Hello. Yes, what would you like to clarify?
 Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
 
-Conversation 22: reading list request
 Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
@@ -306,7 +284,6 @@ Me: Thank you for clarifying. I will revise that section accordingly.
 Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
 
-Conversation 23: draft feedback
 Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
 Me: I will upload the corrected version before the deadline.
@@ -320,7 +297,6 @@ Teacher: Yes, but keep it concise and relevant to your argument.
 Me: I understand. I will make the explanation more specific.
 Teacher: You can send it, but please highlight the areas you want me to review.
 
-Conversation 24: extension follow-up
 Teacher: You can send it, but please highlight the areas you want me to review.
 Me: I will upload the corrected version before the deadline.
 Teacher: Yes, that format is acceptable for this submission.
