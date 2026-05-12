@@ -1,3 +1,7 @@
 .env
 __pycache__/
 *.pyc
+.venv/
+profiles/*.json
+results/*.json
+results/*.csv
