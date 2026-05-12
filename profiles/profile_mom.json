@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.2,
+      "confidence": 90
+    },
+    "politeness": {
+      "score": 0.9,
+      "confidence": 95
+    },
+    "verbosity": {
+      "score": 0.389,
+      "confidence": 86
+    },
+    "optimism": {
+      "score": 0.777,
+      "confidence": 85
+    }
+  },
+  "patterns": [
+    "Frequently repeats health-related reminders and follow-ups",
+    "Uses affectionate closings and reassurances",
+    "Plans activities and schedules with attention to detail",
+    "Provides step-by-step instructions with logical sequencing",
+    "Balances direct caregiving with gentle encouragement"
+  ],
+  "overall_confidence": 93,
+  "message_count": 157,
+  "batch_count": 4
+}

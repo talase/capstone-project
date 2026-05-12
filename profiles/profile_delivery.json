@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.581,
+      "confidence": 88
+    },
+    "politeness": {
+      "score": 0.9,
+      "confidence": 94
+    },
+    "verbosity": {
+      "score": 0.2,
+      "confidence": 91
+    },
+    "optimism": {
+      "score": 0.565,
+      "confidence": 77
+    }
+  },
+  "patterns": [
+    "Gives clear, step-by-step instructions",
+    "Frequently uses polite phrases",
+    "Provides confirmations and validations",
+    "Adapts delivery instructions based on situation",
+    "Expresses appreciation and closure"
+  ],
+  "overall_confidence": 89,
+  "message_count": 128,
+  "batch_count": 3
+}

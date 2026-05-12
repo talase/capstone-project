@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.075,
+      "confidence": 94
+    },
+    "politeness": {
+      "score": 0.378,
+      "confidence": 82
+    },
+    "verbosity": {
+      "score": 0.273,
+      "confidence": 88
+    },
+    "optimism": {
+      "score": 0.768,
+      "confidence": 91
+    }
+  },
+  "patterns": [
+    "Frequent use of humor and self-deprecating anecdotes",
+    "Enthusiastic agreement and collaborative planning",
+    "Incorporates emojis and expressive punctuation for tone",
+    "Shares spontaneous personal stories with vivid detail",
+    "Uses casual language and slang typical of close friends"
+  ],
+  "overall_confidence": 90,
+  "message_count": 151,
+  "batch_count": 4
+}

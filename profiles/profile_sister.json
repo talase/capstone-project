@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.1,
+      "confidence": 92
+    },
+    "politeness": {
+      "score": 0.4,
+      "confidence": 85
+    },
+    "verbosity": {
+      "score": 0.22,
+      "confidence": 88
+    },
+    "optimism": {
+      "score": 0.525,
+      "confidence": 80
+    }
+  },
+  "patterns": [
+    "Frequently uses exaggerated language and hyperbole for emphasis",
+    "Regularly makes requests with playful guilt-tripping or justification",
+    "Uses all caps and repeated punctuation to convey strong emotion",
+    "Engages in shared family gossip with enthusiastic commentary",
+    "Shows affection through teasing, mock complaints, and inside jokes"
+  ],
+  "overall_confidence": 89,
+  "message_count": 160,
+  "batch_count": 4
+}

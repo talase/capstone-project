@@ -1,0 +1,45 @@
+{
+  "boss": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 91
+  },
+  "dad": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 78
+  },
+  "delivery": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 89
+  },
+  "friend": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 90
+  },
+  "mom": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 93
+  },
+  "sister": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 89
+  },
+  "teacher": {
+    "mode": "global+contact",
+    "global_confidence": 88,
+    "contact_confidence": 92
+  },
+  "demo": {
+    "incoming_message": "Can you send me the file today?",
+    "replies": {
+      "boss": "Sure, I\u2019ll send it today. Let me know if you need anything else.",
+      "friend": "On it! Sending your way in a few mins \ud83d\ude0e",
+      "mom": "Yes, I\u2019ll send it over in a few minutes! \ud83d\udc95"
+    }
+  }
+}

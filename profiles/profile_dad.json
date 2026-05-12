@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.356,
+      "confidence": 73
+    },
+    "politeness": {
+      "score": 0.717,
+      "confidence": 83
+    },
+    "verbosity": {
+      "score": 0.225,
+      "confidence": 82
+    },
+    "optimism": {
+      "score": 0.538,
+      "confidence": 71
+    }
+  },
+  "patterns": [
+    "Frequently confirms receipt of instructions",
+    "Provides proactive status updates",
+    "Seeks confirmation before executing actions",
+    "Maintains respectful acknowledgments",
+    "Reports detailed task outcomes"
+  ],
+  "overall_confidence": 78,
+  "message_count": 152,
+  "batch_count": 4
+}

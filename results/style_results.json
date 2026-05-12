@@ -1,0 +1,318 @@
+{
+  "boss": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.654,
+          "confidence": 88
+        },
+        "politeness": {
+          "score": 0.761,
+          "confidence": 89
+        },
+        "verbosity": {
+          "score": 0.2,
+          "confidence": 91
+        },
+        "optimism": {
+          "score": 0.665,
+          "confidence": 84
+        }
+      },
+      "patterns": [
+        "Acknowledges tasks with brief confirmations",
+        "Provides proactive status updates and next steps",
+        "Offers to make revisions or improvements upon request",
+        "Asks for time preferences or confirmation before proceeding",
+        "Reports task completion with an invitation for further feedback"
+      ],
+      "overall_confidence": 91,
+      "message_count": 153,
+      "batch_count": 4
+    },
+    "checks": [
+      {
+        "trait": "formality",
+        "rule": ">= 0.6",
+        "value": 0.654,
+        "passed": true
+      },
+      {
+        "trait": "verbosity",
+        "rule": "<= 0.65",
+        "value": 0.2,
+        "passed": true
+      }
+    ],
+    "status": "PASS"
+  },
+  "dad": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.356,
+          "confidence": 73
+        },
+        "politeness": {
+          "score": 0.717,
+          "confidence": 83
+        },
+        "verbosity": {
+          "score": 0.225,
+          "confidence": 82
+        },
+        "optimism": {
+          "score": 0.538,
+          "confidence": 71
+        }
+      },
+      "patterns": [
+        "Frequently confirms receipt of instructions",
+        "Provides proactive status updates",
+        "Seeks confirmation before executing actions",
+        "Maintains respectful acknowledgments",
+        "Reports detailed task outcomes"
+      ],
+      "overall_confidence": 78,
+      "message_count": 152,
+      "batch_count": 4
+    },
+    "checks": [],
+    "status": "PASS"
+  },
+  "delivery": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.581,
+          "confidence": 88
+        },
+        "politeness": {
+          "score": 0.9,
+          "confidence": 94
+        },
+        "verbosity": {
+          "score": 0.2,
+          "confidence": 91
+        },
+        "optimism": {
+          "score": 0.565,
+          "confidence": 77
+        }
+      },
+      "patterns": [
+        "Gives clear, step-by-step instructions",
+        "Frequently uses polite phrases",
+        "Provides confirmations and validations",
+        "Adapts delivery instructions based on situation",
+        "Expresses appreciation and closure"
+      ],
+      "overall_confidence": 89,
+      "message_count": 128,
+      "batch_count": 3
+    },
+    "checks": [
+      {
+        "trait": "verbosity",
+        "rule": "<= 0.45",
+        "value": 0.2,
+        "passed": true
+      },
+      {
+        "trait": "formality",
+        "rule": "<= 0.55",
+        "value": 0.581,
+        "passed": false
+      }
+    ],
+    "status": "FAIL"
+  },
+  "friend": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.075,
+          "confidence": 94
+        },
+        "politeness": {
+          "score": 0.378,
+          "confidence": 82
+        },
+        "verbosity": {
+          "score": 0.273,
+          "confidence": 88
+        },
+        "optimism": {
+          "score": 0.768,
+          "confidence": 91
+        }
+      },
+      "patterns": [
+        "Frequent use of humor and self-deprecating anecdotes",
+        "Enthusiastic agreement and collaborative planning",
+        "Incorporates emojis and expressive punctuation for tone",
+        "Shares spontaneous personal stories with vivid detail",
+        "Uses casual language and slang typical of close friends"
+      ],
+      "overall_confidence": 90,
+      "message_count": 151,
+      "batch_count": 4
+    },
+    "checks": [
+      {
+        "trait": "formality",
+        "rule": "<= 0.45",
+        "value": 0.075,
+        "passed": true
+      },
+      {
+        "trait": "optimism",
+        "rule": ">= 0.55",
+        "value": 0.768,
+        "passed": true
+      }
+    ],
+    "status": "PASS"
+  },
+  "mom": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.2,
+          "confidence": 90
+        },
+        "politeness": {
+          "score": 0.9,
+          "confidence": 95
+        },
+        "verbosity": {
+          "score": 0.389,
+          "confidence": 86
+        },
+        "optimism": {
+          "score": 0.777,
+          "confidence": 85
+        }
+      },
+      "patterns": [
+        "Frequently repeats health-related reminders and follow-ups",
+        "Uses affectionate closings and reassurances",
+        "Plans activities and schedules with attention to detail",
+        "Provides step-by-step instructions with logical sequencing",
+        "Balances direct caregiving with gentle encouragement"
+      ],
+      "overall_confidence": 93,
+      "message_count": 157,
+      "batch_count": 4
+    },
+    "checks": [
+      {
+        "trait": "politeness",
+        "rule": ">= 0.65",
+        "value": 0.9,
+        "passed": true
+      },
+      {
+        "trait": "optimism",
+        "rule": ">= 0.55",
+        "value": 0.777,
+        "passed": true
+      }
+    ],
+    "status": "PASS"
+  },
+  "sister": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.1,
+          "confidence": 92
+        },
+        "politeness": {
+          "score": 0.4,
+          "confidence": 85
+        },
+        "verbosity": {
+          "score": 0.22,
+          "confidence": 88
+        },
+        "optimism": {
+          "score": 0.525,
+          "confidence": 80
+        }
+      },
+      "patterns": [
+        "Frequently uses exaggerated language and hyperbole for emphasis",
+        "Regularly makes requests with playful guilt-tripping or justification",
+        "Uses all caps and repeated punctuation to convey strong emotion",
+        "Engages in shared family gossip with enthusiastic commentary",
+        "Shows affection through teasing, mock complaints, and inside jokes"
+      ],
+      "overall_confidence": 89,
+      "message_count": 160,
+      "batch_count": 4
+    },
+    "checks": [
+      {
+        "trait": "formality",
+        "rule": "<= 0.5",
+        "value": 0.1,
+        "passed": true
+      },
+      {
+        "trait": "optimism",
+        "rule": ">= 0.55",
+        "value": 0.525,
+        "passed": false
+      }
+    ],
+    "status": "FAIL"
+  },
+  "teacher": {
+    "profile": {
+      "traits": {
+        "formality": {
+          "score": 0.917,
+          "confidence": 95
+        },
+        "politeness": {
+          "score": 0.96,
+          "confidence": 96
+        },
+        "verbosity": {
+          "score": 0.317,
+          "confidence": 90
+        },
+        "optimism": {
+          "score": 0.7,
+          "confidence": 85
+        }
+      },
+      "patterns": [
+        "frequently opens with greetings and courteous closings",
+        "makes polite requests with softening phrases",
+        "expresses gratitude in most exchanges",
+        "provides detailed context for inquiries or delays",
+        "acknowledges and confirms received guidance"
+      ],
+      "overall_confidence": 92,
+      "message_count": 146,
+      "batch_count": 3
+    },
+    "checks": [
+      {
+        "trait": "formality",
+        "rule": ">= 0.65",
+        "value": 0.917,
+        "passed": true
+      },
+      {
+        "trait": "politeness",
+        "rule": ">= 0.65",
+        "value": 0.96,
+        "passed": true
+      }
+    ],
+    "status": "PASS"
+  }
+}

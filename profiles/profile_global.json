@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.38,
+      "confidence": 88
+    },
+    "politeness": {
+      "score": 0.673,
+      "confidence": 88
+    },
+    "verbosity": {
+      "score": 0.276,
+      "confidence": 87
+    },
+    "optimism": {
+      "score": 0.65,
+      "confidence": 81
+    }
+  },
+  "patterns": [
+    "Prefers structured, action-oriented replies",
+    "Frequently acknowledges instructions with confirmation",
+    "Provides status updates with specific timelines",
+    "Proactively offers follow-ups and alternatives",
+    "Uses deferential terms when addressing superiors"
+  ],
+  "overall_confidence": 88,
+  "message_count": 1047,
+  "batch_count": 21
+}

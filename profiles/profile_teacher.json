@@ -1,0 +1,30 @@
+{
+  "traits": {
+    "formality": {
+      "score": 0.917,
+      "confidence": 95
+    },
+    "politeness": {
+      "score": 0.96,
+      "confidence": 96
+    },
+    "verbosity": {
+      "score": 0.317,
+      "confidence": 90
+    },
+    "optimism": {
+      "score": 0.7,
+      "confidence": 85
+    }
+  },
+  "patterns": [
+    "frequently opens with greetings and courteous closings",
+    "makes polite requests with softening phrases",
+    "expresses gratitude in most exchanges",
+    "provides detailed context for inquiries or delays",
+    "acknowledges and confirms received guidance"
+  ],
+  "overall_confidence": 92,
+  "message_count": 146,
+  "batch_count": 3
+}
