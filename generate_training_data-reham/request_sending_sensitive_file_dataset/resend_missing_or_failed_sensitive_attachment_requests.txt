@@ -1,0 +1,285 @@
+Please resend your passport scan — the previous one didn't upload properly.
+Could you forward the medical report again? The file was corrupted.
+I didn't get your ID copy—can you send it once more?
+The bank statement you sent earlier seems to be empty. Please re-upload.
+Mind resending the signed contract? The link expired.
+The visa document you attached failed to open. Can you send it again?
+Hey, the salary slip you shared is showing as inaccessible. Please resend.
+Sorry, the prescription you sent got garbled. Could you forward it again?
+Please re-upload the invoice for the last payment—the file was damaged.
+The lab results didn't come through. Could you send them again?
+Your tax form attachment is missing from the chat. Can you resend?
+The receipt you forwarded earlier isn't showing up on my end. Please send again.
+Can you resend the NDA? The previous one gave me an error.
+The payroll file you attached seems to have expired. Please upload again.
+I tried to open the diploma scan but it's corrupted. Could you forward it again?
+The insurance claim form didn't upload correctly. Please resend.
+Could you please send the employee data sheet again? The version I received is incomplete.
+The customer list you shared failed to download. Please re-upload.
+The access key file you sent is showing as invalid. Can you forward it once more?
+The government form you attached appears to be blank. Please resend.
+Hey, the transcript you forwarded isn't accessible—might be a broken link. Could you send the file directly?
+The bank statement is still missing on the portal. Can you upload it again?
+The signed agreement you sent didn't come through—just a thumbnail. Please resend.
+Please forward the medical records one more time; the previous attachment was corrupted.
+The visa scan you uploaded seems to have failed. Could you try sending it again?
+I can't open the payroll file you attached—it says file type not supported. Could you resend as PDF?
+The receipt you shared earlier is now expired. Please send a fresh copy.
+The lab report you forwarded last week didn't save. Can you resend?
+Your ID copy is not showing in the group. Please re-upload.
+The contract you sent is missing pages. Could you resend the complete version?
+The tax document attachment failed to upload. Please try again.
+The diploma certificate you shared is showing as file not found. Please resend.
+The payment proof you sent appears to be a blank image. Can you forward the original?
+The HR document you attached earlier is corrupted—can you send it again?
+The insurance form didn't upload correctly. Please resend.
+The credential file you sent is expired. Could you please regenerate and send it again?
+The employee sheet you forwarded seems to have a virus warning. Could you re-upload a clean copy?
+The signed legal agreement didn't attach properly in the email. Please forward it here.
+The passport scan you sent last time is missing the signature page. Can you resend the full document?
+The bank statement you uploaded on the application seems to have failed. Please do it again.
+The salary slip you sent is showing as file too large and not opening. Could you compress and resend?
+The invoice you forwarded earlier is now inaccessible. Please send a new copy.
+The medical report you shared is corrupted—can you send it in PDF?
+The visa document you attached expired yesterday. Could you re-upload the updated one?
+The customer data you sent is missing some fields. Please resend the complete file.
+The government form you uploaded failed validation. Could you try sending it again?
+The prescription you sent is showing as a broken link. Please attach the file directly.
+The payroll file you shared didn't upload to the drive. Can you re-upload it?
+The transcript you forwarded is blank. Please resend the scanned copy.
+The signed NDA you sent earlier is not opening on my phone. Could you forward it once more?
+Can you resend the passport scan? The first one didn't go through.
+Hey, the visa document you sent earlier isn't showing up on my end. Could you forward it again please?
+I think the bank statement attachment failed to upload. Can you send it once more?
+The salary slip you sent seems corrupted. Mind resending it?
+Could you please resend the signed contract? I can't open the file you attached.
+Did you get my message? The medical report didn't come through. Please send it again.
+The PDF of my ID seems to have expired in the chat. Could you send a fresh copy?
+Sorry, the lab results you shared are showing as inaccessible on my phone. Can you forward them again?
+I need the payslip again—the one you sent earlier was incomplete.
+The tax form attachment didn't upload properly. Please resend it.
+Could you re-send the invoice? The previous one says file not found.
+Hey, the payment proof you sent is unreadable. Can you upload it again?
+The NDA file didn't attach correctly. Please send it once more.
+I can't access the credential file you shared. Could you resend it?
+The insurance claim form seems to be missing from the chat. Can you forward it again?
+The employee sheet you sent is corrupted. Mind resending?
+The diploma scan you sent earlier isn't showing up. Please send it again.
+Could you resend the customer list? The link expired.
+The bank statement for last month didn't come through. Can you upload it again?
+The access key file you shared is not loading. Send it again please.
+Hey, the signed agreement didn't attach. Could you please resend?
+The payroll file you sent is blank. Can you forward the correct one?
+The transcript you uploaded shows as failed. Please send it again.
+The certificate scan is missing from the chat. Can you resend?
+I need the HR document again—the one you sent is corrupt.
+The prescription you sent didn't download. Could you forward it once more.
+The government form attachment didn't work. Please resend.
+The medical report you forwarded is not accessible. Send it again.
+The visa copy you shared expired in the chat. Can you resend a fresh one?
+The ID card scan failed to upload. Please send it again.
+The salary slip for this month didn't come through. Can you resend?
+The bank statement PDF shows file damaged. Please forward again.
+The contract file you attached is missing. Could you resend?
+The receipt for the payment didn't upload. Send it again.
+The lab report you sent seems incomplete. Could you resend the full file?
+The payslip from last week is not showing. Please send it again.
+The tax document attachment failed. Can you upload it once more?
+The invoice you shared seems to have expired. Please forward a new copy.
+The NDA file didn't send correctly. Could you resend?
+The credential zip file is corrupt. Send it again please.
+The insurance claim PDF didn't attach. Please resend.
+The employee list you sent is inaccessible. Can you forward it again?
+The diploma certificate scan is missing. Please send it again.
+The customer data file you shared says file not found. Resend please.
+The access key document failed to upload. Could you resend?
+The signed legal agreement didn't go through. Please forward again.
+The payroll spreadsheet is showing errors. Can you send it once more?
+The HR forms you attached are blank. Please resend the correct files.
+The academic transcript upload failed. Please send it again.
+The certificate from the embassy didn't come through. Could you resend?
+The passport scan you sent didn't attach properly, could you resend it?
+Hey, the bank statement file seems to be corrupted—can you send it again?
+Sorry, the payment proof didn't upload correctly. Please re-upload it.
+I didn't get the signed contract attachment; could you forward it one more time?
+The medical report you sent is showing as expired—please send the latest version.
+The visa document link you shared says file not found. Can you resend it?
+The employee list you attached didn't come through. Kindly resend.
+Your salary slip didn't load properly. Can you try sending it again?
+The tax form you uploaded failed—please attach it once more.
+The invoice you sent is blank on my end. Could you send it again?
+The NDA file seems to have been removed. Can you re-upload it?
+I can't access the transcript you sent—maybe the link expired. Please resend.
+The private scan you forwarded didn't arrive. Please send it again.
+The insurance claim PDF is corrupted. Could you resend it?
+The government form you attached shows an error. Please upload it again.
+The credential file you sent is missing. Can you forward it one more time?
+The diploma scan didn't attach to your last message—please resend.
+The payslip you shared failed to download. Kindly send it again.
+The lab results file didn't upload properly. Could you try again?
+The prescription you attached is not opening. Please send it a second time.
+The signed legal agreement didn't come through. Can you resend it?
+The customer data sheet you sent is inaccessible—please forward it again.
+The payroll file you uploaded seems to be incomplete. Could you re-upload?
+The HR document you shared is not showing up. Please resend it.
+The access key file you attached is missing. Kindly send it again.
+The receipt you sent didn't appear in the chat. Could you forward it again?
+The salary slip you sent last week has expired—please resend the current one.
+The bank statement you uploaded failed to process. Can you send it once more?
+The medical records you tried to send didn't go through. Please resend.
+The passport copy you forwarded is showing as file not available. Please send again.
+The visa application file you attached is corrupted. Could you re-upload?
+The contract PDF didn't upload correctly. Kindly resend it.
+The academic transcript you sent is incomplete. Please send the full version again.
+The certificate image you shared is not loading. Can you forward it again?
+The payment proof you sent earlier is missing. Please resend it.
+The invoice you emailed didn't reach me. Can you forward it via WhatsApp again?
+The signed NDA you uploaded is showing as file removed. Please re-upload.
+The insurance form you sent is not opening. Could you send it as a fresh attachment?
+The tax document you forwarded appears to be unavailable. Please resend.
+The legal agreement you attached last time failed to download. Kindly send again.
+The employee data sheet you shared is not accessible. Please resend.
+The payroll report you uploaded is empty. Could you re-upload it?
+The private document scan you sent didn't come through. Please try again.
+The bank statement PDF you sent is corrupted. Can you send a new one?
+The medical report attachment is missing from your last message. Please resend.
+The government ID scan you forwarded hasn't arrived. Could you send it again?
+The signed invoice you attached didn't upload properly. Please resend.
+The credential key file you sent is not valid anymore. Can you send a fresh copy?
+The visa supporting document link expired. Please share it again.
+The salary slip you tried to send failed to attach. Could you re-upload it?
+Can you resend the passport scan? The one you sent earlier didn't open properly.
+Hey, the bank statement attachment seems to be corrupted. Could you upload it again?
+Sorry, but the signed contract file didn't come through. Please forward it once more.
+The visa document you sent is showing as expired. Can you share the updated version?
+I didn't get the medical report attachment. Kindly resend it when you get a chance.
+The payroll file from yesterday is missing from the chat. Could you attach it again?
+That lab result PDF wouldn't download. Please send it again.
+The invoice you forwarded seems to be incomplete. Can you re-upload it?
+The salary slip attachment failed to load. Please resend it.
+I can't open the NDA you sent. Could you share it in a different format?
+The insurance claim form didn't upload correctly. Please attach it again.
+Did you resend the diploma scan? I still can't see it.
+The tax document you shared is inaccessible. Kindly forward it again.
+The employee data sheet was missing from your last message. Could you send it once more?
+The prescription you attached is showing as corrupted. Please resend.
+The payment proof file didn't go through. Can you upload it again?
+I tried to open the HR document but it says file not found. Please retransmit it.
+The credential file you sent earlier is no longer available. Could you share it again?
+The academic transcript attachment failed to send. Please resend it.
+The government form you forwarded seems to be empty. Can you reattach it?
+The customer list file didn't arrive. Kindly resend it.
+The legal agreement you uploaded is not visible on my end. Please send it again.
+The access key file appears to be missing from the group. Could you upload it again?
+The private scan you shared didn't load properly. Please resend.
+The payslip attachment was corrupted during upload. Could you forward it once more?
+I still can't see the identity document you tried to send. Please resend.
+The receipt file you attached is blank. Kindly re-upload it.
+The visa application document didn't come through. Can you share it again?
+The medical record you sent earlier is inaccessible now. Please resend.
+The bank statement PDF failed to attach. Please upload it again.
+The invoice file from last week is missing from the email. Could you forward it here?
+The signed agreement didn't upload successfully. Please send it again.
+The diploma certificate attachment is showing as expired. Kindly resend.
+The salary slip you shared in the group is not opening. Please reattach.
+The insurance document seems to be missing from the portal. Could you upload it again?
+The lab results file didn't transmit properly. Please resend.
+The tax form you forwarded is corrupted. Can you send a fresh copy?
+The HR payroll file is not showing up. Please attach it again.
+The prescription scan didn't come through. Kindly resend.
+The payment receipt attachment failed to load. Please re-upload.
+The legal contract you sent is not viewable. Could you forward it again?
+The employee data spreadsheet is inaccessible. Please resend.
+The confidential work file didn't upload correctly. Can you share it once more?
+The customer data file seems to be lost in transmission. Please send again.
+The visa document PDF is showing as damaged. Kindly resend.
+The bank statement from last month didn't attach. Please upload it.
+The medical certificate file is missing from the chat. Could you forward it?
+The signed NDA didn't go through. Please resend.
+The identity card scan failed to send. Please try again.
+The invoice receipt file is not showing up on my end. Could you reattach it?
+Hey, the passport scan you sent earlier didn't come through – can you resend it?
+The ID copy you attached is showing as corrupted, please upload it again.
+I didn't receive the visa document – could you forward it one more time?
+The medical report you shared got expired before I could download it. Please resend.
+The lab results link you sent is dead – can you send the file directly?
+The prescription you uploaded is incomplete on my end; please send it again.
+Your bank statement attachment seems to be missing from the chat – please resend.
+The salary slip you forwarded didn't show up; can you try again?
+The payslip you sent was corrupted; please re-upload.
+The tax form you attached didn't load properly – could you resend it?
+I can't open the invoice you sent – it says file format not supported. Can you send it as PDF?
+The receipt you shared is inaccessible; please send it again.
+The payment proof you uploaded didn't arrive; kindly resend.
+The signed contract you forwarded is showing as empty; please reattach.
+The legal agreement you sent expired yesterday – can you send it again?
+The NDA file you shared failed to upload; please resend.
+The customer list you attached didn't come through; can you send it again?
+The employee spreadsheet you forwarded got corrupted; please re-upload.
+The payroll file you sent is missing from the thread; could you send it once more?
+The academic transcript you attached didn't download; please resend.
+The diploma scan you sent appears to be broken; can you upload it again?
+The certificate file you forwarded is not opening; please send it in a different format.
+The private scan of my passport didn't reach you – can you resend it?
+The credential file you shared expired; please provide a new download link.
+The access key file you uploaded is missing; please send it again.
+The insurance claim form you attached failed to load; kindly resend.
+The government form you sent is unreadable; can you upload a clear copy?
+The medical history document you forwarded didn't come through; please try again.
+The bank card photo you attached got corrupted – please resend.
+The utility bill scan you sent is not showing – could you send it again?
+The employment verification letter you shared failed to upload; please reattach.
+The tax return file you linked is dead; can you send the file directly?
+The payslip for last month you forwarded didn't arrive; please check and resend.
+The invoice PDF you attached is blank; can you send a proper copy?
+The signed offer letter you sent is missing; please upload it again.
+The contract scan you shared got expired; please resend with a new link.
+The NDA you sent is corrupted; can you send it as a PDF?
+The customer data file you forwarded didn't download; please try again.
+The employee list you attached isn't visible; please resend.
+The payroll spreadsheet you uploaded failed to send; please try uploading again.
+The transcript scan you sent didn't show in the chat; could you send it once more?
+The diploma copy you forwarded is inaccessible; please re-upload.
+The certificate of completion you shared expired; can you send it again?
+The ID card scan you attached is missing; please resend.
+The birth certificate scan you sent didn't load; please try again.
+The marriage certificate photo you forwarded is corrupted; please send another.
+The lease agreement you uploaded failed to attach; please resend.
+The insurance policy document you shared is not opening; can you send it as a PDF?
+The prescription refill form you sent didn't go through; please re-upload.
+The lab order PDF you attached is blank; kindly send the correct file.
+Hey, the passport scan you sent earlier didn't come through. Could you resend it?
+The visa document attachment failed to upload. Please send it again.
+I couldn't open the bank statement file you attached. Can you resend it as a PDF?
+The salary slip you shared seems corrupted. Can you forward it again?
+Did you send the signed contract? I don't see it in the chat. Could you resend?
+The payment proof file appears to be empty. Please upload it again.
+The prescription you sent didn't download properly. Could you try sending it again?
+The tax form attachment seems to have expired. Can you resend the link?
+I didn't receive the invoice attachment. Could you forward it once more?
+The insurance claim file didn't upload correctly. Please resend.
+The lab results you sent are not accessible. Can you reattach?
+The employee data sheet attachment is showing as failed. Kindly resend.
+The diploma scan didn't come through. Could you send it again?
+The credential file you attached seems to be invalid. Please resend the correct one.
+The access key file didn't transfer properly. Can you forward it again?
+The NDA document appears to be missing from your email. Please resend.
+The customer list attachment failed to load. Could you upload it again?
+The payroll file you shared is incomplete. Please resend the full version.
+The government form attachment didn't open. Can you send it again?
+I can't find the transcript you mentioned. Did you attach it? Please resend.
+The certificate scan seems to have been deleted. Could you re-upload?
+The confidential work file didn't sync. Please resend via WhatsApp.
+The insurance form attachment is corrupted. Kindly send it as a new message.
+The legal agreement didn't attach properly. Can you forward it again?
+The HR document you sent is showing as failed. Please resend.
+The private personal documents you attached are not showing. Could you resend?
+The receipt file appears to be empty. Please upload it again.
+The visa document link expired. Could you resend the file directly?
+The bank statement didn't download. Can you send it as a fresh attachment?
+The medical record attachment is missing from the group. Please resend.
+The signed contract file seems to be damaged. Kindly send a clean copy.
+The diplomas and transcripts you forwarded didn't come through. Please resend.
+The access key file was not attached to your last message. Could you resend?
+The payslip file you shared is showing file not found. Please upload again.
+The bank statement you attached didn't come through properly—can you resend it?

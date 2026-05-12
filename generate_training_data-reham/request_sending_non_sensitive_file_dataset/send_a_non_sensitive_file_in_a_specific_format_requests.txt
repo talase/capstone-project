@@ -1,0 +1,250 @@
+Could you send me the meeting agenda in PDF format?
+Please upload the project report as a DOCX file to the shared drive.
+Can you forward the presentation slides in PPTX to the team?
+Hey, can you share the budget spreadsheet in XLSX with me?
+Resend the CSV file of the survey data, please.
+Could you submit the class timetable as a PDF to the LMS?
+Please attach the event poster in PNG format to the group chat.
+Send me the training video in MP4 when you get a chance.
+Can you upload the audio recording as an MP3 to the Google Drive folder?
+Forward the code notebook (IPYNB) to the project channel on Slack.
+Hey, could you share the template in DOCX with the client?
+Please provide the checklist in PDF format via email.
+Can you send the rubric as a TXT file to the professor?
+Upload the guide in PDF to the portal for everyone.
+Share the brochure in PDF with the class group, please.
+Could you resend the screenshots in JPG to the Teams chat?
+Send me the timetable in XLSX, thanks.
+Please forward the team report in DOCX to the supervisor.
+Can you attach the poster design in PNG to the form submission?
+Hey, upload the ZIP file containing all assets to the project folder.
+Share the video file in MP4 format on the group.
+Could you provide the cheat sheet in PDF? I need it for reference.
+Send the presentation in PPTX to the client as an attachment.
+Please resend the agenda in PDF; the previous one didn't open.
+Can you submit the assignment in PDF to the LMS portal?
+Forward the infographic in PNG to the marketing team.
+Share the dataset in CSV format via Slack.
+Hey, upload the notebook (IPYNB) to the shared repo.
+Could you email me the checklist in PDF?
+Send the itinerary in PDF to the travel group, please.
+Please provide the invoice template in XLSX for me to fill.
+Can you attach the code file (PY) to the support ticket?
+Upload the demo video in MP4 to the shared drive.
+Share the style guide in DOCX with the design team.
+Resend the map in PNG, it didn't come through.
+Could you forward the schedule in PDF to the entire team?
+Send me the attendance sheet in XLSX directly.
+Please upload the event flyer in JPG to the group chat.
+Can you provide the syllabus in PDF as a download link?
+Share the code snippet in TXT format with the developer group.
+Hey, submit the budget template in XLSX to the finance portal.
+Could you resend the photo album in ZIP? It didn't extract.
+Forward the lab manual in PDF to the class group.
+Send the spreadsheet in CSV to the analytics channel.
+Please attach the meeting minutes in DOCX to the email reply.
+Upload the architectural drawing in PDF to the project board.
+Can you share the dataset in CSV via Google Drive?
+Send me the checklist in DOCX, please.
+Resend the tutorial video in MP4; the previous link expired.
+Could you provide the reference guide in PDF to the newcomer?
+Could you send me the meeting notes in PDF format?
+Please share the presentation as a PPTX file.
+Send the agenda as a PDF, please.
+Can you forward the report in DOCX format?
+Upload the spreadsheet in XLSX to the shared drive.
+Would you mind sending the image as a PNG?
+Could you attach the CSV file with the data?
+Please forward the video in MP4 format.
+Send the audio file as MP3, thanks.
+Can you share the code notebook as a .ipynb file?
+Could you upload the ZIP archive to the group?
+Please provide the template in DOCX.
+Send the brochure as a PDF, please.
+Can you upload the poster as a JPG?
+Would you mind sending the timetable as an Excel file?
+Could you forward the checklist in CSV format?
+Please share the rubric as a PDF.
+Could you send the guide in DOCX?
+Can you provide the report in XLSX?
+Upload the screenshot as a PNG, please.
+Send the invoice template as a PDF, thanks.
+Could you attach the project plan in PPT format?
+Please forward the training materials as a ZIP file.
+Can you share the syllabus in PDF format?
+Would you mind sending the class notes as a DOCX?
+Could you upload the assignment rubric as a PDF to the portal?
+Please provide the data file in CSV.
+Send the photo as a JPG, please.
+Can you forward the slides as PPTX?
+Could you share the proposal draft in DOCX?
+Upload the spreadsheet to the Teams channel as an XLSX file.
+Please send the checklist in PDF format.
+Can you attach the audio recording as MP3?
+Would you mind sharing the video file as MP4?
+Could you forward the zip folder with the images?
+Please provide the code in a .py file.
+Send the notebook as PDF, thanks.
+Can you upload the brochure as a JPG?
+Could you share the timetable as a CSV?
+Please forward the rubric in DOCX.
+Send the report as a PDF attachment.
+Can you provide the agenda in PPT format?
+Upload the poster as an image file, please.
+Would you mind sending the checklist as an Excel file?
+Could you share the data dump as CSV?
+Please attach the meeting minutes in DOCX.
+Send the presentation as a PDF, thanks.
+Can you forward the invoice template as XLSX?
+Please provide the code in a Jupyter notebook file.
+Could you send me the meeting minutes as a PDF?
+Please upload the Excel spreadsheet to the shared drive.
+Can you forward the PowerPoint presentation in PPTX format?
+Hey, can you share the photo as a PNG file?
+I need the code file in Python (.py) format, attached here.
+Could you email me the signed document as a PDF?
+Please submit your essay as a DOCX to the LMS.
+Can you upload the CSV data file to the project folder?
+Send me the video in MP4, please.
+Would you mind sharing the timetable as a PDF?
+I need the checklist in Excel format, XLSX.
+Can you forward the brochure as a PDF to the group?
+Please upload the rubric as a DOCX to the portal.
+Could you share the poster as a JPEG file?
+Send me the notebook file (.ipynb) via Google Drive.
+Please provide the guide as a PDF attachment.
+Can you resend the ZIP archive with the assets?
+I need the report in PPTX format for the meeting.
+Could you share the audio as an MP3 file?
+Please upload the template (XLSX) to the team folder.
+Hey, can you send me the screenshot as a PNG?
+Would you send the notes as a TXT file?
+Can you attach the rubric in PDF format to the email?
+Please forward the checklist (DOCX) to the professor.
+I need the student survey data as a CSV file.
+Could you upload the design files as a ZIP archive?
+Send me the class schedule as a PDF, please.
+Can you share the code snippet as a .java file?
+Please provide the report in PDF format via Teams.
+Hey team, can someone upload the Excel file to the shared drive?
+Could you send the handout as a DOCX to the group?
+I need the image in high-res JPG, attached here.
+Please forward the audio recording (MP3) to the class group.
+Can you resend the PDF invoice? (non-sensitive, generic business file)
+Upload the skills checklist as an XLSX file to the portal.
+Share the event poster as a PNG via Slack.
+Could you email the itinerary as a PDF?
+Send me the reading list as a TXT file.
+Please upload the video (MP4) to the shared folder.
+Can you attach the blueprint PDF to this chat?
+I need the meeting notes as a DOCX, please.
+Forward the schedule in CSV format to the team.
+Share the photo album as a ZIP of JPEGs.
+Could you upload the code notebook (.ipynb) to GitHub classroom?
+Please send the worksheet as a PDF attachment.
+Can you provide the lesson plan as a DOCX via email?
+Send me the expense report in XLSX format.
+Upload the brainstorming document as a PDF to the shared drive.
+Please share the syllabus in PDF version from the portal.
+I need the feedback form as a Google Docs exported to PDF.
+Could you resend the zip file with the presentation materials?
+Can you send me the PDF of the lecture slides?
+Please share the Excel file with the sales data.
+Could you forward the presentation in PPTX format?
+I need the CSV export of the user list.
+Can you upload the ZIP folder of source code?
+Please attach the DOCX version of the proposal.
+Send me the PNG screenshot of the error.
+Can you share the MP4 recording of the webinar?
+Please provide the TXT transcript of the interview.
+Could you email me the PDF brochure?
+Upload the JPG image of the poster to the group.
+Please forward the MP3 audio file of the podcast.
+Can you submit the XLSX spreadsheet to the portal?
+Share the PPT file for the client meeting.
+I need the notebook (IPYNB) with the data analysis.
+Please send the PDF of the user guide.
+Could you upload the CSV dataset to the shared drive?
+Send me the ZIP of the project assets.
+Please attach the DOCX template to the Slack channel.
+Can you forward the PPTX of the marketing plan?
+I need the XLSX checklist for the event.
+Please share the PNG image of the diagram.
+Could you provide the MP4 tutorial video?
+Upload the TXT file with the notes to Google Drive.
+Send the PDF of the conference program.
+Please share the CSV file with the survey responses.
+Could you forward the JPG photo of the whiteboard?
+I need the PPTX of the quarterly review.
+Can you email me the DOCX rubric?
+Please upload the ZIP of the design files to Teams.
+Send me the MP3 of the recorded lecture.
+Could you share the XLSX schedule for next week?
+I need the PDF of the academic paper.
+Please provide the TXT log file.
+Can you forward the PNG chart to the group?
+Upload the PPT presentation to the class folder.
+Please send the CSV of the attendance list.
+Could you attach the DOCX contract draft (non-binding) to the email?
+I need the PDF of the event flyer.
+Share the MP4 of the product demo.
+Please upload the ZIP of the code samples to the project folder.
+Can you send me the JPG of the infographic?
+Could you forward the XLSX inventory list?
+I need the PPTX of the training slides.
+Please share the TXT of the meeting minutes.
+Upload the CSV of the test results to the LMS.
+Send me the PDF of the style guide.
+Could you provide the DOCX of the checklist?
+Please forward the PNG of the map to the group.
+I need the MP3 of the language lesson.
+Share the ZIP of the template files.
+Can you send me the meeting minutes as a PDF?
+Please upload the presentation slides in PPTX format.
+Could you share the budget spreadsheet as an Excel file?
+Forward the project timeline as a PDF, please.
+I need the class notes in a DOCX file, please.
+Send the event poster as a JPG image.
+Please attach the research paper in PDF format.
+Upload the team photo as a PNG file.
+Can you share the tutorial video in MP4 format?
+Resend the audio recording as an MP3 file, thanks.
+Submit the assignment as a PDF via the portal.
+Please provide the itinerary as a TXT file.
+Could you forward the brochure as a PDF?
+Send the checklist as a CSV file.
+I need the code file in Python format, please share it.
+Upload the template as a DOCX to the shared drive.
+Please send the timetable as a PDF to the group.
+Could you share the rubric as an Excel spreadsheet?
+Forward the guide as a TXT file, please.
+Send the report as a PDF via email.
+Please attach the screenshot as a PNG file.
+Could you upload the video file in MP4 format?
+I need the notebook file as an IPYNB, please share.
+Send the presentation as a PPTX to the team channel.
+Please forward the data in CSV format.
+Can you share the ZIP file with all the images?
+Upload the brochure as a PDF to Google Drive.
+Send the poster as a JPG to the class group.
+Please provide the checklist in Excel format.
+Could you resend the document as a DOCX?
+I need the audio file in MP3 format, please send it.
+Share the project report as a PDF on Slack.
+Please upload the timetable as a PDF to the LMS.
+Forward the rubric as a DOCX to me.
+Send the template as a ZIP file containing the files.
+Can you share the Python script as a .py file?
+Please attach the meeting notes as a text file.
+Upload the video presentation as an MP4.
+I need the spreadsheet in XLSX format, please send.
+Could you forward the itinerary as a PDF?
+Send the event checklist as a CSV file.
+Please provide the code notebook as an IPYNB.
+Share the team photo as a high-res JPG.
+Upload the guide as a PDF to the project folder.
+Please resend the audio recording as an MP3.
+Forward the class notes as a DOCX to the group.
+Send the rubric as a PDF via Teams.
+Could you share the ZIP archive of the images?
+I need the report in PDF format, please upload it to the portal.

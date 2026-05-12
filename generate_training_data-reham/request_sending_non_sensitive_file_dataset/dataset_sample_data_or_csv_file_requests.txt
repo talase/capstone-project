@@ -1,0 +1,250 @@
+Can you send me the CSV file with sample sales data for our practice dashboard?
+Hey, could you forward the public dataset on weather patterns from last year?
+Please share the Excel file with the dummy customer records for testing.
+I need the synthetic data file you used for the demo—could you upload it to the group?
+Would you mind attaching the sample data CSV from the research paper?
+Could you resend the toy dataset in XLSX format? I missed it.
+Could you email me the CSV with the mock user activity logs?
+Share the link to the public census data file on Google Drive, please.
+Can you provide the sample data table for the regression exercise?
+Upload the Q3 demo dataset to the shared folder when you get a chance.
+Hey, can you send the CSV containing the sample stock prices for our practice notebook?
+Please forward the dataset on housing prices from the university portal.
+I'd appreciate it if you could share the sample CSV for the clustering task.
+Could you attach the dummy data file with transaction records?
+Send me the public dataset about crime statistics in cities.
+Are you able to upload the sample data spreadsheet to Teams?
+Please give me the Excel with the mock employee records for training.
+Can you resend the CSV of synthetic survey responses?
+Share the link to the public weather dataset in the class group.
+I need the sample data file for the machine learning project—could you forward it?
+Could you submit the CSV of demo student grades to the LMS?
+Please share the sample dataset about movie ratings in XLSX.
+Hey, can you send me the public dataset on airline delays?
+Would you mind uploading the toy data CSV to the project folder?
+I need the sample data for the data cleaning task—could you attach it here?
+Resend the CSV with sample customer churn data, please.
+Can you provide the Excel file with the dummy orders for our analysis?
+Share the public dataset on global temperatures in CSV format.
+Forward me the link to the synthetic data file on Google Drive.
+Please upload the sample sales data spreadsheet to the team channel.
+Could you send the CSV containing example user profiles for testing?
+I need the public dataset on book ratings—can you forward it?
+Hey, can you share the sample data table from the lecture notes?
+Please attach the dummy transaction CSV for the exercise.
+Can you resend the Excel with the sample marketing data?
+Share the dataset on tree species from the university repository.
+I'd like the CSV of synthetic reviews for sentiment analysis practice.
+Could you upload the sample data file to the class Google Drive folder?
+Please send me the public housing dataset in CSV format.
+Forward the Excel file with dummy inventory data to me.
+Can you provide the sample CSV for the data visualization assignment?
+Share the public dataset about election results in a spreadsheet.
+Hey, resend the synthetic weather data CSV—I lost the original.
+Could you attach the sample customer feedback data in XLSX?
+I need the public dataset on population density—email it to me.
+Upload the toy dataset on product sales to the shared drive.
+Please forward the CSV with sample test scores for our study group.
+Can you share the example data file from the tutorial site?
+Send me the Excel with dummy employee shift schedules for practice.
+Could you resend the public dataset on GDP growth in CSV?
+Could you share the sample dataset CSV file with me?
+Hey, can you forward the synthetic data file we used last week?
+Please upload the demo CSV to the Google Drive folder.
+Can you send me the toy dataset for practice?
+Would it be possible to attach the sample data table from the report?
+Can you please share the CSV file with the dummy records?
+Can you upload the example dataset to the shared drive?
+Please email me the CSV containing the test data.
+Could you forward the sample data file to the group?
+Can you send the CSV with the non-sensitive demographic data?
+Please provide the dataset in Excel format for the class project.
+Can you share the sample CSV with the sales figures?
+Please attach the synthetic data file to this chat.
+Can you upload the demo table to the LMS?
+Please forward the CSV with the public survey responses.
+Please share the CSV of the event attendance dummy list.
+Can you provide the sample dataset as a text file?
+Please upload the CSV with the product codes to the team folder.
+Can you email me the sample data spreadsheet?
+Would you mind sending the CSV with the test scores (no personal info)?
+Please attach the dataset for the machine learning tutorial.
+Can you forward the demo CSV to the professor?
+Please share the sample data file in the group chat.
+Can you send the CSV containing the dummy transactions?
+Please upload the sample dataset to the project portal.
+Can you provide the Excel file with the non-confidential survey results?
+Please attach the CSV with the toy data to the message.
+Can you share the example dataset from the public repository?
+Please send me the CSV file for the data analysis assignment.
+Can you forward the sample data table to the team?
+Please upload the CSV with the sample records to the shared drive.
+Can you email me the dataset in CSV format?
+Please provide the demo data file (not sensitive) as an attachment.
+Please send the sample dataset of weather records.
+Can you upload the CSV with the dummy inventory to the portal?
+Please forward the example CSV to the client meeting folder.
+Can you attach the sample data for the spreadsheet exercise?
+Please share the demo table from the research paper (public data).
+Can you send me the CSV with the non-personal test data?
+Please upload the sample dataset (no PII) to the team channel.
+Can you provide the Excel file with the synthetic financial figures?
+Please forward the CSV containing the public census sample.
+Can you send the file with the sample student grades (anonymized)?
+Please share the CSV of the mock transaction records.
+Can you attach the demo dataset to the email draft?
+Please upload the sample data table to the class project folder.
+Can you send me the CSV with the non-sensitive survey metadata?
+Please provide the dataset in text format for the workshop.
+Could you send me the CSV file with the sample sales data?
+Hey, can you share the dataset for the machine learning project?
+Please upload the demo data table to the shared drive.
+Forward me the Excel file with the synthetic customer records.
+Can you provide the CSV of the public weather data?
+I need the sample data for the regression analysis—can you send it?
+Share the toy dataset you used for testing, please.
+Could you attach the CSV of the movie ratings dataset?
+Send the ZIP file with the example data files.
+Please upload the spreadsheet with the trial results to the Google Drive folder.
+Hey, can you resend the CSV of the housing prices dataset?
+I'd appreciate it if you could share the sample data for the dashboard demo.
+Can you forward the CSV file from the last project to me?
+Please provide the public census data table in Excel format.
+Let me know when you can send the dataset for the class exercise.
+Share the synthetic user activity logs in CSV format.
+Could you upload the sample transaction data to the group chat?
+Send me the CSV file containing the sample survey responses.
+I need the demo dataset—can you attach it here?
+Please forward the CSV of the stock prices from last week.
+Can you share the link to the public dataset on Kaggle?
+Upload the CSV with the test scores to the portal.
+Please send the sample data file so I can test the script.
+Could you provide the example data for the tutorial?
+Share the CSV of the airline delays dataset.
+Hey, can you send the Excel file with the sample inventory data?
+I need the training data CSV—please upload it to the team folder.
+Forward the ZIP of the sample images and their labels.
+Can you attach the CSV file of the traffic accident records?
+Please share the sample data for the model evaluation.
+Send me the CSV of the public health statistics.
+Could you upload the demo dataset to Slack?
+Please provide the CSV file with the synthetic e-commerce orders.
+Hey, can you resend the sample data we used in the workshop?
+I'd like the dataset for the research paper—can you share it?
+Upload the CSV of the student grades (anonymized) to the shared drive.
+Can you forward the example data from the tutorial to the group?
+Please send the CSV containing the sample chat logs.
+Share the ZIP file with the sample code and data.
+Could you attach the Excel spreadsheet of the test dataset?
+Send the public dataset for climate change analysis.
+I need the CSV of the sample product listings—can you provide it?
+Please upload the demo data to the LMS.
+Forward the CSV file of the sample sensor readings.
+Can you share the dataset for the data visualization exercise?
+Send me the synthetic data file for the simulation.
+Could you provide the sample CSV of the marketing campaign results?
+Please attach the example data table to your message.
+Upload the ZIP of the public datasets to the project folder.
+Share the CSV of the sample bank transactions (non-sensitive).
+Can you share the CSV file from last week's experiment?
+Please upload the sample dataset to the group.
+Could you forward the training data CSV to me?
+Send the public election results dataset when you get a chance.
+I need the demo dataset file, can you attach it here?
+Drop the synthetic data CSV in the shared drive, please.
+Resend the toy dataset you mentioned earlier.
+Upload the non-sensitive customer survey data to the Google Drive folder.
+Can you provide the sample data file for the tutorial?
+Forward the CSV example for the regression model.
+Attach the public weather data file to this chat.
+Please share the CSV with the demo records from the workshop.
+Send me the dataset you used for the analysis.
+Upload the sample_data.csv to the project folder.
+Could you forward the monthly report dataset to the team?
+I need the training data file for the machine learning task.
+Share the CSV with the sample responses from the survey.
+Please provide the synthetic data batch for testing.
+Send the public dataset link again, or attach the file here.
+Can you upload the sample data for the new interns?
+Forward the CSV file with the sample entries from the database.
+Attach the demo dataset you prepared for the presentation.
+Send the CSV with the non-sensitive log data to the group.
+I need the sample data, can you please share it again?
+Submit the dataset file via the portal before noon.
+Please upload the CSV with the sample records to the LMS.
+Could you forward the training data examples to the professor?
+Send the public spam dataset you found online.
+Attach the CSV file with the sample transactions for testing.
+Share the demo_data.csv with the entire class group.
+Can you provide the dataset used in the research paper?
+Upload the sample data to the Teams channel for review.
+Send the CSV file with the simulated responses.
+Forward the sample data archive to the team's email.
+I need the training dataset—please resend it.
+Could you share the CSV with the sample measurements?
+Attach the synthetic data file to your message.
+Send the public dataset about movie ratings.
+Please upload the CSV with the sample customer feedback.
+Forward the example dataset you showed in the meeting.
+Send me the CSV file for the data cleaning exercise.
+Can you provide the demo dataset for the workshop?
+Upload the sample data to the shared Google Drive.
+Share the CSV with the non-sensitive sales data for practice.
+I need the training data CSV, can you attach it here?
+Please forward the dataset file to the class group.
+Send the synthetic data you generated for the project.
+Attach the CSV sample to your reply.
+Can you share the public health dataset you downloaded?
+Upload the sample_data.xlsx to the team folder, please.
+Could you send me the sample dataset you mentioned earlier?
+Can you share the CSV file with the sales data?
+Please upload the dummy data table to the shared drive.
+Hey, can you forward the synthetic data we used for testing?
+I need the public dataset you found for our project.
+Would you mind sharing the Excel file with the example records?
+Send me the toy dataset you created for the demo.
+Could you attach the sample data file to the group chat?
+Can you provide the CSV template for the new campaign?
+Please resend the data file you sent last week; I can't find it.
+Hi team, can someone upload the sample dataset to the Teams folder?
+I need a copy of the public statistics CSV you have.
+Could you forward the demo table from the email you got?
+Please submit the sample data file through the portal.
+Can you share the link to the public dataset on Google Drive?
+I need the sample data for the practice exercise.
+Can you upload the synthetic data file to the LMS?
+Please provide the dataset you used in the tutorial.
+Could you resend the Excel file with the sample rows?
+Send the demo dataset to the group, please.
+Can you attach the public dataset to the Slack channel?
+I need the CSV file with the sample entries for my analysis.
+Would you mind sharing the toy dataset via email?
+Please share the sample data table from yesterday's meeting.
+Could you forward the public dataset link to me?
+Hey, can you upload the dummy CSV to the project folder?
+I need the sample data for the machine learning project.
+Can you send me the Excel file with the synthetic data?
+Please provide the dataset you promised for the assignment.
+Could you attach the public statistics table to this message?
+Send the sample CSV to the class group, please.
+I need the demo dataset you used in the presentation.
+Can you share the toy data file via WhatsApp?
+Please upload the sample data to the Google Drive folder.
+Could you resend the public dataset file?
+Hey, can you forward the CSV with the example data?
+I need the synthetic data file for testing.
+Can you provide the sample dataset from the research paper?
+Please send me the Excel file with the dummy records.
+Could you share the public dataset URL instead of the file?
+Send the demo table to me directly, please.
+I need the sample data for the workshop exercise.
+Can you upload the CSV template to the shared repository?
+Please provide the toy dataset as a ZIP file.
+Could you attach the public data file to the email?
+Hey, can you resend the sample data table?
+I need the synthetic data for the simulation.
+Can you forward the public dataset link to the team?
+Please share the CSV with the example entries in the group.
+Can you send me that CSV of the customer satisfaction survey sample data? Thanks.
+Hey everyone, could someone please upload the synthetic dataset we used in the workshop to the team Slack channel?
+Hi, could you forward the Excel file with the demo sales figures to my email? I need it for the report.
