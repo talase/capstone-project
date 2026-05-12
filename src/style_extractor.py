@@ -121,13 +121,20 @@ def _read_env_keys(env_path: Path) -> list[str]:
 
 
 def load_messages(path: Path) -> list[str]:
-    """Load non-empty one-message-per-line text data."""
+    """Load outgoing messages from one-message-per-line or chat transcript data."""
 
-    return [
-        line.strip()
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    messages = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        clean = line.strip()
+        if not clean:
+            continue
+        if clean.lower().startswith("me:"):
+            message = clean.split(":", 1)[1].strip()
+            if message:
+                messages.append(message)
+        elif ":" not in clean and not clean.lower().startswith("conversation "):
+            messages.append(clean)
+    return messages
 
 
 def batched(messages: list[str], size: int = BATCH_SIZE) -> list[list[str]]:

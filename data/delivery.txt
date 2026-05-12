@@ -1,120 +1,301 @@
-Hi, leave it at the door. Also, I am at the main gate. thanks.
-Hello, leave it at the door. Also, I am at the main gate. cash paid.
-Hi, call me when outside. near reception.
-Ok, I am at the main gate. thanks.
-Ok, call me when outside. Also, call me when outside. cash paid.
-Please, the address is correct. near reception.
-Hi, order number is ready. gate 2.
-Ok, I am at the main gate. Also, the address is correct. near reception.
-Ok, call me when outside. Also, order number is ready. near reception.
-Hello, order number is ready. thanks.
-Please, I am at the main gate. near reception.
-Please, I am at the main gate. Also, the address is correct. cash paid.
-Hello, leave it at the door. Also, I am at the main gate. cash paid.
-Please, order number is ready. gate 2.
-Hi, call me when outside. gate 2.
-Hi, call me when outside. near reception.
-Hello, call me when outside. gate 2.
-Please, order number is ready. thanks.
-Please, order number is ready. gate 2.
-Hello, I am at the main gate. Also, leave it at the door. cash paid.
-Hi, leave it at the door. gate 2.
-Hi, order number is ready. Also, order number is ready. near reception.
-Hello, call me when outside. cash paid.
-Please, leave it at the door. Also, call me when outside. thanks.
-Hi, order number is ready. cash paid.
-Please, I am at the main gate. thanks.
-Please, call me when outside. gate 2.
-Ok, I am at the main gate. Also, order number is ready. cash paid.
-Please, call me when outside. gate 2.
-Please, call me when outside. gate 2.
-Ok, order number is ready. Also, the address is correct. thanks.
-Hello, order number is ready. thanks.
-Hello, the address is correct. Also, the address is correct. thanks.
-Hello, leave it at the door. cash paid.
-Please, call me when outside. gate 2.
-Please, the address is correct. thanks.
-Hi, I am at the main gate. near reception.
-Hello, I am at the main gate. near reception.
-Please, order number is ready. Also, I am at the main gate. near reception.
-Hello, call me when outside. Also, leave it at the door. near reception.
-Please, leave it at the door. cash paid.
-Hi, leave it at the door. Also, I am at the main gate. cash paid.
-Hello, leave it at the door. thanks.
-Ok, leave it at the door. near reception.
-Hello, order number is ready. Also, leave it at the door. near reception.
-Please, call me when outside. gate 2.
-Please, the address is correct. Also, leave it at the door. cash paid.
-Ok, order number is ready. Also, the address is correct. near reception.
-Hi, I am at the main gate. thanks.
-Ok, call me when outside. Also, call me when outside. thanks.
-Please, leave it at the door. near reception.
-Please, I am at the main gate. near reception.
-Please, leave it at the door. Also, I am at the main gate. near reception.
-Please, call me when outside. Also, I am at the main gate. near reception.
-Ok, the address is correct. gate 2.
-Hi, call me when outside. Also, the address is correct. thanks.
-Ok, order number is ready. gate 2.
-Ok, order number is ready. near reception.
-Ok, order number is ready. gate 2.
-Hi, I am at the main gate. thanks.
-Hello, leave it at the door. Also, call me when outside. near reception.
-Hello, call me when outside. Also, leave it at the door. gate 2.
-Ok, call me when outside. gate 2.
-Please, the address is correct. Also, order number is ready. thanks.
-Ok, order number is ready. cash paid.
-Ok, leave it at the door. Also, call me when outside. near reception.
-Hello, order number is ready. thanks.
-Hi, the address is correct. cash paid.
-Please, I am at the main gate. near reception.
-Ok, leave it at the door. gate 2.
-Hello, order number is ready. Also, the address is correct. near reception.
-Hello, leave it at the door. near reception.
-Please, leave it at the door. cash paid.
-Please, the address is correct. cash paid.
-Hi, call me when outside. gate 2.
-Ok, the address is correct. cash paid.
-Hi, call me when outside. Also, I am at the main gate. near reception.
-Ok, order number is ready. cash paid.
-Hello, leave it at the door. cash paid.
-Ok, call me when outside. Also, call me when outside. thanks.
-Hi, call me when outside. thanks.
-Please, call me when outside. cash paid.
-Ok, order number is ready. near reception.
-Hi, leave it at the door. gate 2.
-Ok, call me when outside. near reception.
-Please, the address is correct. gate 2.
-Please, leave it at the door. Also, leave it at the door. cash paid.
-Hello, order number is ready. gate 2.
-Hello, call me when outside. cash paid.
-Hi, leave it at the door. near reception.
-Hello, order number is ready. Also, order number is ready. thanks.
-Please, the address is correct. near reception.
-Please, I am at the main gate. Also, the address is correct. cash paid.
-Ok, order number is ready. Also, the address is correct. thanks.
-Please, the address is correct. thanks.
-Please, the address is correct. cash paid.
-Please, the address is correct. Also, call me when outside. gate 2.
-Hi, order number is ready. near reception.
-Hello, leave it at the door. near reception.
-Please, I am at the main gate. near reception.
-Hi, order number is ready. gate 2.
-Hello, order number is ready. near reception.
-Please, order number is ready. cash paid.
-Hello, the address is correct. thanks.
-Please, order number is ready. gate 2.
-Please, leave it at the door. gate 2.
-Please, I am at the main gate. cash paid.
-Please, I am at the main gate. thanks.
-Hi, I am at the main gate. gate 2.
-Ok, order number is ready. cash paid.
-Hello, call me when outside. gate 2.
-Ok, call me when outside. cash paid.
-Hello, leave it at the door. near reception.
-Hello, the address is correct. Also, the address is correct. thanks.
-Hello, call me when outside. gate 2.
-Hi, call me when outside. near reception.
-Ok, I am at the main gate. near reception.
-Hi, order number is ready. gate 2.
-Hi, the address is correct. Also, leave it at the door. gate 2.
-Hello, call me when outside. cash paid.
+Conversation 1: confirming the entrance
+Delivery: Hey, I’m at the main entrance. Which entrance should I use?
+Me: Use the visitor entrance please.
+Delivery: Is that the one near the security desk?
+Me: Yes, that one. Tell security it is a food delivery.
+Delivery: Got it. They are letting me in now.
+Me: Great. Follow the signs to the residential drop-off area.
+Delivery: Is that the area on the right after reception?
+Me: Yes. You can park in any visitor spot.
+Delivery: Awesome. See you in a minute.
+Me: Thanks.
+
+Conversation 2: asking to leave an order at the door
+Delivery: I’m here but no one’s answering the door.
+Me: Please leave it at the door.
+Delivery: Sure, any specific spot?
+Me: By the mat, under the overhang.
+Delivery: Got it. It’s raining a bit, will put it in a dry spot.
+Me: Good. Take a pic for proof.
+Delivery: Already did. Sending now.
+Me: Received. Thanks.
+Delivery: No problem. Have a good day.
+
+Conversation 3: sharing delivery instructions
+Me: Leave the package with the front desk.
+Delivery: Front desk of the office building?
+Me: Yes, the main lobby desk.
+Delivery: Okay. Should I ask for anyone specific?
+Me: Just tell them it is for me. They are expecting deliveries today.
+Delivery: Will do. What if no one is there?
+Me: Then leave it at the counter and send a photo.
+Delivery: Alright. Is the order name under your account?
+Me: Yes, that is correct.
+Delivery: Perfect. Dropping it off now.
+Me: Thanks.
+
+Conversation 5: answering a location call
+Delivery: Hey, I’m nearby but the pin seems a little off.
+Me: What do you see around you?
+Delivery: I see the visitor parking sign and the small garden area.
+Me: You’re close. Keep going straight, then turn toward reception.
+Delivery: Toward the covered entrance?
+Me: Yes. I’ll meet you there.
+Delivery: Found it. Pulling up now.
+Me: See you. I’ll come out.
+
+Conversation 6: confirming the entrance again
+Delivery: Hi, I’m at the complex. Which entrance is for visitors?
+Me: Use the visitor entrance near the front desk.
+Delivery: I see a staff entrance and a visitor sign.
+Me: Choose the visitor sign. Security will guide you.
+Delivery: Okay, I’m through. Where should I leave it?
+Me: Leave it at the reception desk please.
+Delivery: Reception is just past the waiting area, right?
+Me: Yes. That is perfect.
+Delivery: Will do. Be there shortly.
+Me: Perfect.
+
+Conversation 7: confirming payment status
+Delivery: Hi, the app says payment on delivery. Is that correct?
+Me: It should be prepaid. Could you refresh the order?
+Delivery: One second. I’m checking now.
+Me: Sure, no rush.
+Delivery: Okay, it updated. It shows paid now.
+Me: Great. Please leave it at reception if I don’t answer.
+Delivery: No problem. I’m almost there.
+Me: Thanks. Send a photo after drop-off, please.
+Delivery: Will do.
+Me: Appreciate it.
+
+Conversation 8: replacing an unavailable item
+Delivery: The store says one item is unavailable.
+Me: Which item is missing?
+Delivery: The sparkling water pack.
+Me: You can replace it with still water.
+Delivery: Same size?
+Me: Yes, same size is fine.
+Delivery: Got it. Anything else?
+Me: No, that’s all. Thanks for checking.
+Delivery: I’ll head to checkout now.
+Me: Perfect.
+
+Conversation 9: adjusting drop-off time
+Delivery: I’m running a little late because the store was busy.
+Me: That’s okay. About how long?
+Delivery: Maybe fifteen more minutes.
+Me: No problem. I’ll still be here.
+Delivery: Should I call when I arrive?
+Me: Yes, please call once you’re at reception.
+Delivery: Got it.
+Me: Thanks for letting me know.
+Delivery: Of course.
+Me: Drive safely.
+
+Conversation 10: confirming fragile package
+Delivery: Hi, this package is marked fragile.
+Me: Yes, please handle it carefully.
+Delivery: Should I leave it at the desk or hand it to you?
+Me: Please hand it to me if possible.
+Delivery: Okay, I’ll call when I’m downstairs.
+Me: Perfect. I’ll come down right away.
+Delivery: I’m about five minutes away.
+Me: Thanks. I’ll keep my phone nearby.
+Delivery: Great.
+Me: See you soon.
+Delivery: I’ll keep it upright until then.
+Me: Thank you, that helps.
+
+Conversation 11: asking for a pickup note
+Delivery: The store asked me to confirm the pickup note.
+Me: It should say leave with reception.
+Delivery: I see it now. Just wanted to make sure.
+Me: Yes, that’s correct.
+Delivery: Do you want me to call before leaving it there?
+Me: A message is enough, thanks.
+Delivery: Okay. I’ll send the photo once it is dropped off.
+Me: Perfect. Please keep the receipt in the bag.
+Delivery: Sure, no problem.
+Me: Thank you.
+
+Conversation 12: pickup note
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+
+Conversation 13: order bag count
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+
+Conversation 14: calling on arrival
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+
+Conversation 15: leaving at desk
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+
+Conversation 16: substitution approval
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+
+Conversation 17: late dispatch
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+
+Conversation 18: contactless delivery
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+
+Conversation 19: drop-off confirmation
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+
+Conversation 20: replacement item
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+
+Conversation 21: arrival update
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+
+Conversation 22: payment status
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+
+Conversation 23: fragile package
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+
+Conversation 24: store delay
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.
+Delivery: Should I call when I reach the entrance?
+Me: Yes, that is the correct entrance.
+Delivery: There are two bags for this order.
+Me: Thanks, I appreciate the update.
+Delivery: Hi, I’m almost there with your order.
+Me: That replacement is fine, thank you for checking.
+Delivery: I can leave it at reception if that works.
+Me: It should be prepaid. Could you refresh the order?
+Delivery: This package is marked fragile.
+Me: No problem, thanks for letting me know.

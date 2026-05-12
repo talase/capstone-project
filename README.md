@@ -1,9 +1,10 @@
 # Style Adaptation Capstone
 
-This project learns high-level messaging style profiles from synthetic outgoing
-WhatsApp-style messages. It extracts abstract traits such as formality,
-politeness, verbosity, and optimism, then uses those traits to choose a safe
-reply style.
+This project learns high-level messaging style profiles from synthetic
+WhatsApp-style conversations. The data files include both sides of each chat,
+while the extractor learns only from outgoing `Me:` lines. It extracts abstract
+traits such as formality, politeness, verbosity, and optimism, then uses those
+traits to choose a safe reply style.
 
 The system does not store or reuse raw message examples in generated replies.
 It saves only summarized style profiles.
@@ -11,7 +12,7 @@ It saves only summarized style profiles.
 ## Project Flow
 
 ```text
-Synthetic contact messages
+Synthetic contact conversations
 -> Observation buffer
 -> 50-message style extraction batches
 -> Global and per-contact profiles
@@ -23,7 +24,7 @@ Synthetic contact messages
 ## Folder Structure
 
 ```text
-data/                  Synthetic one-message-per-line contact data
+data/                  Synthetic two-sided contact chat transcripts
 src/main.py            Full end-to-end runner
 src/style_extractor.py OpenRouter/DeepSeek style extraction
 src/buffer.py          Global and per-contact observation buffers
@@ -89,8 +90,8 @@ python src/main.py
 
 The runner will:
 
-1. Generate synthetic data if any contact files are missing.
-2. Read messages from `data/`.
+1. Generate synthetic chat data if any contact files are missing.
+2. Read outgoing `Me:` messages from `data/`.
 3. Build global and contact-specific style profiles.
 4. Save profiles in `profiles/`.
 5. Run evaluation checks.
@@ -99,7 +100,7 @@ The runner will:
 
 ## Useful Commands
 
-Generate synthetic data:
+Generate synthetic two-sided chat data:
 
 ```bash
 python src/generate_data.py
