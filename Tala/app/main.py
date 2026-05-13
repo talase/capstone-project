@@ -58,6 +58,16 @@ async def webhook(request: Request) -> dict[str, str]:
         phone = value["messages"][0]["from"]
         logger.info("User message: %s", message)
 
+                # Send message to n8n
+        requests.post(
+            "http://localhost:5678/webhook-test/whatsapp",
+            json={
+                "message": message,
+                "phone": phone,
+            },
+            timeout=10,
+        )
+
         if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_NUMBER_ID:
             logger.error("WhatsApp credentials are not configured")
             return {"status": "missing_credentials"}
