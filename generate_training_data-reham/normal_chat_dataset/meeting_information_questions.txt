@@ -1,0 +1,500 @@
+Is the meeting still at 2 PM today?
+What's the agenda for the team sync tomorrow?
+Do we have a meeting link for the client call?
+Who's attending the budget review this afternoon?
+What time does the quarterly presentation start?
+Any updates on the meeting time for next week?
+Is the interview still scheduled for Friday?
+I forgot the conference room for the 3 PM call.
+What's the topic for the afternoon stand-up?
+Did the agenda change for the board meeting?
+Will there be a slides deck for the training session?
+How long is the appointment supposed to last?
+Are we meeting in the main office or online?
+Who's leading the discussion on the new policy?
+Is the workshop happening at the usual location?
+What time does the Zoom link go live?
+I need to know the attendees for the review.
+Was the agenda emailed to everyone?
+Is the meeting still on after lunch?
+Has the session been moved to another room?
+What's the schedule for the all-hands?
+Is the team call at 4 or 5 PM?
+Do we have a Google Meet code for the sync?
+Who's presenting the financial report?
+I missed the memo—what's the meeting about?
+Are we doing a video call or just audio?
+What's the exact address for the client meeting?
+Is the planning session still in Conference Room B?
+Will there be a Q&A at the end?
+Do you know the password for the webinar?
+Is the meeting mandatory or optional?
+I heard the interview got postponed—new time?
+What's the duration for the scrum today?
+Are we meeting with the engineering team or just PMs?
+Is the call still at 10 AM tomorrow?
+Who is the facilitator for the workshop?
+Do we need to prepare any documents for the meeting?
+What's the number of participants expected?
+Is the meeting place the same as last time?
+Will there be coffee served at the morning session?
+I think the meeting was rescheduled—any confirmation?
+What's the link for the video conference?
+Is the agenda attached to the invite?
+Who's responsible for taking minutes?
+Does the 11 AM call have a dial-in number?
+What's the dress code for the client presentation?
+Is the annual review still in the main auditorium?
+I need the meeting ID for the team check-in.
+What time should I log in for the vendor demo?
+What time is the meeting tomorrow?
+Who is attending the afternoon call?
+Did you get the agenda for the team meeting?
+What's the topic of the 3 PM discussion?
+Is the meeting still in the main conference room?
+How long is the session supposed to last?
+Is the project review meeting still on for Friday?
+Do we need to prepare slides for the client call?
+Who is presenting at the weekly stand-up?
+What's the address for the offsite meeting?
+Are we meeting at the usual time next week?
+Is there a meeting scheduled for the onboarding session?
+Did you see the updated agenda for the strategy call?
+What time does the interview start?
+Is the appointment still at 10 AM?
+Who else is joining the call from the team?
+What room is the department meeting in?
+Is the meeting about the budget or the timeline?
+Can you confirm the date for the quarterly review?
+I heard there's a meeting about the new project, any details?
+Is the session recorded or live?
+What's the format of the workshop?
+Are we meeting in person or virtually?
+Who is the facilitator for the brainstorming session?
+What's the deadline for submitting agenda items?
+Do we have a meeting today or did it get moved?
+Can you share the meeting notes from last time?
+I think the call was rescheduled but I'm not sure.
+What topics are covered in the progress meeting?
+Is there a separate meeting for the design review?
+How many people are expected for the event?
+What is the purpose of the sync-up?
+Are we having a quick huddle before the main meeting?
+Is the location the same as last month?
+What time does the conference call end?
+Do we need to bring anything to the workshop?
+Who decided the agenda for the client meeting?
+Is the interview panel confirmed?
+What's the password for the webinar?
+Is the meeting invitation sent to everyone?
+Are we discussing the feedback in the next call?
+What platform are we using for the team meeting?
+Is the session still happening despite the holiday?
+Do you know the meeting ID for the board meeting?
+Who is responsible for taking minutes?
+What is the dress code for the external meeting?
+I missed the meeting, what did I miss?
+Is the meeting open to all departments?
+What time does the meeting start today?
+Is the conference call still at 2 PM?
+Who is attending the team sync tomorrow?
+What's the agenda for the project kickoff?
+Did the client meeting get moved to a different day?
+Are we still on for the 10 AM standup?
+Where exactly is the workshop being held?
+How long is the board meeting supposed to last?
+Did everyone already get the dial-in link for the Zoom?
+Who's presenting the sales update in the next meeting?
+Are we meeting in the main office or the annex?
+What time does the interview slot start?
+I forgot—is the meeting at 3 or 4?
+Can you check if the agenda was sent out?
+Were both managers confirmed for the review meeting?
+Is the lunch-and-learn this Thursday or Friday?
+Did they change the venue for the team-building session?
+What street address is the partner meeting at?
+How many people are expected for the town hall?
+Do we have a meeting ID for the webinar?
+Will the slides be shared before the call?
+Who will be taking notes in the strategy session?
+Is the appointment still on for next Monday?
+Did anyone record last week's meeting?
+What was the main topic of the morning huddle?
+Can you confirm the time zone for the international call?
+Is the project meeting in the same conference room?
+Are we having a pre-meet before the client presentation?
+What's the Wi‑Fi password for the meeting room?
+Do we need to bring anything to the department meeting?
+Has the agenda been updated since yesterday?
+Who's the guest speaker in the all‑hands?
+Is there a make‑up session for the training?
+What's the deadline for submitting questions before the Q&A?
+Did the board approve the new meeting time?
+How many minutes are allocated for updates?
+Will there be a break during the three‑hour workshop?
+Is the meeting starting on time or delayed?
+Which floor is the HR meeting on?
+Can we use the laptop to connect to the TV in the meeting room?
+Who should I contact if I can't join the call?
+Did the agenda include a discussion on the budget?
+Is the interview in‑person or virtual?
+What was the outcome of the last steering committee meeting?
+Are we expected to present our status in the weekly sync?
+How do I access the meeting notes from yesterday?
+Who is moderating the panel discussion?
+Is the meeting room available five minutes before?
+Can someone share the meeting link in the group chat?
+What time does tonight's meeting start?
+Where are we meeting tomorrow for the project?
+Can you tell me the agenda for the Monday call?
+Who is attending the staff meeting next week?
+What's the topic of the afternoon session?
+Is the meeting still at 3 PM today?
+Do you know the conference room number?
+What time is the family reunion call?
+Are we using Zoom or Teams for the interview?
+Has the agenda for the quarterly review been shared yet?
+What's the address for the client meeting next Friday?
+Which attendees are confirmed for the workshop?
+Is the meeting virtual or in person this time?
+What was the main topic of yesterday's meeting?
+Do you have the link for the 2 PM call?
+Who's presenting at the department meeting?
+What time does the school PTA meeting begin?
+Are there any pre-reading materials for the strategy session?
+What's the parking situation for the office meeting tomorrow?
+When is the next board meeting scheduled?
+Is the agenda attached to the calendar invite?
+Do we have a dial‑in number for the conference call?
+What time should I log in for the webinar?
+Who else is invited to the planning session?
+Where exactly is the meeting location in the building?
+What's the meeting ID for the video call?
+Is there a presentation or just discussion?
+What's the dress code for the client meeting?
+Can you confirm the meeting time again?
+Do you know if the meeting has been rescheduled or still on?
+What topics are we covering in the team sync?
+Who is leading the agenda items?
+What's the room number for the 4 PM session?
+Are we meeting at the café or in the office?
+How many people are expected for the call?
+Is the meeting starting on the hour or quarter past?
+What's the passcode for the Zoom meeting?
+Do you have any notes from the last meeting I should review?
+What time is the parent‑teacher conference slot?
+Will there be a Q&A at the end of the presentation?
+Which floor is the conference room on?
+Is the meeting open to all team members or just leads?
+What's the estimated duration of the kickoff call?
+Do we need to prepare anything for the meeting?
+Who is sending out the agenda before the session?
+What's the video link for the all‑hands meeting?
+Are we discussing the budget in the finance call?
+What time is the check‑in call with the client?
+Who's presenting in the afternoon call?
+Is the meeting still at 3 PM?
+Where is the team meeting being held?
+What's the agenda for today's stand-up?
+Did you get the meeting invite for Friday?
+How long is the planning session expected to last?
+Which room is the all-hands in?
+Do we have a meeting link yet?
+What time does the client call start?
+Is there a meeting scheduled for next week?
+Who needs to attend the budget review?
+What's the topic of the afternoon sync?
+Can you confirm the meeting time?
+Is the interview still on for 10 AM?
+What's the conference room number?
+Did the meeting get moved to Thursday?
+Will there be a Q&A session after the presentation?
+Are we meeting in person or online?
+What's the purpose of the emergency meeting?
+Who is leading the workshop tomorrow?
+Is the agenda available for the monthly review?
+Did everyone get the calendar invite?
+Is there a video link for the call?
+How many people are expected at the town hall?
+What's the meeting password?
+Is the project kickoff still at 2?
+Who is the note-taker for the meeting?
+What's the deadline before the next check-in?
+Are we discussing the budget in the next call?
+Which time zone is the meeting in?
+Is there a pre-read document for the session?
+What's the estimated duration of the training?
+Who from marketing is joining the call?
+Did the meeting start already?
+What's the wifi password for the conference room?
+Is the agenda set for the board meeting?
+Can you share the meeting minutes from last time?
+What time is the parent-teacher conference?
+Is the appointment confirmed for Monday?
+What's the address for the off-site meeting?
+Are we having a call tonight?
+Who called the meeting?
+What's the subject line of the meeting invite?
+Is the meeting still happening if John is sick?
+What's the backup plan if the projector fails?
+How is the meeting agenda structured?
+Who is responsible for sending the recap?
+What time did you say the meeting was again?
+Is the meeting still at the office or online?
+Who all is coming to the meeting tomorrow?
+Sorry, what's the agenda for today's call?
+Did the boss confirm the meeting time yet?
+Where exactly is the meeting room located?
+Is the meeting about the new project or the budget review?
+How long is the all-hands meeting supposed to be?
+Will there be a video link for the remote attendees?
+I totally forgot—is the meeting at 2 or 3?
+Did they send out the meeting invite yet?
+What's the topic for the department meeting next week?
+Should I bring my laptop to the client meeting?
+Are we meeting in the conference room or the lobby?
+Has the meeting been moved to a different day?
+Do you know if Sarah will be at the strategy meeting?
+How many people are expected for the kickoff call?
+Is the meeting going to be recorded?
+What's the dress code for the interview meeting?
+I heard the meeting might be cancelled—any updates?
+Do we need to prepare slides for the team meeting?
+Can you confirm the meeting link works?
+Is the meeting still on for Friday morning?
+Who is leading the meeting tomorrow?
+Will there be a Q&A session at the end of the meeting?
+What time does the parent-teacher meeting start?
+Is the meeting room booked for the hour?
+Did everyone get the meeting agenda last night?
+I'm confused—is the meeting at headquarters or the annex?
+What's the expected duration of the sales meeting?
+Are we discussing the budget in the finance meeting?
+Did the client reschedule the meeting or just move it?
+What's the parking situation for the off-site meeting?
+Is there a dial-in number for the conference call?
+Will the CEO be attending the quarterly meeting?
+Can you check if the meeting has been postponed?
+What floor is the meeting room on?
+Should we bring printed copies of the report to the meeting?
+How many attendees are confirmed for the workshop?
+Is the meeting on Zoom or Teams?
+Do we have a backup plan if the meeting room is unavailable?
+Who is presenting the update in the Monday meeting?
+Is the agenda still the same or has it changed?
+What time does the webinar meeting actually start?
+Are we meeting at the coffee shop or the library?
+Has the meeting invite been updated with the new time?
+Did anyone book the conference room for the strategy meeting?
+Is the meeting meant to be in-person or hybrid?
+What's the maximum number of participants for the call?
+Who's all attending the team meeting on Friday?
+Did we decide on a location for the meeting?
+What's the agenda for the project meeting?
+How long do you think the meeting will last?
+Are we meeting in the usual conference room?
+Do you know if the meeting is virtual or in person?
+Who is leading the discussion in the next meeting?
+Is there a meeting scheduled for this afternoon?
+What are we supposed to prepare for the meeting?
+Did you get the meeting invite for Wednesday?
+Can you share the meeting link with me?
+Is the meeting time still the same after the holiday?
+Who from the marketing team is joining the meeting?
+What's the main goal of the upcoming meeting?
+Did anyone bring up the budget in yesterday's meeting?
+Are there any pre-meeting materials we need to read?
+I heard the meeting got moved to a different time.
+Can we confirm the meeting date for next week?
+How many people are expected at the meeting?
+Is there an agenda for the stakeholder meeting?
+What time does the meeting end?
+Will the CEO be at the meeting?
+Do we have a meeting with the client this week?
+Is the meeting location the same as last time?
+What's the meeting code for the Zoom call?
+Who is presenting at the quarterly meeting?
+Can someone summarize the key points from the meeting?
+Did the meeting cover the new policy changes?
+Is the meeting scheduled to discuss the budget?
+What time did the meeting start today?
+Are we having a meeting to talk about the project timeline?
+Who is responsible for taking notes in the meeting?
+Is the meeting still on for 2 PM?
+What day is the next team meeting?
+Did the meeting get canceled or postponed?
+Are there any action items from last meeting?
+Who are the attendees for the board meeting?
+Is the meeting about the new software rollout?
+What's the duration of the client meeting?
+Do we have a meeting scheduled for tomorrow morning?
+Can someone share the meeting minutes from last week?
+Is the meeting topic still the same as discussed earlier?
+Are we meeting in person or via Zoom?
+Who from HR will be at the meeting?
+Hey, what time is the team meeting tomorrow?
+Do you know if the client call is still on for Friday?
+Who's presenting at the quarterly review next week?
+I forgot—what's the topic of today's stand-up?
+Is the board meeting in room 3 or conference A?
+What did they discuss in the last staff meeting?
+Did you get the agenda for the afternoon sync?
+How long is the training session supposed to last?
+Are we all joining the Zoom link or is it in-person?
+Do you know who else is attending the stakeholder meeting?
+Is the meeting at 2 PM or 3 PM local time?
+I heard the lunch meeting got moved—do you know the new time?
+Was the agenda updated after the last email?
+Are we expected to prepare slides for the weekly catch-up?
+What's the conference room number for the interview?
+Did they confirm the time for the one-on-one with the manager?
+Who's leading the brainstorming session tomorrow?
+Is the all-hands meeting mandatory or optional?
+What was the main takeaway from the morning huddle?
+Do you have the link for the webinar this afternoon?
+Are we meeting at the office or remotely next Monday?
+How many people are expected at the department meeting?
+What time does the 3 PM call start—I might be late.
+Is the budget meeting still at 10 AM?
+Did they change the topic for the strategy session?
+Who's responsible for taking minutes in today's meeting?
+Should I bring my laptop for the workshop?
+Is there a parking situation near the venue for the summit?
+What's the password for the private meeting room?
+Will the CEO be joining the town hall later?
+Did they send out the agenda for the weekly sync yet?
+How long is the break between the two sessions?
+Is the meeting time confirmed or still tentative?
+What exact location is the offsite planning day at?
+Are there any pre-reading materials for the quarterly review?
+Who's the moderator for the panel discussion?
+Is the call going to be recorded?
+Did we decide on a backup date for the rescheduled meeting?
+What's the purpose of the afternoon catch-up?
+Do you know if the meeting is canceled or postponed?
+How many people are dialing in from overseas?
+What's the Wi-Fi code at the conference center?
+Is the buyer presentation at 2 PM or 4 PM?
+Did they mention any special guests for the team meeting?
+Should I print any handouts for the workshop?
+What's the Zoom webinar ID for the training?
+Who do I contact if I have trouble joining the meeting?
+Is the agenda still the same as the draft you shared last week?
+What time does the team meeting start?
+Do you know where the meeting is tomorrow?
+What's the agenda for the afternoon call?
+Who is attending the project sync?
+Is the meeting still at 2 PM?
+How long is the planning session supposed to last?
+Do we have a link for the video call?
+What topics are we covering in the weekly review?
+Has the meeting time changed?
+Will the client be on the call?
+Did you get the meeting invite?
+What's the purpose of this meeting?
+Are we discussing the budget in the next meeting?
+Is there a meeting scheduled for Friday?
+Who is leading the discussion?
+Do you know if the meeting is confirmed?
+What time does the board meeting begin?
+Is the agenda out yet for the staff meeting?
+Are we having a quick sync or a long session?
+Will the CEO be present at the meeting?
+How many people are expected at the call?
+Do we need to prepare slides for the meeting?
+What is the meeting about again?
+Is the meeting still on for today?
+Where exactly is the meeting being held?
+Are we meeting in the main office or a different room?
+What time should I dial in?
+Is the meeting this afternoon or evening?
+Who from marketing is joining the meeting?
+Do we have a guest speaker for the meeting?
+What's the expected duration of the training session?
+Is there a pre‑meeting agenda document?
+Are we covering the Q3 report in the next call?
+Has the meeting been postponed to next week?
+Will there be any breakout sessions?
+Is the meeting location accessible for remote participants?
+Are we having a stand‑up meeting today?
+Do you know if the meeting will be recorded?
+What is the specific topic of this meeting?
+Are we meeting before or after lunch?
+Is there a dress code for the client meeting?
+How many agenda items do we have?
+Will the meeting include a demo?
+What time does the interview start tomorrow?
+Is the meeting in Building A or B?
+Who is attending the call?
+Do you know the agenda for the afternoon session?
+Is the meeting still at the usual conference room?
+Will there be a presentation at the team sync?
+Are we meeting in person or online this week?
+What's the topic for the project kickoff?
+Did you see the updated meeting invite?
+How long is the standup going to take?
+Is the client joining the call today?
+Do we need to prepare anything for the review?
+Who's presenting the quarterly update?
+Will the meeting be recorded?
+Is there a parking spot near the venue?
+What's the Zoom link for the interview?
+Did they change the time for the appointment?
+Are all team members joining the session?
+What's the dress code for the board meeting?
+Does the meeting have a set agenda yet?
+Is the doctor's appointment still at 11?
+Who is moderating the Q&A?
+Will the slides be shared before the meeting?
+Is the training session mandatory?
+What room number is the interview in?
+Did you confirm the meeting location with the team?
+How many people are expected for the workshop?
+Is there a deadline for the meeting agenda?
+Who is the guest speaker for the event?
+Will the meeting be rescheduled if it rains?
+Are we having a quick standup after lunch?
+What's the main talking point for the sync?
+Is the conference call still active?
+Do you know the password for the meeting room?
+Will the proposal be reviewed in the meeting?
+Are the attendees confirmed for the webinar?
+Is there a breakout session after the keynote?
+What time does the school meeting start?
+Will the partners be present at the review?
+Is the agenda available in the shared folder?
+Do we need to bring printed materials?
+Is the meeting still on for next Monday?
+What's the format of the all-hands call?
+Are we discussing the new policy in the session?
+Will there be a demo during the appointment?
+Is the meeting room equipped with a projector?
+Who is coordinating the logistics for the conference?
+What's the estimated duration of the call?
+What time does the meeting start?
+Is the meeting still on for Friday?
+Who is going to be at the client call later?
+Do you know the password for the Zoom link?
+What room is the all‑hands in again?
+What's the topic of the quarterly review?
+Is lunch provided during the staff meeting?
+Will Sarah be joining the conference call too?
+What time did the meeting get moved to?
+Do we need to prepare anything for the board meeting?
+Who is presenting at the afternoon session?
+What's the address for the off‑site location?
+Did anyone share the meeting notes from yesterday?
+Is the client call still at 2 pm?
+What's the agenda for the project kick‑off?
+Will there be a breakout session after the main talk?
+What's the dress code for the annual meeting?
+Are we expected to bring our own laptops to the workshop?
+Who is the chairperson for the next committee meeting?
+Is the meeting room already booked for the whole day?
+What time does the webinar actually begin?
+Can you share the calendar invite link one more time?
+Is the meeting focusing on budget or strategy?
+Do you know what time the team meeting starts tomorrow?
+Is the client call still at 3 PM or did they change it?
+Who all is attending the project review on Friday?
+Do you know what time the project update meeting starts on Thursday?
