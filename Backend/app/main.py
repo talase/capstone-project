@@ -4,15 +4,17 @@ import logging
 import os
 
 import requests
-from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 
+from app.buffer import choose_style_mode
+from app.config import load_env_file
+from app.profile_store import load_profile
 from app.style_engine import generate_styled_reply
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-load_dotenv()
+load_env_file()
 
 app = FastAPI()
 
@@ -59,27 +61,33 @@ async def webhook(request: Request) -> dict[str, str]:
         phone = value["messages"][0]["from"]
         logger.info("User message: %s", message)
 
+        contact_name = "friend"
+        global_profile = load_profile("global")
+        contact_profile = load_profile(contact_name)
+        mode = choose_style_mode(global_profile, contact_profile)
         reply = generate_styled_reply(
             incoming_message=message,
-            contact_name="friend",
-            mode="neutral",
-            global_profile={},
-            contact_profile={},
+            contact_name=contact_name,
+            mode=mode,
+            global_profile=global_profile,
+            contact_profile=contact_profile,
         )
 
-                # Send message to n8n
-        requests.post(
+        # Send message to n8n.
+        n8n_response = requests.post(
             "http://localhost:5678/webhook-test/whatsapp",
             json={
                 "message": message,
                 "phone": phone,
+                "reply": reply,
+                "style_mode": mode,
             },
             timeout=10,
         )
+        n8n_response.raise_for_status()
 
         if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_NUMBER_ID:
-            logger.error("WhatsApp credentials are not configured")
-            return {"status": "missing_credentials"}
+            raise RuntimeError("WhatsApp credentials are not configured")
 
         url = (
             "https://graph.facebook.com/v25.0/"
@@ -99,9 +107,11 @@ async def webhook(request: Request) -> dict[str, str]:
         }
 
         response = requests.post(url, headers=headers, json=payload, timeout=30)
+        response.raise_for_status()
         logger.info("Reply sent: %s", response.text)
 
-    except Exception as exc:
-        logger.error("Error: %s", exc)
+    except Exception as e:
+        print("FULL ERROR:", repr(e))
+        raise
 
     return {"status": "received"}
