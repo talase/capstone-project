@@ -53,12 +53,41 @@ async def webhook(request: Request) -> dict[str, str]:
     try:
         value = data["entry"][0]["changes"][0]["value"]
 
-        if "messages" not in value:
+        if value.get("statuses"):
+            logger.info("Ignoring status update")
+            return {"status": "ignored"}
+
+        messages = value.get("messages")
+        if not messages:
             logger.info("Non-message event received")
             return {"status": "received"}
 
-        message = value["messages"][0]["text"]["body"]
-        phone = value["messages"][0]["from"]
+        incoming = messages[0]
+        message_type = incoming.get("type")
+        if message_type != "text":
+            logger.info("Ignoring non-text message type: %s", message_type)
+            return {"status": "ignored"}
+
+        phone = incoming.get("from")
+        metadata = value.get("metadata", {})
+        bot_identifiers = {
+            identifier
+            for identifier in (
+                WHATSAPP_PHONE_NUMBER_ID,
+                metadata.get("phone_number_id"),
+                metadata.get("display_phone_number"),
+            )
+            if identifier
+        }
+        if phone and phone in bot_identifiers:
+            logger.info("Ignoring message from bot identity: %s", phone)
+            return {"status": "ignored"}
+
+        message = incoming.get("text", {}).get("body")
+        if not message:
+            logger.info("Ignoring text message without body")
+            return {"status": "ignored"}
+
         logger.info("User message: %s", message)
 
         contact_name = "friend"
@@ -75,7 +104,7 @@ async def webhook(request: Request) -> dict[str, str]:
 
         # Send message to n8n.
         n8n_response = requests.post(
-            "http://localhost:5678/webhook-test/whatsapp",
+            "http://localhost:5678/webhook/whatsapp",
             json={
                 "message": message,
                 "phone": phone,
@@ -84,31 +113,7 @@ async def webhook(request: Request) -> dict[str, str]:
             },
             timeout=10,
         )
-        n8n_response.raise_for_status()
-
-        if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_NUMBER_ID:
-            raise RuntimeError("WhatsApp credentials are not configured")
-
-        url = (
-            "https://graph.facebook.com/v25.0/"
-            f"{WHATSAPP_PHONE_NUMBER_ID}/messages"
-        )
-        headers = {
-            "Authorization": f"Bearer {WHATSAPP_TOKEN}",
-            "Content-Type": "application/json",
-        }
-        payload = {
-            "messaging_product": "whatsapp",
-            "to": phone,
-            "type": "text",
-            "text": {
-                "body": reply,
-            },
-        }
-
-        response = requests.post(url, headers=headers, json=payload, timeout=30)
-        response.raise_for_status()
-        logger.info("Reply sent: %s", response.text)
+        print(n8n_response.text)
 
     except Exception as e:
         print("FULL ERROR:", repr(e))

@@ -1,0 +1,78 @@
+{
+  "name": "Capstone project",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a2ceb956-dcd1-4c40-bc07-2483b4cc681e",
+      "name": "Webhook",
+      "webhookId": "19f3b36f-205f-4169-b1eb-9044f9727c0b"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5001",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAANlNNTUN00BReBkNCFJE3NNAPz95oOQnarkaiSp9ZBGkm11MpMtJVV2mwjbIrUPkjlP5f1tsj3InwgknPR5M7t4Nazmm7ZCTBzNZCH487VJMH33kyzbjZCwThBsKaX2h3ZAxxcBIZBUsNccZBzWP7kxG39I3pM9QlWVXWTeE8xZCSosmP0GZABJibfhlu10HJT89uRqxanVXIrS0VCVv7TU8BCzJ4HwZCJTkdbXWellRcENnxu2tYEwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"message\": \"={{$json.message}}\",\n  \"contact\": \"={{$json.contact}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5dd025f2-a258-4de5-afce-456a2e1822ac",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "82306667-2085-47e9-a795-980787c48d01",
+  "meta": {
+    "instanceId": "6065b2705d103b3f1a8e24b583671c2360afa7c3233874e01b03230cd056f9a4"
+  },
+  "id": "a4oKlg_yeWEeyThZrqyYU",
+  "tags": []
+}
