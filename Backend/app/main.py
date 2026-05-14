@@ -7,6 +7,7 @@ import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 
+from app.style_engine import generate_styled_reply
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,6 +59,14 @@ async def webhook(request: Request) -> dict[str, str]:
         phone = value["messages"][0]["from"]
         logger.info("User message: %s", message)
 
+        reply = generate_styled_reply(
+            incoming_message=message,
+            contact_name="friend",
+            mode="neutral",
+            global_profile={},
+            contact_profile={},
+        )
+
                 # Send message to n8n
         requests.post(
             "http://localhost:5678/webhook-test/whatsapp",
@@ -85,7 +94,7 @@ async def webhook(request: Request) -> dict[str, str]:
             "to": phone,
             "type": "text",
             "text": {
-                "body": "Hello, I got your message!",
+                "body": reply,
             },
         }
 
