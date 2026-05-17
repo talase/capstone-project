@@ -1,4 +1,8 @@
 .env
+contact_map.json
 __pycache__/
 *.pyc
 .venv/
+.DS_Store
+profiles/
+results/

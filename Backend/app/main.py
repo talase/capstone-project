@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import logging
 import os
+from typing import Any
 
 import requests
 from fastapi import FastAPI, Request
 
-from app.buffer import choose_style_mode
 from app.config import load_env_file
-from app.profile_store import load_profile
-from app.style_engine import generate_styled_reply
+from app.style_engine import generate_style_adapted_response
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -46,7 +45,7 @@ async def verify_webhook(request: Request):
 
 
 @app.post("/webhook")
-async def webhook(request: Request) -> dict[str, str]:
+async def webhook(request: Request) -> dict[str, Any]:
     data = await request.json()
     logger.info("Full webhook data: %s", data)
 
@@ -90,17 +89,11 @@ async def webhook(request: Request) -> dict[str, str]:
 
         logger.info("User message: %s", message)
 
-        contact_name = "friend"
-        global_profile = load_profile("global")
-        contact_profile = load_profile(contact_name)
-        mode = choose_style_mode(global_profile, contact_profile)
-        reply = generate_styled_reply(
+        result = generate_style_adapted_response(
             incoming_message=message,
-            contact_name=contact_name,
-            mode=mode,
-            global_profile=global_profile,
-            contact_profile=contact_profile,
+            contact_id=phone or "",
         )
+        reply = result["reply"]
 
         # Send message to n8n.
         n8n_response = requests.post(
@@ -109,14 +102,20 @@ async def webhook(request: Request) -> dict[str, str]:
                 "message": message,
                 "phone": phone,
                 "reply": reply,
-                "style_mode": mode,
+                "style_mode": result["style_mode"],
+                "profile_contact": result["profile_contact"],
+                "global_confidence": result["global_confidence"],
+                "contact_confidence": result["contact_confidence"],
+                "generation_status": result["generation_status"],
+                "llm_error": result["llm_error"],
             },
             timeout=10,
         )
         print(n8n_response.text)
 
-    except Exception as e:
-        print("FULL ERROR:", repr(e))
-        raise
+        return {"status": "received", **result}
+
+    except Exception as exc:
+        logger.error("Error: %s", exc)
 
     return {"status": "received"}

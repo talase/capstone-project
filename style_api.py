@@ -4,11 +4,12 @@ from pathlib import Path
 from flask import Flask, request, jsonify
 
 SRC_DIR = Path(__file__).resolve().parent / "src"
+BACKEND_DIR = Path(__file__).resolve().parent / "Backend"
 sys.path.insert(0, str(SRC_DIR))
+sys.path.insert(0, str(BACKEND_DIR))
 
-from buffer import StyleBuffer, choose_style_mode
-from main import generate_styled_reply
-from profile_store import load_profile
+from app.buffer import StyleBuffer
+from app.style_engine import generate_style_adapted_response
 
 app = Flask(__name__)
 
@@ -35,7 +36,7 @@ def observe():
     data = request.get_json(silent=True) or {}
 
     message = data.get("message")
-    contact = data.get("contact")
+    contact = data.get("contact") or data.get("contact_id")
 
     if not message or not contact:
         return jsonify({"error": "message/contact missing"}), 400
@@ -57,27 +58,21 @@ def reply():
     data = request.get_json(silent=True) or {}
 
     incoming_message = data.get("message")
-    contact = data.get("contact")
+    contact = data.get("contact") or data.get("contact_id")
+    risk_level = data.get("risk_level")
+    action_type = data.get("action_type")
 
     if not incoming_message or not contact:
         return jsonify({"error": "message/contact missing"}), 400
 
-    global_profile = load_profile("global")
-    contact_profile = load_profile(contact)
-    mode = choose_style_mode(global_profile, contact_profile)
-
-    generated_reply = generate_styled_reply(
-        incoming_message,
-        contact,
-        mode,
-        global_profile,
-        contact_profile,
+    result = generate_style_adapted_response(
+        incoming_message=incoming_message,
+        contact_id=contact,
+        risk_level=risk_level,
+        action_type=action_type,
     )
 
-    return jsonify({
-        "mode": mode,
-        "reply": generated_reply
-    })
+    return jsonify(result)
 
 
 if __name__ == "__main__":

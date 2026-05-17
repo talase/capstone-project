@@ -10,6 +10,7 @@ from app.style_extractor import BATCH_SIZE, extract_style_profile
 
 
 Extractor = Callable[[list[str], str | None], dict[str, Any]]
+CONFIDENCE_GATE = 70
 
 
 class StyleBuffer:
@@ -67,11 +68,22 @@ class StyleBuffer:
 def choose_style_mode(global_profile: dict[str, Any], contact_profile: dict[str, Any]) -> str:
     """Confidence gate for response generation."""
 
-    global_confidence = global_profile.get("overall_confidence", 0)
-    contact_confidence = contact_profile.get("overall_confidence", 0)
+    global_confidence = _profile_confidence(global_profile)
+    contact_confidence = _profile_confidence(contact_profile)
 
-    if global_confidence > 70 and contact_confidence > 70:
-        return "global+contact"
-    if global_confidence > 70:
+    if global_confidence >= CONFIDENCE_GATE and contact_confidence >= CONFIDENCE_GATE:
+        return "global_contact"
+    if contact_confidence >= CONFIDENCE_GATE:
+        return "contact"
+    if global_confidence >= CONFIDENCE_GATE:
         return "global"
     return "neutral"
+
+
+def _profile_confidence(profile: dict[str, Any] | None) -> int:
+    if not isinstance(profile, dict):
+        return 0
+    try:
+        return int(round(float(profile.get("overall_confidence", 0))))
+    except (TypeError, ValueError):
+        return 0

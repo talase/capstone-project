@@ -10,14 +10,17 @@ from app.buffer import StyleBuffer, choose_style_mode
 from app.config import MODEL, get_client, load_env_file
 from app.evaluator import evaluate_profiles
 from app.generate_data import generate_messages_per_contact
-from app.profile_store import load_profile
+from app.profile_store import load_global_profile, load_profile, resolve_profile_contact
+from app.prompt_templates import build_prompt
 from app.style_extractor import load_messages
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 RESULTS_DIR = PROJECT_ROOT / "results"
 PROFILES_DIR = PROJECT_ROOT / "profiles"
 CONTACTS_TO_DEMO = ("boss", "friend", "mom")
+FALLBACK_REPLY = "Sure, I will send it today."
 
 
 def ensure_data_exists() -> None:
@@ -48,53 +51,50 @@ def reset_profiles() -> None:
         profile_file.unlink()
 
 
-def profile_summary(profile: dict[str, Any]) -> str:
-    traits = profile.get("traits", {})
-    parts = []
-    for trait_name, trait_data in traits.items():
-        parts.append(
-            f"{trait_name}: score={trait_data.get('score', 0.5)}, "
-            f"confidence={trait_data.get('confidence', 0)}"
-        )
-    patterns = "; ".join(profile.get("patterns", []))
-    return "\n".join(parts + [f"patterns: {patterns}"])
-
-
 def generate_styled_reply(
     incoming_message: str,
     contact_name: str,
     mode: str,
     global_profile: dict[str, Any],
     contact_profile: dict[str, Any],
+    risk_level: str | None = None,
+    action_type: str | None = None,
 ) -> str:
     """Generate one reply using the selected style mode via OpenRouter."""
 
-    if mode == "global+contact":
-        profile_text = (
-            "Use global tendencies as a base and contact tendencies as the stronger signal.\n"
-            f"Global profile:\n{profile_summary(global_profile)}\n\n"
-            f"Contact profile:\n{profile_summary(contact_profile)}"
-        )
-    elif mode == "global":
-        profile_text = f"Use only this global style profile:\n{profile_summary(global_profile)}"
-    else:
-        profile_text = "Use a neutral, polite, concise messaging style."
+    result = generate_styled_reply_result(
+        incoming_message=incoming_message,
+        contact_name=contact_name,
+        mode=mode,
+        global_profile=global_profile,
+        contact_profile=contact_profile,
+        risk_level=risk_level,
+        action_type=action_type,
+    )
+    return result["reply"]
 
-    prompt = f"""
-You write a single safe WhatsApp-style reply.
 
-Rules:
-- Do not copy or imitate any original training messages.
-- Use only high-level style traits.
-- Keep the reply natural and brief.
-- Return only the reply text, no labels or markdown.
+def generate_styled_reply_result(
+    incoming_message: str,
+    contact_name: str,
+    mode: str,
+    global_profile: dict[str, Any],
+    contact_profile: dict[str, Any],
+    risk_level: str | None = None,
+    action_type: str | None = None,
+) -> dict[str, Any]:
+    """Generate one reply and include whether the LLM or fallback produced it."""
 
-Contact: {contact_name}
-Incoming message: {incoming_message}
-Selected style mode: {mode}
-
-{profile_text}
-""".strip()
+    # The prompt builder centralizes all mode-specific style instructions.
+    prompt = build_prompt(
+        message=incoming_message,
+        contact_name=contact_name,
+        style_mode=mode,
+        global_profile=global_profile,
+        contact_profile=contact_profile,
+        risk_level=risk_level,
+        action_type=action_type,
+    )
 
     try:
         client = get_client()
@@ -103,15 +103,67 @@ Selected style mode: {mode}
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
         )
-        return (response.choices[0].message.content or "").strip()
-    except Exception as e:
-        print("FULL ERROR:", repr(e))
-        raise
+        reply = (response.choices[0].message.content or "").strip()
+        return {
+            "reply": reply or FALLBACK_REPLY,
+            "generation_status": "generated" if reply else "fallback",
+            "llm_error": not bool(reply),
+        }
+    except Exception as exc:
+        print(f"Reply generation failed for {contact_name}: {exc}")
+        return {
+            "reply": FALLBACK_REPLY,
+            "generation_status": "fallback",
+            "llm_error": True,
+        }
+
+
+def generate_style_adapted_response(
+    incoming_message: str,
+    contact_id: str,
+    risk_level: str | None = None,
+    action_type: str | None = None,
+) -> dict[str, Any]:
+    """Run the final style-aware response generation pipeline."""
+
+    clean_message = (incoming_message or "").strip()
+    clean_contact = (contact_id or "").strip()
+    profile_contact = resolve_profile_contact(clean_contact)
+
+    # Missing or malformed profile JSON falls back to neutral profiles.
+    global_profile = load_global_profile()
+    contact_profile = load_profile(clean_contact)
+
+    # Confidence gating chooses which style signal is reliable enough to use.
+    mode = choose_style_mode(global_profile, contact_profile)
+    global_confidence = int(global_profile.get("overall_confidence", 0) or 0)
+    contact_confidence = int(contact_profile.get("overall_confidence", 0) or 0)
+
+    generation = generate_styled_reply_result(
+        incoming_message=clean_message,
+        contact_name=profile_contact,
+        mode=mode,
+        global_profile=global_profile,
+        contact_profile=contact_profile,
+        risk_level=risk_level,
+        action_type=action_type,
+    )
+
+    return {
+        "reply": generation["reply"],
+        "style_mode": mode,
+        "contact_id": clean_contact,
+        "profile_contact": profile_contact,
+        "global_confidence": global_confidence,
+        "contact_confidence": contact_confidence,
+        "generation_status": generation["generation_status"],
+        "llm_error": generation["llm_error"],
+    }
 
 
 def run_gating_and_demo() -> dict[str, Any]:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    global_profile = load_profile("global")
+    global_profile = load_global_profile()
     outputs: dict[str, Any] = {}
     incoming = "Can you send me the file today?"
 
@@ -165,5 +217,5 @@ def main() -> None:
     print("\nDone. Results saved in results/.")
 
 
-#if __name__ == "__main__":
- #   main()
+if __name__ == "__main__":
+    main()

@@ -9,6 +9,7 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROFILES_DIR = PROJECT_ROOT / "profiles"
+CONTACT_MAP_PATH = PROJECT_ROOT / "contact_map.json"
 
 TRAITS = ("formality", "politeness", "verbosity", "optimism")
 
@@ -110,16 +111,73 @@ def sanitize_profile(raw: Any, message_count: int | None = None) -> dict[str, An
     return profile
 
 
+def sanitize_contact_id(contact: str | None = None) -> str:
+    """Return the filesystem-safe profile id used in profile filenames."""
+
+    if contact is None or contact == "global":
+        return "global"
+    return "".join(ch for ch in str(contact).lower() if ch.isalnum() or ch in ("_", "-"))
+
+
 def profile_path(contact: str | None = None) -> Path:
     PROFILES_DIR.mkdir(parents=True, exist_ok=True)
-    if contact is None or contact == "global":
+    safe_contact = sanitize_contact_id(contact)
+    if safe_contact == "global":
         return PROFILES_DIR / "profile_global.json"
-    safe_contact = "".join(ch for ch in contact.lower() if ch.isalnum() or ch in ("_", "-"))
     return PROFILES_DIR / f"profile_{safe_contact}.json"
 
 
+def load_contact_map() -> dict[str, str]:
+    """Load optional external contact ids mapped to saved profile names.
+
+    Example contact_map.json:
+    {
+      "+15551234567": "friend",
+      "905551112233": "mom"
+    }
+    """
+
+    if not CONTACT_MAP_PATH.exists():
+        return {}
+    try:
+        raw_map = json.loads(CONTACT_MAP_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(raw_map, dict):
+        return {}
+
+    clean_map: dict[str, str] = {}
+    for raw_contact, profile_contact in raw_map.items():
+        if not isinstance(raw_contact, str) or not isinstance(profile_contact, str):
+            continue
+        keys = _contact_lookup_keys(raw_contact)
+        safe_profile = sanitize_contact_id(profile_contact)
+        if safe_profile:
+            for key in keys:
+                clean_map[key] = safe_profile
+    return clean_map
+
+
+def resolve_profile_contact(contact: str | None = None) -> str:
+    """Resolve a backend contact id, such as a phone number, to a profile id."""
+
+    if contact is None or contact == "global":
+        return "global"
+
+    safe_contact = sanitize_contact_id(contact)
+    contact_map = load_contact_map()
+    for key in _contact_lookup_keys(contact):
+        mapped_contact = contact_map.get(key)
+        if mapped_contact:
+            return mapped_contact
+
+    if profile_path(safe_contact).exists():
+        return safe_contact
+    return safe_contact
+
+
 def load_profile(contact: str | None = None) -> dict[str, Any]:
-    path = profile_path(contact)
+    path = profile_path(resolve_profile_contact(contact))
     if not path.exists():
         return neutral_profile()
     try:
@@ -128,8 +186,14 @@ def load_profile(contact: str | None = None) -> dict[str, Any]:
         return neutral_profile()
 
 
+def load_global_profile() -> dict[str, Any]:
+    """Load profiles/profile_global.json, falling back to a neutral profile."""
+
+    return load_profile("global")
+
+
 def save_profile(profile: dict[str, Any], contact: str | None = None) -> Path:
-    path = profile_path(contact)
+    path = profile_path(resolve_profile_contact(contact))
     clean_profile = sanitize_profile(profile)
     path.write_text(json.dumps(clean_profile, indent=2), encoding="utf-8")
     return path
@@ -190,3 +254,23 @@ def update_profile(new_profile: dict[str, Any], contact: str | None = None) -> d
     merged = merge_profiles(existing, new_profile)
     save_profile(merged, contact)
     return merged
+
+
+def _contact_lookup_keys(contact: str | None) -> list[str]:
+    if contact is None:
+        return []
+
+    raw = str(contact).strip()
+    if not raw:
+        return []
+
+    digits = "".join(ch for ch in raw if ch.isdigit())
+    keys = [raw, raw.lower(), sanitize_contact_id(raw)]
+    if digits:
+        keys.append(digits)
+
+    unique_keys: list[str] = []
+    for key in keys:
+        if key and key not in unique_keys:
+            unique_keys.append(key)
+    return unique_keys
