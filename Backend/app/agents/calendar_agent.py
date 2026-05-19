@@ -1,5 +1,7 @@
 import json
 
+from datetime import datetime
+
 from openai import OpenAI
 
 from app.services.calendar_service import (
@@ -14,6 +16,8 @@ client = OpenAI(
 
 
 def process_calendar_request(user_message: str):
+
+    today = datetime.now().strftime("%Y-%m-%d")
 
     prompt = f"""
 You are a calendar scheduling assistant.
@@ -42,7 +46,7 @@ JSON format:
   "time": ""
 }}
 
-Today is 2026-05-18.
+Today is {today}.
 
 User request:
 {user_message}
@@ -61,7 +65,13 @@ User request:
 
     content = response.choices[0].message.content
 
+    print("RAW MODEL OUTPUT:")
+    print(content)
+
     parsed = json.loads(content)
+
+    print("\nPARSED JSON:")
+    print(parsed)
 
     if parsed["action"] == "create_event":
 
