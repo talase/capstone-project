@@ -3,3 +3,7 @@ python-dotenv>=1.0.0
 fastapi
 requests
 uvicorn
+transformers
+peft
+torch
+accelerate

@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request
 
 from app.buffer import choose_style_mode
 from app.config import load_env_file
+from app.model_pred.model import router as model_pred_router
 from app.profile_store import load_profile
 from app.style_engine import generate_styled_reply
 
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 load_env_file()
 
 app = FastAPI()
+app.include_router(model_pred_router)
 
 WHATSAPP_TOKEN = os.getenv("WHATSAPP_TOKEN")
 WHATSAPP_PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_NUMBER_ID")

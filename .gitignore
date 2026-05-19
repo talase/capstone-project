@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 .venv/
+Backend\app\model_pred\model_weights
