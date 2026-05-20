@@ -1,12 +1,15 @@
 import json
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from openai import OpenAI
 
 from app.services.calendar_service import (
     check_availability,
     create_event,
+    delete_event,
+    find_event_by_title,
+    update_event,
 )
 
 client = OpenAI(
@@ -73,6 +76,10 @@ User request:
     print("\nPARSED JSON:")
     print(parsed)
 
+    # -----------------------------
+    # CREATE EVENT
+    # -----------------------------
+
     if parsed["action"] == "create_event":
 
         title = parsed["title"]
@@ -81,10 +88,11 @@ User request:
 
         start_datetime = f"{date}T{time}:00"
 
-        hour = int(time.split(":")[0]) + 1
-        end_time = f"{hour:02d}:00"
+        start_dt = datetime.fromisoformat(start_datetime)
 
-        end_datetime = f"{date}T{end_time}:00"
+        end_dt = start_dt + timedelta(hours=1)
+
+        end_datetime = end_dt.isoformat()
 
         existing_events = check_availability(
             start_datetime,
@@ -141,15 +149,121 @@ Generate a short, natural WhatsApp-style reply.
             end_datetime
         )
 
-        success_reply = f"""
+        success_reply = f'''
 Your meeting "{title}" has been scheduled successfully.
-"""
+'''
 
         return {
             "status": "success",
             "reply": success_reply,
             "event_link": created_event.get("htmlLink")
         }
+
+    # -----------------------------
+    # DELETE EVENT
+    # -----------------------------
+
+    if parsed["action"] == "delete_event":
+
+        title = parsed["title"]
+
+        existing_event = find_event_by_title(title)
+
+        if not existing_event:
+
+            return {
+                "status": "not_found",
+                "reply": f'I could not find an event called "{title}".'
+            }
+
+        event_id = existing_event["id"]
+
+        delete_event(event_id)
+
+        return {
+            "status": "success",
+            "reply": f'The event "{title}" was deleted successfully.'
+        }
+    # -----------------------------
+    # UPDATE EVENT
+    # -----------------------------
+
+    if parsed["action"] == "update_event":
+
+        title = parsed["title"]
+        date = parsed["date"]
+        time = parsed["time"]
+
+        existing_event = find_event_by_title(title)
+
+        if not existing_event:
+
+            return {
+                "status": "not_found",
+                "reply": f'I could not find an event called "{title}".'
+            }
+
+        start_datetime = f"{date}T{time}:00"
+
+        start_dt = datetime.fromisoformat(start_datetime)
+
+        end_dt = start_dt + timedelta(hours=1)
+
+        end_datetime = end_dt.isoformat()
+
+        updated_event = update_event(
+            existing_event["id"],
+            start_datetime,
+            end_datetime
+        )
+
+        return {
+            "status": "success",
+            "reply": f'The event "{title}" was updated successfully.',
+            "event_link": updated_event.get("htmlLink")
+        }
+    # -----------------------------
+    # CHECK AVAILABILITY
+    # -----------------------------
+
+    if parsed["action"] == "check_availability":
+
+        date = parsed["date"]
+        time = parsed["time"]
+
+        start_datetime = f"{date}T{time}:00"
+
+        start_dt = datetime.fromisoformat(start_datetime)
+
+        end_dt = start_dt + timedelta(hours=1)
+
+        end_datetime = end_dt.isoformat()
+
+        existing_events = check_availability(
+            start_datetime,
+            end_datetime
+        )
+
+        if existing_events:
+
+            existing_titles = [
+                existing.get("summary")
+                for existing in existing_events
+            ]
+
+            return {
+                "status": "busy",
+                "reply": f"You already have events during that time: {existing_titles}"
+            }
+
+        return {
+            "status": "free",
+            "reply": "You are free during that time."
+        }
+
+    # -----------------------------
+    # UNKNOWN ACTION
+    # -----------------------------
 
     return {
         "status": "unknown",
