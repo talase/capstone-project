@@ -4,3 +4,7 @@ fastapi
 flask
 requests
 uvicorn
+transformers
+peft
+torch
+accelerate
