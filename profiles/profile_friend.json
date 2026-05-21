@@ -1,30 +1,30 @@
 {
   "traits": {
     "formality": {
-      "score": 0.075,
-      "confidence": 94
+      "score": 0.151,
+      "confidence": 68
     },
     "politeness": {
-      "score": 0.378,
-      "confidence": 82
+      "score": 0.363,
+      "confidence": 64
     },
     "verbosity": {
-      "score": 0.273,
-      "confidence": 88
+      "score": 0.267,
+      "confidence": 66
     },
     "optimism": {
-      "score": 0.768,
-      "confidence": 91
+      "score": 0.615,
+      "confidence": 68
     }
   },
   "patterns": [
-    "Frequent use of humor and self-deprecating anecdotes",
-    "Enthusiastic agreement and collaborative planning",
-    "Incorporates emojis and expressive punctuation for tone",
-    "Shares spontaneous personal stories with vivid detail",
-    "Uses casual language and slang typical of close friends"
+    "frequent use of exclamation marks and emojis",
+    "casual slang and abbreviations",
+    "enthusiastic and upbeat tone",
+    "active planning and coordination",
+    "self\u2011deprecating humor"
   ],
-  "overall_confidence": 90,
+  "overall_confidence": 67,
   "message_count": 151,
   "batch_count": 4
 }

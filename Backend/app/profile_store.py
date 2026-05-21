@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROFILES_DIR = PROJECT_ROOT / "profiles"
 CONTACT_MAP_PATH = PROJECT_ROOT / "contact_map.json"
 

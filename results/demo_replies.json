@@ -1,45 +1,45 @@
 {
   "boss": {
-    "mode": "global+contact",
-    "global_confidence": 88,
-    "contact_confidence": 91
+    "mode": "contact",
+    "global_confidence": 67,
+    "contact_confidence": 83
   },
   "dad": {
-    "mode": "global+contact",
-    "global_confidence": 88,
-    "contact_confidence": 78
+    "mode": "neutral",
+    "global_confidence": 67,
+    "contact_confidence": 67
   },
   "delivery": {
-    "mode": "global+contact",
-    "global_confidence": 88,
-    "contact_confidence": 89
+    "mode": "neutral",
+    "global_confidence": 67,
+    "contact_confidence": 61
   },
   "friend": {
-    "mode": "global+contact",
-    "global_confidence": 88,
-    "contact_confidence": 90
+    "mode": "neutral",
+    "global_confidence": 67,
+    "contact_confidence": 67
   },
   "mom": {
-    "mode": "global+contact",
-    "global_confidence": 88,
-    "contact_confidence": 93
+    "mode": "neutral",
+    "global_confidence": 67,
+    "contact_confidence": 66
   },
   "sister": {
-    "mode": "global+contact",
-    "global_confidence": 88,
+    "mode": "contact",
+    "global_confidence": 67,
     "contact_confidence": 89
   },
   "teacher": {
-    "mode": "global+contact",
-    "global_confidence": 88,
-    "contact_confidence": 92
+    "mode": "contact",
+    "global_confidence": 67,
+    "contact_confidence": 93
   },
   "demo": {
     "incoming_message": "Can you send me the file today?",
     "replies": {
-      "boss": "Sure, I\u2019ll send it today. Let me know if you need anything else.",
-      "friend": "On it! Sending your way in a few mins \ud83d\ude0e",
-      "mom": "Yes, I\u2019ll send it over in a few minutes! \ud83d\udc95"
+      "boss": "Sure, I will send it today.",
+      "friend": "\"Sure, I'll send it over today!\"",
+      "mom": "Sure, I\u2019ll send it to you today."
     }
   }
 }

@@ -15,7 +15,7 @@ from typing import Any
 from app.config import MODEL, get_client
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_ROOT / "data"
 TARGET_CONVERSATIONS = 24
 MIN_CONVERSATIONS = 20

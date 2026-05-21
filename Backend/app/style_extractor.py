@@ -14,7 +14,7 @@ from app.config import BATCH_SIZE, MODEL, get_client, load_env_file
 from app.profile_store import neutral_profile, sanitize_profile
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE_ROOT = PROJECT_ROOT.parent
 
 
