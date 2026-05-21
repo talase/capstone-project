@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.config import load_env_file
 
+app = FastAPI()
 
 #NOTE: comment the parts you are not working on (model, calender, style)
 from app.routes.calendar import router as calendar_router
@@ -15,8 +16,6 @@ app.include_router(style_router)
 
 
 load_env_file()
-
-app = FastAPI()
 
 
 
