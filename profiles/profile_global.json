@@ -1,30 +1,30 @@
 {
   "traits": {
     "formality": {
-      "score": 0.376,
-      "confidence": 67
+      "score": 0.38,
+      "confidence": 88
     },
     "politeness": {
-      "score": 0.747,
-      "confidence": 68
+      "score": 0.673,
+      "confidence": 88
     },
     "verbosity": {
-      "score": 0.349,
-      "confidence": 64
+      "score": 0.276,
+      "confidence": 87
     },
     "optimism": {
-      "score": 0.646,
-      "confidence": 62
+      "score": 0.65,
+      "confidence": 81
     }
   },
   "patterns": [
-    "action-oriented updates",
-    "concise communication",
-    "repetitive structure",
-    "task-focused language",
-    "affirmative tone"
+    "Prefers structured, action-oriented replies",
+    "Frequently acknowledges instructions with confirmation",
+    "Provides status updates with specific timelines",
+    "Proactively offers follow-ups and alternatives",
+    "Uses deferential terms when addressing superiors"
   ],
-  "overall_confidence": 67,
-  "message_count": 1007,
+  "overall_confidence": 88,
+  "message_count": 1047,
   "batch_count": 21
 }

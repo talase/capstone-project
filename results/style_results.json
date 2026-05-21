@@ -3,30 +3,30 @@
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.663,
-          "confidence": 86
+          "score": 0.654,
+          "confidence": 88
         },
         "politeness": {
-          "score": 0.705,
-          "confidence": 82
+          "score": 0.761,
+          "confidence": 89
         },
         "verbosity": {
-          "score": 0.274,
-          "confidence": 90
+          "score": 0.2,
+          "confidence": 91
         },
         "optimism": {
-          "score": 0.644,
-          "confidence": 77
+          "score": 0.665,
+          "confidence": 84
         }
       },
       "patterns": [
-        "concise status reporting",
-        "action-oriented task acknowledgment",
-        "frequent use of polite affirmations",
-        "proactive follow-up planning",
-        "concise single-sentence responses"
+        "Acknowledges tasks with brief confirmations",
+        "Provides proactive status updates and next steps",
+        "Offers to make revisions or improvements upon request",
+        "Asks for time preferences or confirmation before proceeding",
+        "Reports task completion with an invitation for further feedback"
       ],
-      "overall_confidence": 83,
+      "overall_confidence": 91,
       "message_count": 153,
       "batch_count": 4
     },
@@ -34,13 +34,13 @@
       {
         "trait": "formality",
         "rule": ">= 0.6",
-        "value": 0.663,
+        "value": 0.654,
         "passed": true
       },
       {
         "trait": "verbosity",
         "rule": "<= 0.65",
-        "value": 0.274,
+        "value": 0.2,
         "passed": true
       }
     ],
@@ -50,30 +50,30 @@
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.167,
-          "confidence": 68
+          "score": 0.356,
+          "confidence": 73
         },
         "politeness": {
-          "score": 0.504,
-          "confidence": 66
+          "score": 0.717,
+          "confidence": 83
         },
         "verbosity": {
-          "score": 0.278,
-          "confidence": 65
+          "score": 0.225,
+          "confidence": 82
         },
         "optimism": {
-          "score": 0.406,
-          "confidence": 61
+          "score": 0.538,
+          "confidence": 71
         }
       },
       "patterns": [
-        "repetitive reassurance",
-        "proactive planning",
-        "concise updates",
-        "affectionate closing",
-        "practical problem solving"
+        "Frequently confirms receipt of instructions",
+        "Provides proactive status updates",
+        "Seeks confirmation before executing actions",
+        "Maintains respectful acknowledgments",
+        "Reports detailed task outcomes"
       ],
-      "overall_confidence": 67,
+      "overall_confidence": 78,
       "message_count": 152,
       "batch_count": 4
     },
@@ -84,30 +84,30 @@
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.523,
-          "confidence": 62
+          "score": 0.581,
+          "confidence": 88
         },
         "politeness": {
-          "score": 0.81,
-          "confidence": 65
+          "score": 0.9,
+          "confidence": 94
         },
         "verbosity": {
-          "score": 0.192,
-          "confidence": 60
+          "score": 0.2,
+          "confidence": 91
         },
         "optimism": {
-          "score": 0.357,
-          "confidence": 52
+          "score": 0.565,
+          "confidence": 77
         }
       },
       "patterns": [
-        "Direct requests with polite phrasing",
-        "Brief confirmations",
-        "Expression of gratitude",
-        "Collaborative problem-solving approach",
-        "concise acknowledgement"
+        "Gives clear, step-by-step instructions",
+        "Frequently uses polite phrases",
+        "Provides confirmations and validations",
+        "Adapts delivery instructions based on situation",
+        "Expresses appreciation and closure"
       ],
-      "overall_confidence": 61,
+      "overall_confidence": 89,
       "message_count": 128,
       "batch_count": 3
     },
@@ -115,46 +115,46 @@
       {
         "trait": "verbosity",
         "rule": "<= 0.45",
-        "value": 0.192,
+        "value": 0.2,
         "passed": true
       },
       {
         "trait": "formality",
         "rule": "<= 0.55",
-        "value": 0.523,
-        "passed": true
+        "value": 0.581,
+        "passed": false
       }
     ],
-    "status": "PASS"
+    "status": "FAIL"
   },
   "friend": {
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.151,
-          "confidence": 68
+          "score": 0.075,
+          "confidence": 94
         },
         "politeness": {
-          "score": 0.363,
-          "confidence": 64
+          "score": 0.378,
+          "confidence": 82
         },
         "verbosity": {
-          "score": 0.267,
-          "confidence": 66
+          "score": 0.273,
+          "confidence": 88
         },
         "optimism": {
-          "score": 0.615,
-          "confidence": 68
+          "score": 0.768,
+          "confidence": 91
         }
       },
       "patterns": [
-        "frequent use of exclamation marks and emojis",
-        "casual slang and abbreviations",
-        "enthusiastic and upbeat tone",
-        "active planning and coordination",
-        "self\u2011deprecating humor"
+        "Frequent use of humor and self-deprecating anecdotes",
+        "Enthusiastic agreement and collaborative planning",
+        "Incorporates emojis and expressive punctuation for tone",
+        "Shares spontaneous personal stories with vivid detail",
+        "Uses casual language and slang typical of close friends"
       ],
-      "overall_confidence": 67,
+      "overall_confidence": 90,
       "message_count": 151,
       "batch_count": 4
     },
@@ -162,13 +162,13 @@
       {
         "trait": "formality",
         "rule": "<= 0.45",
-        "value": 0.151,
+        "value": 0.075,
         "passed": true
       },
       {
         "trait": "optimism",
         "rule": ">= 0.55",
-        "value": 0.615,
+        "value": 0.768,
         "passed": true
       }
     ],
@@ -178,30 +178,30 @@
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.322,
-          "confidence": 46
+          "score": 0.2,
+          "confidence": 90
         },
         "politeness": {
-          "score": 0.822,
-          "confidence": 46
+          "score": 0.9,
+          "confidence": 95
         },
         "verbosity": {
-          "score": 0.276,
-          "confidence": 44
+          "score": 0.389,
+          "confidence": 86
         },
         "optimism": {
-          "score": 0.647,
-          "confidence": 41
+          "score": 0.777,
+          "confidence": 85
         }
       },
       "patterns": [
-        "repetitive caregiving reminders",
-        "use of polite requests",
-        "expresses affection",
-        "offers practical assistance",
-        "encourages rest and self\u2011care"
+        "Frequently repeats health-related reminders and follow-ups",
+        "Uses affectionate closings and reassurances",
+        "Plans activities and schedules with attention to detail",
+        "Provides step-by-step instructions with logical sequencing",
+        "Balances direct caregiving with gentle encouragement"
       ],
-      "overall_confidence": 66,
+      "overall_confidence": 93,
       "message_count": 157,
       "batch_count": 4
     },
@@ -209,13 +209,13 @@
       {
         "trait": "politeness",
         "rule": ">= 0.65",
-        "value": 0.822,
+        "value": 0.9,
         "passed": true
       },
       {
         "trait": "optimism",
         "rule": ">= 0.55",
-        "value": 0.647,
+        "value": 0.777,
         "passed": true
       }
     ],
@@ -225,77 +225,77 @@
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.129,
-          "confidence": 91
+          "score": 0.1,
+          "confidence": 92
         },
         "politeness": {
-          "score": 0.5,
+          "score": 0.4,
           "confidence": 85
         },
         "verbosity": {
-          "score": 0.265,
-          "confidence": 90
+          "score": 0.22,
+          "confidence": 88
         },
         "optimism": {
-          "score": 0.707,
-          "confidence": 88
+          "score": 0.525,
+          "confidence": 80
         }
       },
       "patterns": [
-        "Informal address with nicknames",
-        "Humor via emoticons and laughter expressions",
-        "Direct and concise communication style",
-        "Inclusion of personal anecdotes and offers",
-        "Affectionate closings and terms of endearment"
+        "Frequently uses exaggerated language and hyperbole for emphasis",
+        "Regularly makes requests with playful guilt-tripping or justification",
+        "Uses all caps and repeated punctuation to convey strong emotion",
+        "Engages in shared family gossip with enthusiastic commentary",
+        "Shows affection through teasing, mock complaints, and inside jokes"
       ],
       "overall_confidence": 89,
-      "message_count": 120,
-      "batch_count": 3
+      "message_count": 160,
+      "batch_count": 4
     },
     "checks": [
       {
         "trait": "formality",
         "rule": "<= 0.5",
-        "value": 0.129,
+        "value": 0.1,
         "passed": true
       },
       {
         "trait": "optimism",
         "rule": ">= 0.55",
-        "value": 0.707,
-        "passed": true
+        "value": 0.525,
+        "passed": false
       }
     ],
-    "status": "PASS"
+    "status": "FAIL"
   },
   "teacher": {
     "profile": {
       "traits": {
         "formality": {
-          "score": 0.797,
-          "confidence": 93
+          "score": 0.917,
+          "confidence": 95
         },
         "politeness": {
-          "score": 0.933,
-          "confidence": 97
+          "score": 0.96,
+          "confidence": 96
         },
         "verbosity": {
-          "score": 0.261,
+          "score": 0.317,
           "confidence": 90
         },
         "optimism": {
-          "score": 0.644,
-          "confidence": 81
+          "score": 0.7,
+          "confidence": 85
         }
       },
       "patterns": [
-        "Consistent formal address with title usage",
-        "Frequent gratitude expressions",
-        "Direct but respectful request patterns",
-        "Collaborative problem-solving orientation",
-        "Solution-focused follow-up communications"
+        "frequently opens with greetings and courteous closings",
+        "makes polite requests with softening phrases",
+        "expresses gratitude in most exchanges",
+        "provides detailed context for inquiries or delays",
+        "acknowledges and confirms received guidance"
       ],
-      "overall_confidence": 93,
+      "overall_confidence": 92,
       "message_count": 146,
       "batch_count": 3
     },
@@ -303,13 +303,13 @@
       {
         "trait": "formality",
         "rule": ">= 0.65",
-        "value": 0.797,
+        "value": 0.917,
         "passed": true
       },
       {
         "trait": "politeness",
         "rule": ">= 0.65",
-        "value": 0.933,
+        "value": 0.96,
         "passed": true
       }
     ],

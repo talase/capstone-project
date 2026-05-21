@@ -1,13 +1,13 @@
 contact,trait,expected,actual,status
-boss,formality,>= 0.6,0.663,PASS
-boss,verbosity,<= 0.65,0.274,PASS
-delivery,verbosity,<= 0.45,0.192,PASS
-delivery,formality,<= 0.55,0.523,PASS
-friend,formality,<= 0.45,0.151,PASS
-friend,optimism,>= 0.55,0.615,PASS
-mom,politeness,>= 0.65,0.822,PASS
-mom,optimism,>= 0.55,0.647,PASS
-sister,formality,<= 0.5,0.129,PASS
-sister,optimism,>= 0.55,0.707,PASS
-teacher,formality,>= 0.65,0.797,PASS
-teacher,politeness,>= 0.65,0.933,PASS
+boss,formality,>= 0.6,0.654,PASS
+boss,verbosity,<= 0.65,0.2,PASS
+delivery,verbosity,<= 0.45,0.2,PASS
+delivery,formality,<= 0.55,0.581,FAIL
+friend,formality,<= 0.45,0.075,PASS
+friend,optimism,>= 0.55,0.768,PASS
+mom,politeness,>= 0.65,0.9,PASS
+mom,optimism,>= 0.55,0.777,PASS
+sister,formality,<= 0.5,0.1,PASS
+sister,optimism,>= 0.55,0.525,FAIL
+teacher,formality,>= 0.65,0.917,PASS
+teacher,politeness,>= 0.65,0.96,PASS

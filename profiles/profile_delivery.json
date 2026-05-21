@@ -1,30 +1,30 @@
 {
   "traits": {
     "formality": {
-      "score": 0.523,
-      "confidence": 62
+      "score": 0.581,
+      "confidence": 88
     },
     "politeness": {
-      "score": 0.81,
-      "confidence": 65
+      "score": 0.9,
+      "confidence": 94
     },
     "verbosity": {
-      "score": 0.192,
-      "confidence": 60
+      "score": 0.2,
+      "confidence": 91
     },
     "optimism": {
-      "score": 0.357,
-      "confidence": 52
+      "score": 0.565,
+      "confidence": 77
     }
   },
   "patterns": [
-    "Direct requests with polite phrasing",
-    "Brief confirmations",
-    "Expression of gratitude",
-    "Collaborative problem-solving approach",
-    "concise acknowledgement"
+    "Gives clear, step-by-step instructions",
+    "Frequently uses polite phrases",
+    "Provides confirmations and validations",
+    "Adapts delivery instructions based on situation",
+    "Expresses appreciation and closure"
   ],
-  "overall_confidence": 61,
+  "overall_confidence": 89,
   "message_count": 128,
   "batch_count": 3
 }

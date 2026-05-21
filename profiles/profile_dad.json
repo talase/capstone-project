@@ -1,30 +1,30 @@
 {
   "traits": {
     "formality": {
-      "score": 0.167,
-      "confidence": 68
+      "score": 0.356,
+      "confidence": 73
     },
     "politeness": {
-      "score": 0.504,
-      "confidence": 66
+      "score": 0.717,
+      "confidence": 83
     },
     "verbosity": {
-      "score": 0.278,
-      "confidence": 65
+      "score": 0.225,
+      "confidence": 82
     },
     "optimism": {
-      "score": 0.406,
-      "confidence": 61
+      "score": 0.538,
+      "confidence": 71
     }
   },
   "patterns": [
-    "repetitive reassurance",
-    "proactive planning",
-    "concise updates",
-    "affectionate closing",
-    "practical problem solving"
+    "Frequently confirms receipt of instructions",
+    "Provides proactive status updates",
+    "Seeks confirmation before executing actions",
+    "Maintains respectful acknowledgments",
+    "Reports detailed task outcomes"
   ],
-  "overall_confidence": 67,
+  "overall_confidence": 78,
   "message_count": 152,
   "batch_count": 4
 }
