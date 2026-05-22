@@ -6,6 +6,15 @@ __pycache__/
 .DS_Store
 profiles/
 results/
+<<<<<<< Updated upstream
 Backend/app/model_pred/model_weights
+<<<<<<< HEAD
 Backend/app/model_pred/model_weights_2
 Backend/app/model_pred/model_weights_3
+=======
+=======
+.env
+token.json
+credentials.json
+>>>>>>> Stashed changes
+>>>>>>> 83d2d8b (Added calendar agent features and scheduler structure)

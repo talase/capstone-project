@@ -8,6 +8,7 @@ from app.model_pred.model import router as model_pred_router
 #from app.routes.calendar import router as calendar_router
 from app.routes.reports import router as reports_router
 from app.routes.style import router as style_router
+from app.routes.scheduler import router as scheduler_router
 
 
 load_env_file()
@@ -18,7 +19,7 @@ app.include_router(style_router)
 app.include_router(reports_router)
 app.include_router(personal_context_router)
 app.include_router(model_pred_router)
-
+app.include_router(scheduler_router)
 
 
 
