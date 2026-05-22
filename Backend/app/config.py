@@ -101,9 +101,8 @@ def env_file_status() -> list[str]:
         statuses.append(
             f"{env_path}: exists, "
             f"OPENROUTER_API_KEY={'yes' if 'OPENROUTER_API_KEY' in keys else 'no'}, "
-            f"WHATSAPP_TOKEN={'yes' if 'WHATSAPP_TOKEN' in keys else 'no'}, "
-            f"WHATSAPP_PHONE_NUMBER_ID={'yes' if 'WHATSAPP_PHONE_NUMBER_ID' in keys else 'no'}, "
-            f"WHATSAPP_VERIFY_TOKEN={'yes' if 'WHATSAPP_VERIFY_TOKEN' in keys else 'no'}"
+            f"SUPABASE_URL={'yes' if 'SUPABASE_URL' in keys else 'no'}, "
+            f"SUPABASE_KEY={'yes' if 'SUPABASE_KEY' in keys else 'no'}"
         )
     return statuses
 
