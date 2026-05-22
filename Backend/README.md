@@ -1,123 +1,77 @@
-# Tala
+# Tala Backend
 
-Tala is a small FastAPI backend for a WhatsApp Cloud API webhook. It exposes
-basic health endpoints, verifies the webhook with Meta, receives incoming
-WhatsApp messages, and sends a simple text reply back to the sender.
+Tala is the FastAPI backend used by n8n workflows. The backend exposes clean
+HTTP endpoints for style adaptation, calendar processing, and Personal Context
+Memory (PCM). n8n owns workflow orchestration and calls these endpoints with
+HTTP Request nodes.
 
-## Project Structure
+## Run Locally
 
-```text
-Tala/
-  app/
-    main.py        FastAPI app and WhatsApp webhook handlers
-```
-
-## Requirements
-
-Install the project dependencies from the repository root:
+Install dependencies from the repository root:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-The main dependencies used by Tala are:
+Start the backend:
 
-- `fastapi`
-- `uvicorn`
-- `requests`
-- `python-dotenv`
+```bash
+cd Backend
+uvicorn app.main:app --reload
+```
+
+The API will be available at `http://127.0.0.1:8000`.
 
 ## Environment Variables
 
-Create a `.env` file in the repository root, or export these variables in your
-shell before running the server:
+Create `Backend/app/.env` or export these values before starting the server:
 
 ```env
-WHATSAPP_TOKEN=your_meta_whatsapp_access_token
-WHATSAPP_PHONE_NUMBER_ID=your_whatsapp_phone_number_id
-WHATSAPP_VERIFY_TOKEN=choose_a_custom_verify_token
-```
-
-`WHATSAPP_VERIFY_TOKEN` must match the verify token you enter when configuring
-the webhook in the Meta developer dashboard. If it is not set, the app uses
-`my_secret_token` by default.
-
-## Run Locally
-
-From the repository root:
-
-```bash
-uvicorn Tala.app.main:app --reload
-```
-
-The API will be available at:
-
-```text
-http://127.0.0.1:8000
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_service_or_anon_key
 ```
 
 ## Endpoints
 
-### `GET /`
+- `GET /` - backend status message
+- `GET /health` - health check
+- `POST /style/process` - generate a style-adapted response and evaluate PCM
+- `POST /calendar/process` - process a calendar request
+- `POST /personal-context/rules` - create a PCM rule
+- `GET /personal-context/rules` - list PCM rules
+- `GET /personal-context/rules/active` - list active PCM rules
+- `PUT /personal-context/rules/{rule_id}` - update a PCM rule
+- `DELETE /personal-context/rules/{rule_id}` - delete a PCM rule
+- `PATCH /personal-context/rules/{rule_id}/activate` - activate a PCM rule
+- `PATCH /personal-context/rules/{rule_id}/deactivate` - deactivate a PCM rule
+- `POST /personal-context/approvals` - create a pending approval request
+- `GET /personal-context/approvals` - list approval requests
+- `GET /personal-context/approvals/{approval_id}` - get one approval request
+- `POST /personal-context/approvals/{approval_id}/approve` - approve a request
+- `POST /personal-context/approvals/{approval_id}/reject` - reject a request
+- `POST /personal-context/status` - set current user status
+- `GET /personal-context/status` - get current user status
+- `PATCH /personal-context/status` - update current user status
+- `DELETE /personal-context/status` - clear current user status
 
-Returns a simple status message:
+## n8n Integration
 
-```json
-{"message": "Backend is running"}
-```
+n8n should receive external events and orchestrate the workflow. Use HTTP
+Request nodes to call the backend endpoints above. The backend does not expose
+or process WhatsApp callback routes.
 
-### `GET /health`
-
-Returns a health check response:
-
-```json
-{"status": "ok"}
-```
-
-### `GET /webhook`
-
-Used by Meta to verify the webhook subscription. The app checks:
-
-- `hub.mode`
-- `hub.verify_token`
-- `hub.challenge`
-
-If the mode is `subscribe` and the verify token matches
-`WHATSAPP_VERIFY_TOKEN`, the app returns the challenge value.
-
-### `POST /webhook`
-
-Receives WhatsApp webhook events. For incoming text messages, the app sends
-this reply through the Meta Graph API:
-
-```text
-Hello, I got your message!
-```
-
-Non-message events are acknowledged with:
+Example request to `POST /style/process`:
 
 ```json
-{"status": "received"}
+{
+  "message": "Can you send the file today?",
+  "contact_id": "friend",
+  "user_id": "default_user",
+  "risk_level": "low",
+  "action_type": "send_message"
+}
 ```
 
-## Testing With a Public URL
-
-Meta needs a public HTTPS URL for webhook callbacks. During local development,
-you can expose your local server with a tunneling tool such as ngrok:
-
-```bash
-ngrok http 8000
-```
-
-Use the generated HTTPS URL as the callback URL in Meta, with `/webhook`
-appended:
-
-```text
-https://your-ngrok-url.ngrok-free.app/webhook
-```
-
-## Notes
-
-- Keep `.env` files and access tokens out of version control.
-- The current reply message is hard-coded in `app/main.py`.
-- The app uses Meta Graph API version `v25.0`.
+Run `Backend/supabase/migrations/001_personal_context_memory.sql` in Supabase
+before using PCM rule, status, or approval endpoints.
