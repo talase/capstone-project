@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from app import daily_activity_logger as activity_logger
 from app.buffer import StyleBuffer, choose_style_mode
 from app.config import MODEL, get_client, load_env_file
 from app.evaluator import evaluate_profiles
@@ -137,6 +138,21 @@ def generate_style_adapted_response(
     clean_message = (incoming_message or "").strip()
     clean_contact = (contact_id or "").strip()
     profile_contact = resolve_profile_contact(clean_contact)
+    logging_warnings: list[dict[str, str]] = []
+
+    _collect_logging_warning(
+        logging_warnings,
+        activity_logger.log_message_event(
+            direction="received",
+            message=clean_message,
+            user_id=user_id,
+            contact_id=clean_contact,
+            metadata={
+                "risk_level": risk_level,
+                "action_type": action_type,
+            },
+        ),
+    )
 
     # Missing or malformed profile JSON falls back to neutral profiles.
     global_profile = load_global_profile()
@@ -175,6 +191,73 @@ def generate_style_adapted_response(
     reply = generation["reply"]
     pcm_decision = personal_context["decision"]
     final_action = _final_action_for_decision(pcm_decision)
+    _collect_logging_warning(
+        logging_warnings,
+        activity_logger.log_message_event(
+            direction="sent",
+            message=reply,
+            user_id=user_id,
+            contact_id=clean_contact,
+            metadata={
+                "generated_only": final_action != "send",
+                "generation_status": generation["generation_status"],
+                "llm_error": generation["llm_error"],
+                "final_action": final_action,
+            },
+        ),
+    )
+    _collect_logging_warning(
+        logging_warnings,
+        activity_logger.log_personal_context_decision(
+            decision=pcm_decision,
+            user_id=user_id,
+            contact_id=clean_contact,
+            reason=personal_context["reason"],
+            matched_rules=personal_context["matched_rules"],
+            original_message=clean_message,
+            final_action=final_action,
+            metadata={
+                "risk_level": risk_level,
+                "action_type": action_type,
+                "current_status": current_status.get("status"),
+            },
+        ),
+    )
+    _collect_logging_warning(
+        logging_warnings,
+        activity_logger.log_agent_activity(
+            status=_activity_status_for_final_action(final_action),
+            user_id=user_id,
+            contact_id=clean_contact,
+            action_category=action_type,
+            action_type=action_type,
+            mode="automatic" if final_action == "send" else None,
+            requires_approval=final_action == "approval_required",
+            description=personal_context["reason"],
+            metadata={
+                "pcm_decision": pcm_decision,
+                "risk_level": risk_level,
+                "style_mode": mode,
+            },
+        ),
+    )
+    if _is_high_risk(risk_level):
+        _collect_logging_warning(
+            logging_warnings,
+            activity_logger.log_high_risk_alert(
+                risk_level=risk_level or "high",
+                user_id=user_id,
+                contact_id=clean_contact,
+                action_category=action_type,
+                message=clean_message,
+                reason=personal_context["reason"],
+                metadata={
+                    "final_action": final_action,
+                    "matched_rules": personal_context["matched_rules"],
+                },
+            ),
+        )
+
     approval_request = None
     if pcm_decision == "require_approval":
         approval_request = _create_pending_approval_request(
@@ -202,6 +285,7 @@ def generate_style_adapted_response(
         "pcm_reason": personal_context["reason"],
         "final_action": final_action,
         "approval_request": approval_request,
+        "daily_report_logging_warnings": logging_warnings,
     }
 
 
@@ -244,8 +328,7 @@ def _enforce_high_risk_approval(
 ) -> dict[str, Any]:
     """Prevent high-risk messages from being sent automatically."""
 
-    risk_level = str(message_data.get("risk_level") or "").strip().lower()
-    if risk_level not in {"high", "high_risk", "critical"}:
+    if not _is_high_risk(message_data.get("risk_level")):
         return personal_context
 
     matched_rules = list(personal_context.get("matched_rules", []))
@@ -271,6 +354,28 @@ def _final_action_for_decision(decision: str) -> str:
         "require_approval": "approval_required",
         "defer": "deferred",
     }.get(decision, "approval_required")
+
+
+def _activity_status_for_final_action(final_action: str) -> str:
+    return {
+        "send": "automatic",
+        "draft": "draft",
+        "approval_required": "pending",
+        "deferred": "deferred",
+    }.get(final_action, "pending")
+
+
+def _is_high_risk(risk_level: str | None) -> bool:
+    return str(risk_level or "").strip().lower() in {"high", "high_risk", "critical"}
+
+
+def _collect_logging_warning(
+    warnings: list[dict[str, str]],
+    result: activity_logger.LogResult,
+) -> None:
+    warning = result.warning()
+    if warning:
+        warnings.append(warning)
 
 
 def _create_pending_approval_request(

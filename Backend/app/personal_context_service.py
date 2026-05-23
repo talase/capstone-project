@@ -7,6 +7,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.daily_activity_logger import log_approval_event
 from app.supabase_client import SupabaseConfigError, get_supabase_client
 
 
@@ -200,7 +201,22 @@ def create_approval_request(request: ApprovalRequestCreate) -> dict[str, Any]:
     data = request.model_dump(exclude_none=True)
     data["status"] = "pending"
     response = _approval_table().insert(data).execute()
-    return _single_row(response, "Approval request was not created.")
+    created = _single_row(response, "Approval request was not created.")
+    log_approval_event(
+        status="pending",
+        user_id=created.get("user_id"),
+        contact_id=created.get("contact_id"),
+        approval_request_id=created.get("id"),
+        action_category=_approval_action_category(created),
+        original_message=created.get("original_message"),
+        generated_reply=created.get("generated_reply"),
+        reason=created.get("reason"),
+        metadata={
+            "decision": created.get("decision"),
+            "matched_rules": created.get("matched_rules", []),
+        },
+    )
+    return created
 
 
 def list_approval_requests(
@@ -228,7 +244,23 @@ def set_approval_status(approval_id: int | str, status: str) -> dict[str, Any]:
     if existing.get("status") != "pending":
         raise PersonalContextError("Only pending approval requests can be updated.")
     response = _approval_table().update({"status": status}).eq("id", approval_id).execute()
-    return _single_row(response, "Approval request was not found.")
+    updated = _single_row(response, "Approval request was not found.")
+    log_approval_event(
+        status=status,
+        user_id=updated.get("user_id"),
+        contact_id=updated.get("contact_id"),
+        approval_request_id=updated.get("id"),
+        action_category=_approval_action_category(updated),
+        original_message=updated.get("original_message"),
+        generated_reply=updated.get("generated_reply"),
+        reason=updated.get("reason"),
+        metadata={
+            "decision": updated.get("decision"),
+            "matched_rules": updated.get("matched_rules", []),
+            "previous_status": existing.get("status"),
+        },
+    )
+    return updated
 
 
 def set_user_status(status: UserStatusSet) -> dict[str, Any]:
@@ -377,6 +409,14 @@ def _single_row(response: Any, error_message: str) -> dict[str, Any]:
     if not rows:
         raise PersonalContextError(error_message)
     return rows[0]
+
+
+def _approval_action_category(row: dict[str, Any]) -> str | None:
+    for rule in row.get("matched_rules", []) or []:
+        rule_type = rule.get("rule_type")
+        if rule_type:
+            return str(rule_type)
+    return row.get("decision")
 
 
 def _rule_matches_message(rule: dict[str, Any], message_data: dict[str, Any]) -> bool:

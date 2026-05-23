@@ -2,8 +2,10 @@ import unittest
 from unittest.mock import patch
 
 from app.personal_context_service import (
+    ApprovalRequestCreate,
     UserStatusSet,
     clear_user_status,
+    create_approval_request,
     evaluate_personal_context_rules,
     get_current_user_status,
     set_approval_status,
@@ -120,10 +122,45 @@ class PersonalContextServiceTests(unittest.TestCase):
 
     def test_approval_status_flow(self):
         fake_table = _FakeApprovalTable()
-        with patch("app.personal_context_service._approval_table", return_value=fake_table):
+        with (
+            patch("app.personal_context_service._approval_table", return_value=fake_table),
+            patch("app.personal_context_service.log_approval_event") as log_approval_event,
+        ):
             approved = set_approval_status(1, "approved")
 
         self.assertEqual(approved["status"], "approved")
+        log_approval_event.assert_called_once()
+        self.assertEqual(log_approval_event.call_args.kwargs["status"], "approved")
+        self.assertEqual(log_approval_event.call_args.kwargs["approval_request_id"], 1)
+
+    def test_create_approval_request_writes_pending_approval_log(self):
+        fake_table = _FakeApprovalInsertTable()
+        with (
+            patch("app.personal_context_service._approval_table", return_value=fake_table),
+            patch("app.personal_context_service.log_approval_event") as log_approval_event,
+        ):
+            created = create_approval_request(
+                ApprovalRequestCreate(
+                    user_id="u1",
+                    contact_id="friend",
+                    original_message="Can you send this?",
+                    generated_reply="Draft reply",
+                    matched_rules=[
+                        {
+                            "rule_type": "money_requires_approval",
+                            "decision": "require_approval",
+                        }
+                    ],
+                )
+            )
+
+        self.assertEqual(created["status"], "pending")
+        log_approval_event.assert_called_once()
+        self.assertEqual(log_approval_event.call_args.kwargs["status"], "pending")
+        self.assertEqual(
+            log_approval_event.call_args.kwargs["action_category"],
+            "money_requires_approval",
+        )
 
     def test_set_retrieve_and_clear_user_status(self):
         fake_table = _FakeStatusTable()
@@ -203,6 +240,19 @@ class _FakeApprovalTable:
             return _FakeResponse([])
         if self._operation == "update":
             row.update(self._update_data)
+        return _FakeResponse([row])
+
+
+class _FakeApprovalInsertTable:
+    def __init__(self):
+        self._insert_data = None
+
+    def insert(self, data):
+        self._insert_data = data
+        return self
+
+    def execute(self):
+        row = {"id": 2, **self._insert_data}
         return _FakeResponse([row])
 
 

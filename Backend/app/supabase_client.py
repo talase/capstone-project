@@ -10,7 +10,7 @@ from app.config import load_env_file
 
 try:
     from supabase import Client, create_client
-except ModuleNotFoundError:  # pragma: no cover - handled at runtime
+except (ImportError, ModuleNotFoundError):  # pragma: no cover - handled at runtime
     Client = Any
     create_client = None
 
