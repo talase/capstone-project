@@ -3,6 +3,7 @@ python-dotenv>=1.0.0
 fastapi
 flask
 requests
+python-multipart
 supabase
 uvicorn
 transformers
