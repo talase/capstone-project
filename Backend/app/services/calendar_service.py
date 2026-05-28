@@ -1,14 +1,39 @@
 from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 
 from datetime import datetime
+import os
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
-creds = Credentials.from_authorized_user_file(
-    "token.json",
-    SCOPES
-)
+creds = None
+
+# Load existing token if it exists
+if os.path.exists("token.json"):
+    creds = Credentials.from_authorized_user_file(
+        "token.json",
+        SCOPES
+    )
+
+# If no valid credentials, login again
+if not creds or not creds.valid:
+
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
+    else:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            "credentials.json",
+            SCOPES
+        )
+
+        creds = flow.run_local_server(port=0)
+
+    # Save new token
+    with open("token.json", "w") as token:
+        token.write(creds.to_json())
 
 calendar_service = build(
     "calendar",
@@ -79,8 +104,15 @@ def update_event(
         eventId=event_id
     ).execute()
 
-    event["start"]["dateTime"] = new_start
-    event["end"]["dateTime"] = new_end
+    event["start"] = {
+        "dateTime": new_start,
+        "timeZone": "Asia/Nicosia",
+    }
+
+    event["end"] = {
+        "dateTime": new_end,
+        "timeZone": "Asia/Nicosia",
+    }
 
     updated_event = calendar_service.events().update(
         calendarId="primary",
@@ -89,6 +121,7 @@ def update_event(
     ).execute()
 
     return updated_event
+
 
 def find_event_by_title(title: str):
 
@@ -113,28 +146,3 @@ def find_event_by_title(title: str):
             return event
 
     return None
-
-def update_event(event_id, new_start, new_end):
-
-    event = calendar_service.events().get(
-        calendarId="primary",
-        eventId=event_id
-    ).execute()
-
-    event["start"] = {
-        "dateTime": new_start,
-        "timeZone": "Asia/Nicosia",
-    }
-
-    event["end"] = {
-        "dateTime": new_end,
-        "timeZone": "Asia/Nicosia",
-    }
-
-    updated_event = calendar_service.events().update(
-        calendarId="primary",
-        eventId=event_id,
-        body=event
-    ).execute()
-
-    return updated_event
