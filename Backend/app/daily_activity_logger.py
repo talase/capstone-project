@@ -7,6 +7,8 @@ from typing import Any
 
 from app.supabase_client import get_supabase_client
 
+DEFAULT_USER_ID = "default_user"
+
 
 @dataclass
 class LogResult:
@@ -83,10 +85,13 @@ def log_approval_event(
     reason: str | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> LogResult:
+    log_metadata = metadata or {}
+    if approval_request_id is not None:
+        log_metadata = {**log_metadata, "approval_request_id": str(approval_request_id)}
     return _safe_insert(
-        "approval_logs",
+        "approvals",
         {
-            "user_id": user_id,
+            "user_id": user_id or DEFAULT_USER_ID,
             "contact_id": contact_id,
             "approval_request_id": _int_or_none(approval_request_id),
             "action_category": action_category,
@@ -94,7 +99,7 @@ def log_approval_event(
             "original_message": original_message,
             "generated_reply": generated_reply,
             "reason": reason,
-            "metadata": metadata or {},
+            "metadata": log_metadata,
         },
     )
 

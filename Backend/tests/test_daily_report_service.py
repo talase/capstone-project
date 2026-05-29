@@ -47,7 +47,7 @@ class DailyReportServiceTests(unittest.TestCase):
                 "action_category": "request_to_send_message",
             }
         ]
-        records["approval_logs"] = [
+        records["approvals"] = [
             {"id": 4, "status": "approved", "action_category": "money_request"},
             {"id": 5, "status": "rejected", "action_category": "sensitive_file"},
         ]
@@ -76,7 +76,7 @@ class DailyReportServiceTests(unittest.TestCase):
 
     def test_pending_approvals_appear_in_needs_attention(self):
         records = _empty_records()
-        records["approval_logs"] = [
+        records["approvals"] = [
             {"id": 1, "status": "pending", "original_message": "Send this?"}
         ]
 
@@ -86,33 +86,39 @@ class DailyReportServiceTests(unittest.TestCase):
         self.assertEqual(report["needs_attention"][0]["type"], "pending_approval")
         self.assertEqual(report["needs_attention"][0]["id"], 1)
 
-    def test_approval_logs_do_not_double_count_approval_requests(self):
+    def test_approvals_count_current_statuses(self):
         records = _empty_records()
-        records["approval_logs"] = [
+        records["approvals"] = [
             {
                 "id": 10,
-                "approval_request_id": 1,
                 "status": "pending",
                 "original_message": "Send this?",
             },
             {
                 "id": 11,
-                "approval_request_id": 1,
                 "status": "approved",
                 "original_message": "Send this?",
             },
-        ]
-        records["approval_requests"] = [
-            {
-                "id": 1,
-                "status": "approved",
-                "original_message": "Send this?",
-            }
         ]
 
         report = build_daily_report(REPORT_DATE, records)
 
         self.assertEqual(report["summary"]["approved_actions"], 1)
+        self.assertEqual(report["summary"]["pending_approvals"], 1)
+
+    def test_rejected_approvals_are_counted_from_approvals_table(self):
+        records = _empty_records()
+        records["approvals"] = [
+            {
+                "id": 11,
+                "status": "rejected",
+                "original_message": "Send this?",
+            },
+        ]
+
+        report = build_daily_report(REPORT_DATE, records)
+
+        self.assertEqual(report["summary"]["rejected_actions"], 1)
         self.assertEqual(report["summary"]["pending_approvals"], 0)
 
     def test_high_risk_alerts_appear_in_needs_attention(self):

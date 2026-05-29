@@ -155,8 +155,8 @@ def generate_style_adapted_response(
     )
 
     # Missing or malformed profile JSON falls back to neutral profiles.
-    global_profile = load_global_profile()
-    contact_profile = load_profile(clean_contact)
+    global_profile = load_global_profile(user_id=user_id)
+    contact_profile = load_profile(clean_contact, user_id=user_id)
 
     # Confidence gating chooses which style signal is reliable enough to use.
     mode = choose_style_mode(global_profile, contact_profile)
@@ -300,7 +300,9 @@ def _evaluate_personal_context(message_data: dict[str, Any]) -> dict[str, Any]:
         return _enforce_high_risk_approval(message_data, {
             "decision": "auto_reply",
             "matched_rules": [],
+            "winning_rule": None,
             "reason": f"Personal context rules unavailable: {exc}",
+            "fallback_used": True,
         })
 
 
@@ -338,12 +340,15 @@ def _enforce_high_risk_approval(
             "rule_name": "High risk messages require approval",
             "rule_type": "system_governance",
             "decision": "require_approval",
+            "priority": 999,
         }
     )
     return {
         "decision": "require_approval",
         "matched_rules": matched_rules,
+        "winning_rule": matched_rules[-1],
         "reason": "High-risk message requires approval before sending.",
+        "fallback_used": personal_context.get("fallback_used", False),
     }
 
 
@@ -353,6 +358,7 @@ def _final_action_for_decision(decision: str) -> str:
         "draft_only": "draft",
         "require_approval": "approval_required",
         "defer": "deferred",
+        "blocked": "blocked",
     }.get(decision, "approval_required")
 
 
@@ -362,6 +368,7 @@ def _activity_status_for_final_action(final_action: str) -> str:
         "draft": "draft",
         "approval_required": "pending",
         "deferred": "deferred",
+        "blocked": "blocked",
     }.get(final_action, "pending")
 
 

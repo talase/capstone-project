@@ -15,6 +15,13 @@ TABLE_NAME = "personal_context_rules"
 APPROVAL_TABLE_NAME = "approval_requests"
 USER_STATUS_TABLE_NAME = "user_statuses"
 DEFAULT_DECISION = "auto_reply"
+ALLOWED_DECISIONS = {
+    "auto_reply",
+    "require_approval",
+    "draft_only",
+    "defer",
+    "blocked",
+}
 AVAILABLE_STATUS = "available"
 SUPPORTED_USER_STATUSES = {
     "available",
@@ -29,6 +36,14 @@ DECISION_PRIORITY = {
     "draft_only": 1,
     "require_approval": 2,
     "defer": 3,
+    "blocked": 4,
+}
+DECISION_ALIASES = {
+    "approval_required": "require_approval",
+    "needs_approval": "require_approval",
+    "approval": "require_approval",
+    "deferred": "defer",
+    "block": "blocked",
 }
 MONEY_TERMS = {
     "money",
@@ -55,6 +70,7 @@ class PersonalContextRuleBase(BaseModel):
     rule_name: str = Field(..., min_length=1, max_length=120)
     rule_type: str = Field(..., min_length=1, max_length=80)
     rule_value: Any
+    priority: int = 0
     contact_id: str | None = None
     topic: str | None = None
     action: str | None = None
@@ -69,6 +85,7 @@ class PersonalContextRuleUpdate(BaseModel):
     rule_name: str | None = Field(default=None, min_length=1, max_length=120)
     rule_type: str | None = Field(default=None, min_length=1, max_length=80)
     rule_value: Any | None = None
+    priority: int | None = None
     contact_id: str | None = None
     topic: str | None = None
     action: str | None = None
@@ -86,6 +103,7 @@ class PersonalContextRule(PersonalContextRuleBase):
 class RuleEvaluationResult(BaseModel):
     decision: str
     matched_rules: list[dict[str, Any]]
+    winning_rule: dict[str, Any] | None = None
     reason: str
 
 
@@ -332,7 +350,6 @@ def evaluate_personal_context_rules(
     """Evaluate active personal context rules against one incoming message."""
 
     matched_rules: list[dict[str, Any]] = []
-    final_decision = DEFAULT_DECISION
 
     for rule in rules:
         if not rule.get("is_active", True):
@@ -349,20 +366,32 @@ def evaluate_personal_context_rules(
                 "rule_name": rule.get("rule_name"),
                 "rule_type": rule.get("rule_type"),
                 "decision": decision,
+                "priority": _priority_for_rule(rule),
             }
         )
-        if DECISION_PRIORITY[decision] > DECISION_PRIORITY[final_decision]:
-            final_decision = decision
+
+    matched_rules.sort(
+        key=lambda matched_rule: matched_rule.get("priority", 0),
+        reverse=True,
+    )
+    winning_rule = matched_rules[0] if matched_rules else None
+    final_decision = (
+        winning_rule.get("decision", DEFAULT_DECISION)
+        if winning_rule
+        else DEFAULT_DECISION
+    )
 
     reason = (
-        "Matched personal context rules."
+        "Highest-priority matching rule selected."
         if matched_rules
         else "No personal context rule matched; auto reply is allowed."
     )
     return {
         "decision": final_decision,
         "matched_rules": matched_rules,
+        "winning_rule": winning_rule,
         "reason": reason,
+        "fallback_used": False,
     }
 
 
@@ -433,17 +462,39 @@ def _decision_for_rule(rule: dict[str, Any], message_data: dict[str, Any]) -> st
     rule_type = _clean(rule.get("rule_type"))
     rule_value = rule.get("rule_value")
 
-    if rule_type in {"require_approval", "approval_required", "contact_requires_approval"}:
+    if rule_type in {
+        "require_approval",
+        "approval_required",
+        "needs_approval",
+        "approval",
+        "contact_requires_approval",
+    }:
         return "require_approval"
+    if rule_type in {"blocked", "block"}:
+        return "blocked"
     if rule_type in {"draft_only", "work_hours_draft"}:
         return "draft_only" if _work_hours_match(rule_value, message_data) else DEFAULT_DECISION
-    if rule_type in {"defer", "busy_status", "availability"}:
+    if rule_type in {"defer", "deferred", "busy_status", "availability"}:
         return "defer" if _busy_status_match(rule_value, message_data) else DEFAULT_DECISION
     if rule_type in {"no_auto_send", "topic_requires_approval", "money_requires_approval"}:
         return "require_approval"
 
-    decision = _clean(rule_value)
-    return decision if decision in DECISION_PRIORITY else "require_approval"
+    decision = _normalize_decision(rule_value)
+    return decision if decision in ALLOWED_DECISIONS else "require_approval"
+
+
+def _normalize_decision(value: Any) -> str:
+    if isinstance(value, dict):
+        value = value.get("decision")
+    decision = _clean(value)
+    return DECISION_ALIASES.get(decision, decision)
+
+
+def _priority_for_rule(rule: dict[str, Any]) -> int:
+    try:
+        return int(rule.get("priority", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
 
 
 def _matches_optional_filter(expected: Any, actual_values: list[Any]) -> bool:
