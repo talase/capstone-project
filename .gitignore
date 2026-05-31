@@ -7,3 +7,5 @@ __pycache__/
 profiles/
 results/
 Backend/app/model_pred/model_weights
+Backend/app/model_pred/model_weights_2
+Backend/app/model_pred/model_weights_3
