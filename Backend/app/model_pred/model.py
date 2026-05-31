@@ -9,7 +9,8 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 router = APIRouter(prefix="/model-pred", tags=["model-pred"])
 
-MODEL_DIR = Path(__file__).resolve().parent / "model_weights"
+MODEL_DIR = Path(__file__).resolve().parent / "model_weights_3"
+PREDICTION_THRESHOLD = 0.80
 
 
 class ClassifyMessageRequest(BaseModel):
@@ -18,7 +19,7 @@ class ClassifyMessageRequest(BaseModel):
 
 class ClassifyMessageResponse(BaseModel):
     message: str
-    predicted_label: str
+    predicted_labels: list[str]
     confidence: float
     probabilities: dict[str, float]
 
@@ -87,14 +88,16 @@ def classify_message(payload: ClassifyMessageRequest) -> ClassifyMessageResponse
     categories, probabilities = detector.predict_emotion_from_text(payload.message)
     probs = probabilities[0].float().tolist()
     probability_by_label = dict(zip(categories, probs))
-    predicted_label, confidence = max(
-        probability_by_label.items(),
-        key=lambda item: item[1],
-    )
+    predicted_labels = [
+        label
+        for label, probability in probability_by_label.items()
+        if probability > PREDICTION_THRESHOLD
+    ]
+    confidence = max(probability_by_label.values()) if probability_by_label else 0.0
 
     return ClassifyMessageResponse(
         message=payload.message,
-        predicted_label=predicted_label,
+        predicted_labels=predicted_labels,
         confidence=confidence,
         probabilities=probability_by_label,
     )
