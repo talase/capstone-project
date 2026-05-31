@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, status
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.personal_context_service import (
     ApprovalRequest,
@@ -20,6 +21,7 @@ from app.personal_context_service import (
     create_approval_request,
     create_rule,
     delete_rule,
+    evaluate_personal_context_rules,
     get_approval_request,
     get_current_user_status,
     list_approval_requests,
@@ -35,6 +37,23 @@ from app.supabase_client import SupabaseConfigError
 
 
 router = APIRouter(prefix="/personal-context", tags=["personal-context"])
+
+
+class PersonalContextEvaluateRequest(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    message: str = Field(..., min_length=1)
+    user_id: str = "default_user"
+    contact_id: str | None = None
+    profile_contact: str | None = None
+    contact_name: str | None = None
+    risk_level: str | None = None
+    topic: str | None = None
+    action: str | None = None
+    action_type: str | None = None
+    user_status: str | None = None
+    availability: str | None = None
+    current_time: str | None = None
 
 
 @router.post(
@@ -58,6 +77,13 @@ def get_active_personal_context_rules(
     user_id: str | None = Query(default=None),
 ) -> list[dict[str, Any]]:
     return _handle_service_call(lambda: list_active_rules(user_id=user_id))
+
+
+@router.post("/evaluate")
+def evaluate_personal_context(
+    request: PersonalContextEvaluateRequest,
+) -> dict[str, Any]:
+    return _handle_service_call(lambda: _evaluate_personal_context(request))
 
 
 @router.put("/rules/{rule_id}", response_model=PersonalContextRule)
@@ -142,6 +168,82 @@ def clear_current_status(
     user_id: str = Query(default="default_user"),
 ) -> dict[str, Any]:
     return _handle_service_call(lambda: clear_user_status(user_id))
+
+
+def _evaluate_personal_context(
+    request: PersonalContextEvaluateRequest,
+) -> dict[str, Any]:
+    message_data = request.model_dump(exclude_none=True)
+    message_data["action"] = message_data.get("action") or message_data.get("action_type")
+    message_data["topic"] = message_data.get("topic") or message_data.get("risk_level")
+
+    current_status = None
+    if not message_data.get("user_status") and not message_data.get("availability"):
+        current_status = get_current_user_status(request.user_id)
+        message_data["user_status"] = current_status["status"]
+        message_data["availability"] = current_status["status"]
+
+    rules = list_active_rules(user_id=request.user_id)
+    result = evaluate_personal_context_rules(message_data, rules)
+    result = _enforce_high_risk_approval(message_data, result)
+    personal_context = _personal_context_payload(result)
+
+    return {
+        **result,
+        "final_action": _final_action_for_decision(result["decision"]),
+        "current_status": current_status,
+        "personal_context": personal_context,
+    }
+
+
+def _enforce_high_risk_approval(
+    message_data: dict[str, Any],
+    personal_context: dict[str, Any],
+) -> dict[str, Any]:
+    if not _is_high_risk(message_data.get("risk_level")):
+        return personal_context
+
+    matched_rules = list(personal_context.get("matched_rules", []))
+    matched_rules.append(
+        {
+            "id": "system_high_risk_gate",
+            "rule_name": "High risk messages require approval",
+            "rule_type": "system_governance",
+            "decision": "require_approval",
+            "priority": 999,
+        }
+    )
+    return {
+        "decision": "require_approval",
+        "matched_rules": matched_rules,
+        "winning_rule": matched_rules[-1],
+        "reason": "High-risk message requires approval before sending.",
+        "fallback_used": personal_context.get("fallback_used", False),
+    }
+
+
+def _personal_context_payload(result: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "decision": result["decision"],
+        "reason": result.get("reason"),
+        "matched_rules": result.get("matched_rules", []),
+        "winning_rule": result.get("winning_rule"),
+        "fallback_used": result.get("fallback_used", False),
+    }
+
+
+def _final_action_for_decision(decision: str) -> str:
+    return {
+        "auto_reply": "send",
+        "draft_only": "draft",
+        "require_approval": "approval_required",
+        "defer": "deferred",
+        "blocked": "blocked",
+    }.get(decision, "approval_required")
+
+
+def _is_high_risk(risk_level: str | None) -> bool:
+    return str(risk_level or "").strip().lower() in {"high", "high_risk", "critical"}
 
 
 def _handle_service_call(callback):
