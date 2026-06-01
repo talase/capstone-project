@@ -35,5 +35,8 @@ def get_supabase_client() -> Client:
         raise SupabaseConfigError(
             "SUPABASE_URL and SUPABASE_KEY must be set in .env to use personal context rules."
         )
+    
+    print("URL:", supabase_url)
+    print("KEY EXISTS:", bool(supabase_key))
 
     return create_client(supabase_url, supabase_key)
