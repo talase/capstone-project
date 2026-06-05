@@ -57,7 +57,7 @@ class DailyActivityLoggerTests(unittest.TestCase):
             )
 
         self.assertTrue(result.ok)
-        self.assertEqual(fake_client.table_name, "approvals")
+        self.assertEqual(fake_client.table_name, "approval_logs")
         self.assertEqual(fake_client.inserted["user_id"], "default_user")
         self.assertNotIn("approval_request_id", fake_client.inserted)
         self.assertEqual(
@@ -75,6 +75,22 @@ class DailyActivityLoggerTests(unittest.TestCase):
 
         self.assertFalse(result.ok)
         self.assertEqual(result.warning()["table"], "message_logs")
+
+    def test_unresolved_contact_template_is_not_logged_as_contact_id(self):
+        fake_client = _FakeSupabaseClient()
+
+        with patch(
+            "app.daily_activity_logger.get_supabase_client",
+            return_value=fake_client,
+        ):
+            result = log_message_event(
+                direction="received",
+                message="hello",
+                contact_id="={{$json.contact_id}}",
+            )
+
+        self.assertTrue(result.ok)
+        self.assertNotIn("contact_id", fake_client.inserted)
 
 
 class _FakeResponse:

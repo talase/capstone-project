@@ -22,6 +22,7 @@ class DailyReportServiceTests(unittest.TestCase):
             {
                 "messages_received": 0,
                 "messages_sent": 0,
+                "auto_replies": 0,
                 "automatic_actions": 0,
                 "approved_actions": 0,
                 "rejected_actions": 0,
@@ -36,9 +37,9 @@ class DailyReportServiceTests(unittest.TestCase):
 
     def test_correct_counting_of_messages_actions_and_approvals(self):
         records = _empty_records()
-        records["message_logs"] = [
-            {"id": 1, "direction": "received", "message": "hi"},
-            {"id": 2, "direction": "sent", "message": "hello"},
+        records["messages"] = [
+            {"id": 1, "direction": "incoming", "message_text": "hi"},
+            {"id": 2, "direction": "outgoing", "message_text": "hello"},
         ]
         records["agent_activity_logs"] = [
             {
@@ -134,7 +135,7 @@ class DailyReportServiceTests(unittest.TestCase):
         self.assertEqual(report["needs_attention"][0]["id"], 2)
 
     def test_fetch_records_uses_supabase_date_range_and_user_filter(self):
-        fake_client = _FakeSupabaseClient({"message_logs": [{"id": 1}]})
+        fake_client = _FakeSupabaseClient({"messages": [{"id": 1}]})
 
         with patch(
             "app.daily_report_service.get_supabase_client",
@@ -142,12 +143,15 @@ class DailyReportServiceTests(unittest.TestCase):
         ):
             records = fetch_records_for_date(REPORT_DATE, user_id="user-1")
 
-        self.assertEqual(records["message_logs"], [{"id": 1}])
+        self.assertEqual(records["messages"], [{"id": 1}])
         self.assertEqual(len(fake_client.tables), len(REPORT_TABLES))
-        first_query = fake_client.tables["message_logs"]
+        first_query = fake_client.tables["messages"]
         self.assertIn(("gte", "created_at", "2026-05-22T00:00:00+00:00"), first_query.calls)
         self.assertIn(("lt", "created_at", "2026-05-23T00:00:00+00:00"), first_query.calls)
-        self.assertIn(("eq", "user_id", "user-1"), first_query.calls)
+        self.assertNotIn(("eq", "user_id", "user-1"), first_query.calls)
+
+        activity_query = fake_client.tables["agent_activity_logs"]
+        self.assertIn(("eq", "user_id", "user-1"), activity_query.calls)
 
     def test_endpoint_returns_valid_json(self):
         payload = build_daily_report(REPORT_DATE, _empty_records())

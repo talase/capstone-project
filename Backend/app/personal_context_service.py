@@ -12,7 +12,7 @@ from app.supabase_client import SupabaseConfigError, get_supabase_client
 
 
 TABLE_NAME = "personal_context_rules"
-APPROVAL_TABLE_NAME = "approval_requests"
+APPROVAL_TABLE_NAME = "approvals"
 USER_STATUS_TABLE_NAME = "user_statuses"
 DEFAULT_DECISION = "auto_reply"
 ALLOWED_DECISIONS = {
@@ -237,7 +237,7 @@ def create_approval_request(request: ApprovalRequestCreate) -> dict[str, Any]:
     return created
 
 
-def list_approval_requests(
+def list_approvals(
     user_id: str | None = None,
     status: str | None = None,
 ) -> list[dict[str, Any]]:
@@ -248,6 +248,13 @@ def list_approval_requests(
         query = query.eq("status", status)
     response = query.execute()
     return _rows(response)
+
+
+def list_approval_requests(
+    user_id: str | None = None,
+    status: str | None = None,
+) -> list[dict[str, Any]]:
+    return list_approvals(user_id=user_id, status=status)
 
 
 def get_approval_request(approval_id: int | str) -> dict[str, Any]:

@@ -16,7 +16,7 @@ create table if not exists personal_context_rules (
   updated_at timestamptz not null default now()
 );
 
-create table if not exists approval_requests (
+create table if not exists approvals (
   id uuid primary key default gen_random_uuid(),
   user_id text not null,
   contact_id text,
@@ -56,11 +56,11 @@ create index if not exists personal_context_rules_user_idx
 create index if not exists personal_context_rules_active_idx
   on personal_context_rules (is_active);
 
-create index if not exists approval_requests_user_idx
-  on approval_requests (user_id);
+create index if not exists approvals_user_idx
+  on approvals (user_id);
 
-create index if not exists approval_requests_status_idx
-  on approval_requests (status);
+create index if not exists approvals_status_idx
+  on approvals (status);
 
 create index if not exists user_statuses_user_idx
   on user_statuses (user_id);
@@ -83,11 +83,11 @@ create trigger personal_context_rules_updated_at
 before update on personal_context_rules
 for each row execute function set_updated_at();
 
-drop trigger if exists approval_requests_updated_at
-  on approval_requests;
+drop trigger if exists approvals_updated_at
+  on approvals;
 
-create trigger approval_requests_updated_at
-before update on approval_requests
+create trigger approvals_updated_at
+before update on approvals
 for each row execute function set_updated_at();
 
 drop trigger if exists user_statuses_updated_at

@@ -7,7 +7,7 @@ declare
   table_name text;
   table_names text[] := array[
     'personal_context_rules',
-    'approval_requests',
+    'approvals',
     'style_profiles',
     'user_statuses',
     'current_status',

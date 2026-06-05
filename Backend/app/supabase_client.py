@@ -30,10 +30,10 @@ def get_supabase_client() -> Client:
         )
 
     supabase_url = os.getenv("SUPABASE_URL")
-    supabase_key = os.getenv("SUPABASE_KEY")
+    supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_KEY")
     if not supabase_url or not supabase_key:
         raise SupabaseConfigError(
-            "SUPABASE_URL and SUPABASE_KEY must be set in .env to use personal context rules."
+            "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY or SUPABASE_KEY must be set in .env."
         )
     
     print("URL:", supabase_url)

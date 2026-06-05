@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Any
 
 from app.supabase_client import get_supabase_client
 
 DEFAULT_USER_ID = "default_user"
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -35,8 +37,8 @@ def log_message_event(
     return _safe_insert(
         "message_logs",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "direction": direction,
             "message": message,
             "channel": channel,
@@ -60,8 +62,8 @@ def log_agent_activity(
     return _safe_insert(
         "agent_activity_logs",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "action_category": action_category,
             "action_type": action_type,
             "status": status,
@@ -89,10 +91,10 @@ def log_approval_event(
     if approval_request_id is not None:
         log_metadata = {**log_metadata, "approval_request_id": str(approval_request_id)}
     return _safe_insert(
-        "approvals",
+        "approval_logs",
         {
             "user_id": user_id or DEFAULT_USER_ID,
-            "contact_id": contact_id,
+            "contact_id": _clean_contact_id(contact_id),
             "approval_request_id": _int_or_none(approval_request_id),
             "action_category": action_category,
             "status": status,
@@ -118,8 +120,8 @@ def log_high_risk_alert(
     return _safe_insert(
         "high_risk_alerts",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "risk_level": risk_level,
             "action_category": action_category,
             "status": status,
@@ -144,8 +146,8 @@ def log_personal_context_decision(
     return _safe_insert(
         "personal_context_decision_logs",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "decision": decision,
             "reason": reason,
             "matched_rules": matched_rules or [],
@@ -168,8 +170,8 @@ def log_reminder_created(
     return _safe_insert(
         "reminder_logs",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "reminder_text": reminder_text,
             "remind_at": remind_at,
             "status": status,
@@ -190,8 +192,8 @@ def log_scheduled_message_created(
     return _safe_insert(
         "scheduled_message_logs",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "message": message,
             "scheduled_for": scheduled_for,
             "status": status,
@@ -214,8 +216,8 @@ def log_rag_access(
     return _safe_insert(
         "rag_access_logs",
         {
-            "user_id": user_id,
-            "contact_id": contact_id,
+            "user_id": user_id or DEFAULT_USER_ID,
+            "contact_id": _clean_contact_id(contact_id),
             "file_id": file_id,
             "file_name": file_name,
             "file_path": file_path,
@@ -230,10 +232,19 @@ def _safe_insert(table_name: str, payload: dict[str, Any]) -> LogResult:
     data = {key: value for key, value in payload.items() if value is not None}
     try:
         response = get_supabase_client().table(table_name).insert(data).execute()
+        response_error = getattr(response, "error", None)
+        if response_error:
+            raise RuntimeError(str(response_error))
         rows = getattr(response, "data", None)
         row = rows[0] if isinstance(rows, list) and rows else data
         return LogResult(ok=True, table=table_name, row=row)
     except Exception as exc:  # pragma: no cover - depends on Supabase runtime
+        LOGGER.warning(
+            "Daily activity log insert failed for %s: %s",
+            table_name,
+            exc,
+            exc_info=True,
+        )
         return LogResult(ok=False, table=table_name, error=str(exc))
 
 
@@ -242,3 +253,13 @@ def _int_or_none(value: int | str | None) -> int | None:
         return int(value) if value is not None else None
     except (TypeError, ValueError):
         return None
+
+
+def _clean_contact_id(contact_id: str | None) -> str | None:
+    clean_id = str(contact_id or "").strip()
+    if not clean_id:
+        return None
+    if clean_id.startswith("={{") or "$json.contact_id" in clean_id:
+        LOGGER.warning("Refusing to log unresolved contact_id template: %s", clean_id)
+        return None
+    return clean_id

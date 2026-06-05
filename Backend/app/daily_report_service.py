@@ -9,7 +9,7 @@ from typing import Any
 from app.supabase_client import SupabaseConfigError, get_supabase_client
 
 
-MESSAGE_LOGS_TABLE = "message_logs"
+MESSAGES_TABLE = "messages"
 ACTIVITY_LOGS_TABLE = "agent_activity_logs"
 APPROVALS_TABLE = "approvals"
 HIGH_RISK_ALERTS_TABLE = "high_risk_alerts"
@@ -19,7 +19,7 @@ RAG_ACCESS_LOGS_TABLE = "rag_access_logs"
 PERSONAL_CONTEXT_DECISION_LOGS_TABLE = "personal_context_decision_logs"
 
 REPORT_TABLES = (
-    MESSAGE_LOGS_TABLE,
+    MESSAGES_TABLE,
     ACTIVITY_LOGS_TABLE,
     APPROVALS_TABLE,
     HIGH_RISK_ALERTS_TABLE,
@@ -53,6 +53,8 @@ def fetch_records_for_date(
 
     start_at = datetime.combine(report_date, time.min, tzinfo=timezone.utc)
     end_at = start_at + timedelta(days=1)
+    print("daily report start_at:", start_at.isoformat())
+    print("daily report end_at:", end_at.isoformat())
 
     try:
         client = get_supabase_client()
@@ -78,7 +80,16 @@ def build_daily_report(
 ) -> dict[str, Any]:
     """Build the final JSON-compatible daily report payload."""
 
-    message_logs = records.get(MESSAGE_LOGS_TABLE, [])
+    print("REPORT_TABLES:", REPORT_TABLES)
+    print("messages records count:", len(records.get("messages", [])))
+    print("messages directions:", [row.get("direction") for row in records.get("messages", [])])
+    print("messages sample:", records.get("messages", [])[:3])
+    for table_name, rows in records.items():
+        print(f"REPORT DEBUG: {table_name} -> {len(rows)} rows")
+        if rows:
+            print(f"REPORT DEBUG SAMPLE {table_name}:", rows[0])
+
+    messages = records.get(MESSAGES_TABLE, [])
     activity_logs = records.get(ACTIVITY_LOGS_TABLE, [])
     approvals = records.get(APPROVALS_TABLE, [])
     high_risk_alerts = records.get(HIGH_RISK_ALERTS_TABLE, [])
@@ -88,12 +99,12 @@ def build_daily_report(
     personal_context_decisions = records.get(PERSONAL_CONTEXT_DECISION_LOGS_TABLE, [])
 
     messages_received = [
-        row for row in message_logs if _clean(_first_value(row, "direction", "message_direction", "type"))
-        in {"received", "incoming", "inbound"}
+        row for row in messages if _clean(row.get("direction"))
+        in {"incoming", "received", "inbound"}
     ]
     messages_sent = [
-        row for row in message_logs if _clean(_first_value(row, "direction", "message_direction", "type"))
-        in {"sent", "outgoing", "outbound"}
+        row for row in messages if _clean(row.get("direction"))
+        in {"outgoing", "sent", "outbound"}
     ]
 
     automatic_actions = [
@@ -117,6 +128,7 @@ def build_daily_report(
         "summary": {
             "messages_received": len(messages_received),
             "messages_sent": len(messages_sent),
+            "auto_replies": len(automatic_actions),
             "automatic_actions": len(automatic_actions),
             "approved_actions": len(user_approved_actions),
             "rejected_actions": len(rejected_actions),
@@ -153,10 +165,61 @@ def _fetch_table_records(
         .gte("created_at", start_at.isoformat())
         .lt("created_at", end_at.isoformat())
     )
-    if user_id:
+    if table_name == MESSAGES_TABLE:
+        print("fetching table:", table_name)
+        print("start_at:", start_at.isoformat())
+        print("end_at:", end_at.isoformat())
+        direct_messages_response = (
+            client.table("messages")
+            .select("*")
+            .limit(5)
+            .execute()
+        )
+        print("direct messages no date filter response:", direct_messages_response)
+        print(
+            "direct messages no date filter data:",
+            getattr(direct_messages_response, "data", None),
+        )
+        direct_messages_date_response = (
+            client.table("messages")
+            .select("direction,created_at,message_text")
+            .gte("created_at", "2026-06-05 00:00:00+00")
+            .lt("created_at", "2026-06-06 00:00:00+00")
+            .execute()
+        )
+        print("direct messages space timestamp response:", direct_messages_date_response)
+        print(
+            "direct messages space timestamp data:",
+            getattr(direct_messages_date_response, "data", None),
+        )
+        print(
+            "generated query filters:",
+            {
+                "table_name": table_name,
+                "created_at_gte": start_at.isoformat(),
+                "created_at_lt": end_at.isoformat(),
+                "user_id_filter_applied": bool(user_id and _table_has_user_id(table_name)),
+            },
+        )
+    if table_name == HIGH_RISK_ALERTS_TABLE:
+        print("fetching table:", table_name)
+    if user_id and _table_has_user_id(table_name):
         query = query.eq("user_id", user_id)
     response = query.order("created_at", desc=False).execute()
-    return _rows(response)
+    rows = _rows(response)
+    if table_name == MESSAGES_TABLE:
+        print("raw response:", response)
+        print("raw response data:", getattr(response, "data", None))
+        print("rows returned:", len(rows))
+    if table_name == HIGH_RISK_ALERTS_TABLE:
+        print("raw response:", response)
+        print("raw response data:", getattr(response, "data", None))
+        print("rows returned:", len(rows))
+    return rows
+
+
+def _table_has_user_id(table_name: str) -> bool:
+    return table_name != MESSAGES_TABLE
 
 
 def _rows(response: Any) -> list[dict[str, Any]]:
