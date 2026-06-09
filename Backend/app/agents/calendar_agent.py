@@ -12,9 +12,11 @@ from app.services.calendar_service import (
     update_event,
 )
 
+import os
+
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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"
+    api_key=os.getenv("OPENROUTER_API_KEY")
 )
 
 
