@@ -323,7 +323,6 @@ def _get_current_status(user_id: str) -> dict[str, Any]:
             "updated_at": None,
         }
 
-
 def _enforce_high_risk_approval(
     message_data: dict[str, Any],
     personal_context: dict[str, Any],

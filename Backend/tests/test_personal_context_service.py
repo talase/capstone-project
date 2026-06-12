@@ -1,12 +1,17 @@
 import unittest
 from unittest.mock import patch
 
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
 from app.personal_context_service import (
     ALLOWED_DECISIONS,
     ApprovalRequestCreate,
+    PersonalContextRuleCreate,
     UserStatusSet,
     clear_user_status,
     create_approval_request,
+    create_rule,
     evaluate_personal_context_rules,
     get_current_user_status,
     set_approval_status,
@@ -15,11 +20,92 @@ from app.personal_context_service import (
 from app.personal_context_routes import (
     PersonalContextEvaluateRequest,
     _evaluate_personal_context,
+    router as personal_context_router,
 )
 from app.style_engine import _enforce_high_risk_approval, _final_action_for_decision
 
 
 class PersonalContextServiceTests(unittest.TestCase):
+    def test_create_rule_inserts_all_fields(self):
+        fake_table = _FakeRuleInsertTable()
+        rule = PersonalContextRuleCreate(
+            user_id="u1",
+            rule_name="Work hours draft",
+            rule_type="work_hours_draft",
+            rule_value={"window": "09:00-17:00"},
+            priority=5,
+            contact_id="boss",
+            topic="work",
+            action="send_message",
+            is_active=True,
+        )
+
+        with patch("app.personal_context_service._table", return_value=fake_table):
+            created = create_rule(rule)
+
+        self.assertEqual(fake_table.inserted, rule.model_dump())
+        self.assertEqual(created["id"], 1)
+        self.assertEqual(created["rule_value"], {"window": "09:00-17:00"})
+
+    def test_create_rule_endpoint_returns_201_and_created_rule(self):
+        fake_table = _FakeRuleInsertTable()
+        app = FastAPI()
+        app.include_router(personal_context_router)
+        client = TestClient(app)
+        payload = {
+            "user_id": "u1",
+            "rule_name": "Money approval",
+            "rule_type": "money_requires_approval",
+            "rule_value": {"decision": "require_approval"},
+            "priority": 10,
+            "topic": "money",
+            "is_active": True,
+        }
+
+        with patch("app.personal_context_service._table", return_value=fake_table):
+            response = client.post("/personal-context/rules", json=payload)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["id"], 1)
+        self.assertEqual(response.json()["rule_name"], "Money approval")
+        self.assertEqual(fake_table.inserted, payload)
+
+    def test_create_rule_endpoint_rejects_null_rule_value(self):
+        app = FastAPI()
+        app.include_router(personal_context_router)
+        client = TestClient(app)
+
+        response = client.post(
+            "/personal-context/rules",
+            json={
+                "user_id": "u1",
+                "rule_name": "Invalid rule",
+                "rule_type": "custom",
+                "rule_value": None,
+            },
+        )
+
+        self.assertEqual(response.status_code, 422)
+
+    def test_create_rule_endpoint_rejects_unsupported_time_columns(self):
+        app = FastAPI()
+        app.include_router(personal_context_router)
+        client = TestClient(app)
+
+        response = client.post(
+            "/personal-context/rules",
+            json={
+                "user_id": "u1",
+                "rule_name": "Work hours draft",
+                "rule_type": "work_hours_draft",
+                "rule_value": {"window": "09:00-17:00"},
+                "start_time": "09:00",
+                "end_time": "17:00",
+            },
+        )
+
+        self.assertEqual(response.status_code, 422)
+
     def test_auto_reply_when_no_rules_match(self):
         result = evaluate_personal_context_rules(
             {"contact_id": "friend", "message": "hey"},
@@ -145,6 +231,33 @@ class PersonalContextServiceTests(unittest.TestCase):
         self.assertEqual(result["decision"], "defer")
         self.assertEqual(_final_action_for_decision(result["decision"]), "deferred")
 
+    def test_null_rule_filters_match_all_messages(self):
+        result = evaluate_personal_context_rules(
+            {
+                "contact_id": "friend",
+                "message": "hello",
+                "topic": "general",
+                "action": "send_message",
+                "user_status": "busy",
+            },
+            [
+                {
+                    "id": 7,
+                    "rule_name": "Global busy defer",
+                    "rule_type": "busy_status",
+                    "rule_value": {"status": "busy"},
+                    "priority": 0,
+                    "contact_id": None,
+                    "topic": None,
+                    "action": None,
+                    "is_active": True,
+                }
+            ],
+        )
+
+        self.assertEqual(result["decision"], "defer")
+        self.assertEqual(result["winning_rule"]["id"], 7)
+
     def test_defer_for_unavailable_status(self):
         result = evaluate_personal_context_rules(
             {"contact_id": "friend", "message": "hello", "user_status": "unavailable"},
@@ -245,6 +358,45 @@ class PersonalContextServiceTests(unittest.TestCase):
         self.assertEqual(current["status"], "busy")
         self.assertEqual(cleared["status"], "available")
 
+    def test_current_status_logs_query_result_and_selected_row(self):
+        fake_table = _FakeStatusTable()
+        fake_table.rows.append(
+            {
+                "id": 1,
+                "user_id": "default_user",
+                "status": "busy",
+                "is_active": True,
+                "expires_at": None,
+                "created_at": "2026-06-06T10:00:00+00:00",
+            }
+        )
+
+        with (
+            patch("app.personal_context_service._status_table", return_value=fake_table),
+            self.assertLogs("app.personal_context_service", level="DEBUG") as logs,
+        ):
+            current = get_current_user_status("default_user")
+
+        self.assertEqual(current["status"], "busy")
+        output = "\n".join(logs.output)
+        self.assertIn("'user_id': 'default_user'", output)
+        self.assertIn("'is_active': True", output)
+        self.assertIn("row_count=1", output)
+        self.assertIn("selected row", output)
+        self.assertNotIn("fallback", output)
+
+    def test_current_status_logs_available_fallback(self):
+        fake_table = _FakeStatusTable()
+
+        with (
+            patch("app.personal_context_service._status_table", return_value=fake_table),
+            self.assertLogs("app.personal_context_service", level="DEBUG") as logs,
+        ):
+            current = get_current_user_status("default_user")
+
+        self.assertEqual(current["status"], "available")
+        self.assertIn("fallback", "\n".join(logs.output))
+
     def test_status_based_defer_maps_to_no_send(self):
         result = evaluate_personal_context_rules(
             {"message": "hello", "user_status": "busy"},
@@ -343,10 +495,82 @@ class PersonalContextServiceTests(unittest.TestCase):
         self.assertFalse(response["personal_context"]["fallback_used"])
         self.assertIn(response["personal_context"]["decision"], ALLOWED_DECISIONS)
 
+    def test_evaluate_endpoint_uses_database_busy_status_and_defers(self):
+        app = FastAPI()
+        app.include_router(personal_context_router)
+        client = TestClient(app)
+
+        with (
+            patch(
+                "app.personal_context_routes.get_current_user_status",
+                return_value={
+                    "id": 1,
+                    "user_id": "default_user",
+                    "status": "busy",
+                    "is_active": True,
+                    "expires_at": None,
+                },
+            ),
+            patch(
+                "app.personal_context_routes.list_active_rules",
+                return_value=[
+                    {
+                        "id": 3,
+                        "user_id": "default_user",
+                        "rule_name": "Busy defer",
+                        "rule_type": "busy_status",
+                        "rule_value": {"status": "busy"},
+                        "priority": 0,
+                        "contact_id": None,
+                        "topic": None,
+                        "action": None,
+                        "is_active": True,
+                    }
+                ],
+            ),
+            patch(
+                "app.personal_context_routes._log_evaluation_activity",
+                return_value=[],
+            ),
+        ):
+            response = client.post(
+                "/personal-context/evaluate",
+                json={
+                    "user_id": "default_user",
+                    "message": "Are you available?",
+                },
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["current_status"]["status"], "busy")
+        self.assertEqual(response.json()["decision"], "defer")
+        self.assertEqual(response.json()["final_action"], "deferred")
+
 
 class _FakeResponse:
     def __init__(self, data):
         self.data = data
+
+
+class _FakeRuleInsertTable:
+    def __init__(self):
+        self.inserted = None
+
+    def insert(self, data):
+        self.inserted = dict(data)
+        return self
+
+    def execute(self):
+        return _FakeResponse(
+            [
+                {
+                    "id": 1,
+                    **self.inserted,
+                    "created_at": "2026-06-06T10:00:00+00:00",
+                    "updated_at": "2026-06-06T10:00:00+00:00",
+                }
+            ]
+        )
 
 
 class _FakeApprovalTable:

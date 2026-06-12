@@ -29,7 +29,8 @@ Create `Backend/app/.env` or export these values before starting the server:
 ```env
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_service_or_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_server_only_service_role_key
+SUPABASE_KEY=your_publishable_fallback_key
 ```
 
 ## Endpoints

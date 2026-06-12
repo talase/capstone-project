@@ -101,3 +101,6 @@ def classify_message(payload: ClassifyMessageRequest) -> ClassifyMessageResponse
         confidence=confidence,
         probabilities=probability_by_label,
     )
+
+print("MODEL_DIR =", MODEL_DIR)
+print("EXISTS =", MODEL_DIR.exists())

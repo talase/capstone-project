@@ -12,6 +12,8 @@ You are generating one WhatsApp-style reply.
 
 Use this mode because style confidence is low or unavailable:
 - Reply naturally, politely, and safely.
+- Sound like a normal ongoing WhatsApp conversation, not customer support.
+- Never use stock service phrases such as "How can I help you today?" or "So nice to hear from you!"
 - Do not strongly imitate the user's style.
 - Do not copy any training messages or invent facts.
 - Keep the reply appropriate for the risk level and action type.
@@ -46,6 +48,9 @@ You are generating one WhatsApp-style reply using the user's global communicatio
 
 Rules:
 - Use only the global style profile as the style signal.
+- Sound like an existing friend or acquaintance, never a support assistant.
+- Never use stock service phrases such as "How can I help you today?" or "So nice to hear from you!"
+- Use patterns selectively; do not force emojis or repeat the same greeting every time.
 - Apply high-level traits, not exact wording from previous messages.
 - Keep the reply natural for WhatsApp and suitable for the incoming message.
 - Do not copy training messages or over-imitate.
@@ -82,6 +87,10 @@ You are generating one WhatsApp-style reply using the style learned for this con
 Rules:
 - Use only the contact-specific style profile as the style signal.
 - Adapt to how the user usually talks with this contact.
+- Sound like an existing friend or acquaintance, never a support assistant.
+- Never use stock service phrases such as "How can I help you today?" or "So nice to hear from you!"
+- Use learned greetings, phrases, punctuation, and tone only when confidence supports this mode.
+- Do not force an emoji, repeat the same greeting every time, or exaggerate repeated letters.
 - Apply high-level traits, not exact wording from previous messages.
 - Keep the reply natural for WhatsApp and suitable for the incoming message.
 - Be extra cautious if the risk level or action type suggests a sensitive action.
@@ -117,6 +126,9 @@ You are generating one WhatsApp-style reply using both global and contact-specif
 Rules:
 - Use global style as the general baseline.
 - Give contact-specific style higher priority when it differs from global style.
+- Sound like an existing friend or acquaintance, never a support assistant.
+- Never use stock service phrases such as "How can I help you today?" or "So nice to hear from you!"
+- Use contact-specific patterns selectively; do not force emojis or repeat the same greeting every time.
 - Apply high-level traits, not exact wording from previous messages.
 - Keep the reply natural for WhatsApp and suitable for the incoming message.
 - Do not copy training messages or over-imitate.
@@ -305,8 +317,8 @@ def _trait_label(trait: str, score: float) -> str:
 
 def _format_recurring_patterns(
     normalized_mode: str,
-    global_patterns: list[str],
-    contact_patterns: list[str],
+    global_patterns: Any,
+    contact_patterns: Any,
 ) -> str:
     if normalized_mode == "global_style":
         return _bullet_list(global_patterns)
@@ -324,11 +336,82 @@ def _format_recurring_patterns(
     return "- No strong recurring patterns. Use a natural neutral reply."
 
 
-def _bullet_list(items: list[str]) -> str:
+def _bullet_list(items: Any) -> str:
+    if isinstance(items, dict):
+        punctuation = items.get("punctuation_style", {})
+        lines = []
+        for label, key in (
+            ("Greetings", "greetings"),
+            ("Common phrases", "common_phrases"),
+            ("Emojis", "emoji_usage"),
+            ("Tone", "tone_indicators"),
+        ):
+            values = items.get(key, [])
+            if isinstance(values, list) and values:
+                lines.append(f"- {label}: {', '.join(str(value) for value in values)}")
+        if isinstance(punctuation, dict):
+            habits = []
+            if punctuation.get("uses_exclamation"):
+                habits.append("frequent exclamation marks")
+            if punctuation.get("uses_repeated_letters"):
+                habits.append("repeated letters")
+            question_frequency = int(punctuation.get("question_frequency", 0) or 0)
+            if question_frequency:
+                habits.append(f"questions observed in {question_frequency} messages")
+            if habits:
+                lines.append(f"- Punctuation: {', '.join(habits)}")
+        behavior = items.get("conversation_behavior", {})
+        if isinstance(behavior, dict):
+            lines.extend(_format_conversation_behavior(behavior))
+        return "\n".join(lines) or "- No reliable recurring patterns available."
+
+    if not isinstance(items, list):
+        return "- No reliable recurring patterns available."
     clean_items = [_clean_text(item, "") for item in items if _clean_text(item, "")]
     if not clean_items:
         return "- No reliable recurring patterns available."
     return "\n".join(f"- {item}" for item in clean_items)
+
+
+def _format_conversation_behavior(behavior: dict[str, Any]) -> list[str]:
+    length_style = _clean_text(behavior.get("reply_length_style"), "medium")
+    acknowledgment = _clean_text(behavior.get("acknowledgment_style"), "short")
+    helpfulness = _clean_text(behavior.get("helpfulness_mode"), "friend")
+    asks_followup = bool(behavior.get("asks_followup_often", False))
+    assistant_closings = bool(behavior.get("uses_assistant_closings", False))
+
+    lines = [
+        f"- Conversation behavior: reply length={length_style}, "
+        f"acknowledgment={acknowledgment}, helpfulness={helpfulness}"
+    ]
+    if length_style == "brief":
+        lines.append("- Behavior guidance: keep the reply short and direct.")
+    elif length_style == "detailed":
+        lines.append("- Behavior guidance: a more detailed reply is natural when useful.")
+
+    if helpfulness == "friend":
+        lines.append(
+            "- Behavior guidance: reply like a friend; avoid assistant or customer-service endings."
+        )
+    elif helpfulness == "professional":
+        lines.append("- Behavior guidance: keep the reply task-focused and professional.")
+
+    if not asks_followup:
+        lines.append("- Behavior guidance: do not force a follow-up question.")
+    if acknowledgment == "short":
+        lines.append(
+            "- Behavior guidance: answer simple acknowledgments such as okay, sure, or gotcha briefly."
+        )
+    elif acknowledgment == "supportive":
+        lines.append("- Behavior guidance: use a supportive acknowledgment when appropriate.")
+    elif acknowledgment == "warm":
+        lines.append("- Behavior guidance: use a warm acknowledgment when appropriate.")
+
+    if assistant_closings and helpfulness == "assistant":
+        lines.append(
+            "- Behavior guidance: assistant-style closings are observed, but use them only when context calls for one."
+        )
+    return lines
 
 
 def _clean_text(value: Any, default: str) -> str:

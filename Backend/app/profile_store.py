@@ -26,7 +26,7 @@ def neutral_profile(message_count: int = 0, batch_count: int = 0) -> dict[str, A
             trait: {"score": 0.5, "confidence": 0}
             for trait in TRAITS
         },
-        "patterns": [],
+        "patterns": empty_style_patterns(),
         "overall_confidence": 0,
         "message_count": message_count,
         "batch_count": batch_count,
@@ -60,9 +60,32 @@ def normalize_confidence(value: Any) -> int:
     return _as_int(clamp(confidence, 0, 100), 0)
 
 
-def sanitize_patterns(patterns: Any, max_items: int = 5) -> list[str]:
-    """Keep short abstract patterns and drop quote-like or oversized content."""
+def empty_style_patterns() -> dict[str, Any]:
+    return {
+        "greetings": [],
+        "common_phrases": [],
+        "emoji_usage": [],
+        "punctuation_style": {
+            "uses_exclamation": False,
+            "uses_repeated_letters": False,
+            "question_frequency": 0,
+        },
+        "tone_indicators": [],
+        "conversation_behavior": empty_conversation_behavior(),
+    }
 
+
+def empty_conversation_behavior() -> dict[str, Any]:
+    return {
+        "reply_length_style": "medium",
+        "asks_followup_often": False,
+        "uses_assistant_closings": False,
+        "acknowledgment_style": "short",
+        "helpfulness_mode": "friend",
+    }
+
+
+def _sanitize_pattern_list(patterns: Any, max_items: int = 10) -> list[str]:
     if not isinstance(patterns, list):
         return []
 
@@ -73,7 +96,6 @@ def sanitize_patterns(patterns: Any, max_items: int = 5) -> list[str]:
         item = pattern.strip().replace("\n", " ")
         if not item:
             continue
-        # Prevent storing copied message-like content. Patterns should be abstract.
         if '"' in item or "'" in item:
             continue
         if len(item.split()) > 18:
@@ -83,6 +105,61 @@ def sanitize_patterns(patterns: Any, max_items: int = 5) -> list[str]:
         if len(clean) >= max_items:
             break
     return clean
+
+
+def sanitize_patterns(patterns: Any) -> dict[str, Any] | list[str]:
+    """Normalize structured patterns while retaining legacy list profiles."""
+
+    if isinstance(patterns, list):
+        return _sanitize_pattern_list(patterns, max_items=5)
+    if not isinstance(patterns, dict):
+        return empty_style_patterns()
+
+    clean = empty_style_patterns()
+    clean["greetings"] = _sanitize_pattern_list(patterns.get("greetings"))
+    clean["common_phrases"] = _sanitize_pattern_list(patterns.get("common_phrases"))
+    clean["emoji_usage"] = _sanitize_pattern_list(patterns.get("emoji_usage"))
+    clean["tone_indicators"] = _sanitize_pattern_list(patterns.get("tone_indicators"))
+
+    punctuation = patterns.get("punctuation_style", {})
+    if isinstance(punctuation, dict):
+        clean["punctuation_style"] = {
+            "uses_exclamation": bool(punctuation.get("uses_exclamation", False)),
+            "uses_repeated_letters": bool(punctuation.get("uses_repeated_letters", False)),
+            "question_frequency": max(
+                0, _as_int(punctuation.get("question_frequency"), 0)
+            ),
+        }
+
+    behavior = patterns.get("conversation_behavior", {})
+    if isinstance(behavior, dict):
+        clean["conversation_behavior"] = {
+            "reply_length_style": _allowed_value(
+                behavior.get("reply_length_style"),
+                {"brief", "medium", "detailed"},
+                "medium",
+            ),
+            "asks_followup_often": bool(behavior.get("asks_followup_often", False)),
+            "uses_assistant_closings": bool(
+                behavior.get("uses_assistant_closings", False)
+            ),
+            "acknowledgment_style": _allowed_value(
+                behavior.get("acknowledgment_style"),
+                {"short", "warm", "supportive"},
+                "short",
+            ),
+            "helpfulness_mode": _allowed_value(
+                behavior.get("helpfulness_mode"),
+                {"friend", "assistant", "professional"},
+                "friend",
+            ),
+        }
+    return clean
+
+
+def _allowed_value(value: Any, allowed: set[str], default: str) -> str:
+    clean = str(value or "").strip().lower()
+    return clean if clean in allowed else default
 
 
 def sanitize_profile(raw: Any, message_count: int | None = None) -> dict[str, Any]:
@@ -251,8 +328,10 @@ def merge_profiles(existing: dict[str, Any], new: dict[str, Any]) -> dict[str, A
             "confidence": _as_int(clamp(confidence, 0, 100), 0),
         }
 
-    combined_patterns = old.get("patterns", []) + incoming.get("patterns", [])
-    merged["patterns"] = sanitize_patterns(combined_patterns)
+    merged["patterns"] = _merge_patterns(
+        old.get("patterns", empty_style_patterns()),
+        incoming.get("patterns", empty_style_patterns()),
+    )
     merged["overall_confidence"] = _as_int(
         clamp(
             (old.get("overall_confidence", 0) * old_batches
@@ -267,6 +346,40 @@ def merge_profiles(existing: dict[str, Any], new: dict[str, Any]) -> dict[str, A
         incoming.get("message_count"), 0
     )
     merged["batch_count"] = total_batches
+    return merged
+
+
+def _merge_patterns(existing: Any, incoming: Any) -> dict[str, Any] | list[str]:
+    old = sanitize_patterns(existing)
+    new = sanitize_patterns(incoming)
+    if isinstance(old, list) and isinstance(new, list):
+        return _sanitize_pattern_list(old + new, max_items=5)
+    if isinstance(old, list):
+        return new
+    if isinstance(new, list):
+        return old
+
+    merged = empty_style_patterns()
+    for key in ("greetings", "common_phrases", "emoji_usage", "tone_indicators"):
+        merged[key] = _sanitize_pattern_list(old[key] + new[key])
+    merged["punctuation_style"] = {
+        "uses_exclamation": (
+            old["punctuation_style"]["uses_exclamation"]
+            or new["punctuation_style"]["uses_exclamation"]
+        ),
+        "uses_repeated_letters": (
+            old["punctuation_style"]["uses_repeated_letters"]
+            or new["punctuation_style"]["uses_repeated_letters"]
+        ),
+        "question_frequency": (
+            old["punctuation_style"]["question_frequency"]
+            + new["punctuation_style"]["question_frequency"]
+        ),
+    }
+    # Behavioral categories describe the newest observed conversation set.
+    # Unlike recurring surface patterns, retaining an old boolean forever would
+    # make the profile unable to adapt when a contact's interaction changes.
+    merged["conversation_behavior"] = new["conversation_behavior"]
     return merged
 
 

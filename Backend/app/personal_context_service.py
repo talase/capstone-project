@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime, time, timezone
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.daily_activity_logger import log_approval_event
 from app.supabase_client import SupabaseConfigError, get_supabase_client
 
+
+LOGGER = logging.getLogger(__name__)
 
 TABLE_NAME = "personal_context_rules"
 APPROVAL_TABLE_NAME = "approvals"
@@ -66,6 +69,8 @@ class PersonalContextError(RuntimeError):
 
 
 class PersonalContextRuleBase(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
     user_id: str = Field(..., min_length=1)
     rule_name: str = Field(..., min_length=1, max_length=120)
     rule_type: str = Field(..., min_length=1, max_length=80)
@@ -76,12 +81,21 @@ class PersonalContextRuleBase(BaseModel):
     action: str | None = None
     is_active: bool = True
 
+    @field_validator("rule_value")
+    @classmethod
+    def validate_rule_value(cls, value: Any) -> Any:
+        if value is None:
+            raise ValueError("rule_value must not be null")
+        return value
+
 
 class PersonalContextRuleCreate(PersonalContextRuleBase):
     pass
 
 
 class PersonalContextRuleUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
     rule_name: str | None = Field(default=None, min_length=1, max_length=120)
     rule_type: str | None = Field(default=None, min_length=1, max_length=80)
     rule_value: Any | None = None
@@ -90,6 +104,13 @@ class PersonalContextRuleUpdate(BaseModel):
     topic: str | None = None
     action: str | None = None
     is_active: bool | None = None
+
+    @field_validator("rule_value")
+    @classmethod
+    def validate_rule_value(cls, value: Any) -> Any:
+        if value is None:
+            raise ValueError("rule_value must not be null")
+        return value
 
 
 class PersonalContextRule(PersonalContextRuleBase):
@@ -308,6 +329,13 @@ def set_user_status(status: UserStatusSet) -> dict[str, Any]:
 def get_current_user_status(user_id: str) -> dict[str, Any]:
     """Return the active non-expired user status, or available if none exists."""
 
+    LOGGER.debug(
+        "PCM status lookup: table=%s user_id=%r filters=%s order=%s",
+        USER_STATUS_TABLE_NAME,
+        user_id,
+        {"user_id": user_id, "is_active": True},
+        {"column": "created_at", "desc": True},
+    )
     response = (
         _status_table()
         .select("*")
@@ -316,9 +344,33 @@ def get_current_user_status(user_id: str) -> dict[str, Any]:
         .order("created_at", desc=True)
         .execute()
     )
-    for row in _rows(response):
+    rows = _rows(response)
+    LOGGER.debug(
+        "PCM status lookup result: user_id=%r row_count=%d",
+        user_id,
+        len(rows),
+    )
+    for row in rows:
         if _status_is_current(row):
+            LOGGER.debug(
+                "PCM status lookup selected row: user_id=%r status=%r row_id=%r",
+                user_id,
+                row.get("status"),
+                row.get("id"),
+            )
             return row
+        LOGGER.debug(
+            "PCM status lookup skipped expired row: user_id=%r row_id=%r expires_at=%r",
+            user_id,
+            row.get("id"),
+            row.get("expires_at"),
+        )
+    LOGGER.debug(
+        "PCM status lookup fallback: user_id=%r status=%s reason=%s",
+        user_id,
+        AVAILABLE_STATUS,
+        "no active non-expired rows returned",
+    )
     return _available_status(user_id)
 
 

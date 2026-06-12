@@ -13,10 +13,11 @@ MESSAGES_TABLE = "messages"
 ACTIVITY_LOGS_TABLE = "agent_activity_logs"
 APPROVALS_TABLE = "approvals"
 HIGH_RISK_ALERTS_TABLE = "high_risk_alerts"
+PERSONAL_CONTEXT_DECISION_LOGS_TABLE = "personal_context_decision_logs"
 REMINDER_LOGS_TABLE = "reminder_logs"
 SCHEDULED_MESSAGE_LOGS_TABLE = "scheduled_message_logs"
 RAG_ACCESS_LOGS_TABLE = "rag_access_logs"
-PERSONAL_CONTEXT_DECISION_LOGS_TABLE = "personal_context_decision_logs"
+
 
 REPORT_TABLES = (
     MESSAGES_TABLE,
@@ -42,6 +43,16 @@ def get_daily_report(
 
     selected_date = report_date or date.today()
     records = fetch_records_for_date(selected_date, user_id=user_id)
+    print("daily report date:", selected_date.isoformat())
+    print("daily report user_id:", user_id)
+    print("PCM rows count:", len(records.get("personal_context_decision_logs", [])))
+    print(
+        "PCM decisions:",
+        [
+            row.get("decision")
+            for row in records.get("personal_context_decision_logs", [])[:20]
+        ],
+    )
     return build_daily_report(selected_date, records)
 
 
@@ -110,6 +121,12 @@ def build_daily_report(
     automatic_actions = [
         row for row in activity_logs if _is_automatic_action(row)
     ]
+    auto_replies = [
+        row
+        for row in personal_context_decisions
+        if _clean(row.get("decision")) == "auto_reply"
+    ]
+    print("auto_replies count:", len(auto_replies))
     user_approved_actions = [
         row for row in [*activity_logs, *approvals] if _status(row) in {"approved", "user_approved"}
     ]
@@ -128,7 +145,7 @@ def build_daily_report(
         "summary": {
             "messages_received": len(messages_received),
             "messages_sent": len(messages_sent),
-            "auto_replies": len(automatic_actions),
+            "auto_replies": len(auto_replies),
             "automatic_actions": len(automatic_actions),
             "approved_actions": len(user_approved_actions),
             "rejected_actions": len(rejected_actions),
@@ -165,57 +182,10 @@ def _fetch_table_records(
         .gte("created_at", start_at.isoformat())
         .lt("created_at", end_at.isoformat())
     )
-    if table_name == MESSAGES_TABLE:
-        print("fetching table:", table_name)
-        print("start_at:", start_at.isoformat())
-        print("end_at:", end_at.isoformat())
-        direct_messages_response = (
-            client.table("messages")
-            .select("*")
-            .limit(5)
-            .execute()
-        )
-        print("direct messages no date filter response:", direct_messages_response)
-        print(
-            "direct messages no date filter data:",
-            getattr(direct_messages_response, "data", None),
-        )
-        direct_messages_date_response = (
-            client.table("messages")
-            .select("direction,created_at,message_text")
-            .gte("created_at", "2026-06-05 00:00:00+00")
-            .lt("created_at", "2026-06-06 00:00:00+00")
-            .execute()
-        )
-        print("direct messages space timestamp response:", direct_messages_date_response)
-        print(
-            "direct messages space timestamp data:",
-            getattr(direct_messages_date_response, "data", None),
-        )
-        print(
-            "generated query filters:",
-            {
-                "table_name": table_name,
-                "created_at_gte": start_at.isoformat(),
-                "created_at_lt": end_at.isoformat(),
-                "user_id_filter_applied": bool(user_id and _table_has_user_id(table_name)),
-            },
-        )
-    if table_name == HIGH_RISK_ALERTS_TABLE:
-        print("fetching table:", table_name)
     if user_id and _table_has_user_id(table_name):
         query = query.eq("user_id", user_id)
     response = query.order("created_at", desc=False).execute()
-    rows = _rows(response)
-    if table_name == MESSAGES_TABLE:
-        print("raw response:", response)
-        print("raw response data:", getattr(response, "data", None))
-        print("rows returned:", len(rows))
-    if table_name == HIGH_RISK_ALERTS_TABLE:
-        print("raw response:", response)
-        print("raw response data:", getattr(response, "data", None))
-        print("rows returned:", len(rows))
-    return rows
+    return _rows(response)
 
 
 def _table_has_user_id(table_name: str) -> bool:

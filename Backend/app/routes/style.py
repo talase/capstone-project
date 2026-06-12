@@ -5,10 +5,13 @@ from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
 from app.style_engine import generate_style_adapted_response
-from app.style_extractor import batched, extract_style_profile
+from app.style_learning_service import (
+    StyleLearningError,
+    learn_style_messages,
+    process_pending_style_learning,
+)
 from app.profile_store import (
     PROFILES_DIR,
-    merge_profiles,
     neutral_profile,
     resolve_profile_contact,
     sanitize_contact_id,
@@ -25,10 +28,22 @@ class StyleRequest(BaseModel):
     action_type: str | None = None
 
 
+class StyleLearnContextReply(BaseModel):
+    context: str = ""
+    reply: str
+
+
+class StyleLearnConversationPair(BaseModel):
+    incoming_message: str
+    user_reply: str
+
+
 class StyleLearnRequest(BaseModel):
     user_id: str = "default_user"
     contact_id: str
-    messages: list[str] = Field(..., min_length=1)
+    messages: list[
+        str | StyleLearnContextReply | StyleLearnConversationPair
+    ] = Field(default_factory=list)
 
 
 class StyleLearnResponse(BaseModel):
@@ -36,10 +51,32 @@ class StyleLearnResponse(BaseModel):
     contact_id: str
     profile_type: str
     traits: dict[str, Any]
-    patterns: list[str]
+    patterns: dict[str, Any] | list[str]
     confidence: float
     message_count: int
     batch_count: int
+
+
+class StyleLearnPendingRequest(BaseModel):
+    user_id: str = "default_user"
+
+
+class ContactStyleUpdate(BaseModel):
+    contact_id: str
+    message_count: int
+
+
+class SkippedContactStyleUpdate(BaseModel):
+    contact_id: str
+    available_messages: int
+    reason: str
+
+
+class StyleLearnPendingResponse(BaseModel):
+    global_updated: bool
+    global_message_count: int
+    contacts_updated: list[ContactStyleUpdate]
+    skipped_contacts: list[SkippedContactStyleUpdate]
 
 
 class StyleProfileFile(BaseModel):
@@ -48,7 +85,7 @@ class StyleProfileFile(BaseModel):
     message_count: int
     batch_count: int
     traits: dict[str, Any]
-    patterns: list[Any]
+    patterns: dict[str, Any] | list[Any]
     overall_confidence: Any | None = None
     profile: dict[str, Any]
 
@@ -169,21 +206,40 @@ def delete_style_profile(contact_id: str):
 
 @router.post("/learn", response_model=StyleLearnResponse)
 async def learn_style(data: StyleLearnRequest):
-    messages = [message.strip() for message in data.messages if message.strip()]
-    if not messages:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="messages must include at least one non-empty message",
-        )
+    messages: list[str | dict[str, str]] = []
+    for message in data.messages:
+        if isinstance(message, str):
+            reply = message.strip()
+            if reply:
+                messages.append(reply)
+            continue
+
+        if isinstance(message, StyleLearnConversationPair):
+            reply = message.user_reply.strip()
+            context = message.incoming_message.strip()
+        else:
+            reply = message.reply.strip()
+            context = message.context.strip()
+
+        if reply:
+            messages.append(
+                {
+                    "context": context,
+                    "reply": reply,
+                }
+            )
 
     contact_id = resolve_profile_contact(data.contact_id)
     profile_type = "global" if contact_id == "global" else "contact"
     merged_profile = neutral_profile(message_count=0, batch_count=0)
 
     try:
-        for batch in batched(messages):
-            batch_profile = extract_style_profile(batch, contact=contact_id)
-            merged_profile = merge_profiles(merged_profile, batch_profile)
+        if messages:
+            merged_profile = learn_style_messages(
+                messages,
+                contact_id=contact_id,
+                user_id=data.user_id,
+            )
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -200,3 +256,14 @@ async def learn_style(data: StyleLearnRequest):
         message_count=merged_profile["message_count"],
         batch_count=merged_profile["batch_count"],
     )
+
+
+@router.post("/learn/pending", response_model=StyleLearnPendingResponse)
+async def learn_pending_style(data: StyleLearnPendingRequest):
+    try:
+        return process_pending_style_learning(data.user_id)
+    except StyleLearningError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Pending style learning failed: {exc}",
+        ) from exc
