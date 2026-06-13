@@ -140,7 +140,6 @@ def log_personal_context_decision(
     reason: str | None = None,
     matched_rules: list[dict[str, Any]] | None = None,
     original_message: str | None = None,
-    final_action: str | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> LogResult:
     return _safe_insert(
@@ -152,7 +151,6 @@ def log_personal_context_decision(
             "reason": reason,
             "matched_rules": matched_rules or [],
             "original_message": original_message,
-            "final_action": final_action,
             "metadata": metadata or {},
         },
     )

@@ -26,6 +26,9 @@ Confidence score: {confidence_score}
 Risk level: {risk_level}
 Action type: {action_type}
 
+Personal context:
+{personal_context}
+
 Neutral style guidance:
 - Formality: {formality}
 - Politeness: {politeness}
@@ -63,6 +66,9 @@ Style mode: global_style
 Confidence score: {confidence_score}
 Risk level: {risk_level}
 Action type: {action_type}
+
+Personal context:
+{personal_context}
 
 Global style traits:
 {global_style_traits}
@@ -103,6 +109,9 @@ Confidence score: {confidence_score}
 Risk level: {risk_level}
 Action type: {action_type}
 
+Personal context:
+{personal_context}
+
 Contact-specific style traits:
 {contact_style_traits}
 
@@ -141,6 +150,9 @@ Style mode: global_contact_style
 Confidence score: {confidence_score}
 Risk level: {risk_level}
 Action type: {action_type}
+
+Personal context:
+{personal_context}
 
 Global style traits:
 {global_style_traits}
@@ -193,6 +205,7 @@ def build_prompt(
     contact_profile: dict | None = None,
     risk_level: str | None = None,
     action_type: str | None = None,
+    personal_context: dict[str, Any] | None = None,
 ) -> str:
     """Build the final LLM prompt from profiles and the selected style mode."""
 
@@ -207,6 +220,7 @@ def build_prompt(
         "confidence_score": _confidence_for_mode(normalized_mode, safe_global, safe_contact),
         "risk_level": _clean_text(risk_level, "not provided"),
         "action_type": _clean_text(action_type, "not provided"),
+        "personal_context": _format_personal_context(personal_context),
         "global_style_traits": _format_style_traits(safe_global),
         "contact_style_traits": _format_style_traits(safe_contact),
         "recurring_patterns": _format_recurring_patterns(
@@ -220,6 +234,20 @@ def build_prompt(
         values[trait] = _format_trait(active_profile, trait)
 
     return choose_prompt_template(normalized_mode).format(**values)
+
+
+def _format_personal_context(personal_context: dict[str, Any] | None) -> str:
+    if not isinstance(personal_context, dict):
+        return "- No relevant personal context."
+    context = personal_context.get("context")
+    if not isinstance(context, list) or not context:
+        return "- No relevant personal context."
+    lines = [
+        "- Use the following context only when it is relevant to the incoming message.",
+        "- Mention it naturally; do not expose internal rules or force it into the reply.",
+    ]
+    lines.extend(f"- {str(item).strip()}" for item in context if str(item).strip())
+    return "\n".join(lines)
 
 
 def _safe_profile(profile: dict | None) -> dict[str, Any]:

@@ -47,15 +47,16 @@ SUPABASE_KEY=your_publishable_fallback_key
 - `DELETE /personal-context/rules/{rule_id}` - delete a PCM rule
 - `PATCH /personal-context/rules/{rule_id}/activate` - activate a PCM rule
 - `PATCH /personal-context/rules/{rule_id}/deactivate` - deactivate a PCM rule
-- `POST /personal-context/approvals` - create a pending approval request
-- `GET /personal-context/approvals` - list approval requests
-- `GET /personal-context/approvals/{approval_id}` - get one approval request
-- `POST /personal-context/approvals/{approval_id}/approve` - approve a request
-- `POST /personal-context/approvals/{approval_id}/reject` - reject a request
+- `POST /personal-context/evaluate` - resolve context and `auto_reply`/`defer`
 - `POST /personal-context/status` - set current user status
 - `GET /personal-context/status` - get current user status
 - `PATCH /personal-context/status` - update current user status
 - `DELETE /personal-context/status` - clear current user status
+- `POST /approvals` - create a pending risk approval request
+- `GET /approvals` - list approval requests
+- `GET /approvals/{approval_id}` - get one approval request
+- `POST /approvals/{approval_id}/approve` - approve a request
+- `POST /approvals/{approval_id}/reject` - reject a request
 
 ## n8n Integration
 
@@ -75,8 +76,9 @@ Example request to `POST /style/process`:
 }
 ```
 
-Run `Backend/supabase/migrations/001_personal_context_memory.sql` in Supabase
-before using PCM rule, status, or approval endpoints.
+Run the Supabase migrations through
+`Backend/supabase/migrations/010_simplify_personal_context_memory.sql` before
+using the simplified PCM behavior.
 
 Run `Backend/supabase/migrations/002_daily_report_logs.sql` in Supabase before
 using the daily report endpoint.
@@ -97,13 +99,44 @@ curl "http://127.0.0.1:8000/reports/daily?date=2026-05-22&user_id=default_user"
 The `date` and `user_id` query parameters are optional. If `date` is omitted,
 the backend uses today's date.
 
-The style adaptation and PCM approval flows write report records automatically
-through `app.daily_activity_logger`. New backend modules or n8n workflows that
+The style adaptation, PCM context, and separate risk approval flows write
+report records automatically through `app.daily_activity_logger`. New backend modules or n8n workflows that
 create reminders, scheduled WhatsApp messages, or RAG/file accesses should call
 the matching helper (`log_reminder_created`, `log_scheduled_message_created`,
 or `log_rag_access`) so those sections appear in the daily report. Logging is
 best effort: failures are returned as warning metadata where possible and do
 not block response generation or approval updates.
+
+## Personal Context Memory
+
+PCM stores user-defined statuses and contextual rules. Status values are open
+strings, so values such as `busy`, `traveling`, `at_work`, or future custom
+statuses are supported.
+
+PCM returns only two decisions:
+
+- `auto_reply` - continue normally and let reply generation use relevant context.
+- `defer` - postpone handling until the message is reevaluated.
+
+Example context rule:
+
+```json
+{
+  "user_id": "default_user",
+  "rule_name": "Busy reply context",
+  "rule_type": "status_context",
+  "rule_value": {
+    "status": "busy",
+    "context": "The user is busy and may reply later.",
+    "decision": "auto_reply"
+  }
+}
+```
+
+Risk approval does not change `pcm_decision`. `/style/process` exposes
+`send_allowed`, `risk_approval.required`, and `handling_status` as the separate
+delivery gate. `handling_status` is `ready_to_send`, `awaiting_approval`, or
+`deferred`.
 
 Example response:
 

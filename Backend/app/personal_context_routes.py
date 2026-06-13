@@ -9,8 +9,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app import daily_activity_logger as activity_logger
 from app.personal_context_service import (
-    ApprovalRequest,
-    ApprovalRequestCreate,
     PersonalContextError,
     PersonalContextRule,
     PersonalContextRuleCreate,
@@ -19,16 +17,12 @@ from app.personal_context_service import (
     UserStatusSet,
     UserStatusUpdate,
     clear_user_status,
-    create_approval_request,
     create_rule,
     delete_rule,
     evaluate_personal_context_rules,
-    get_approval_request,
     get_current_user_status,
-    list_approvals,
     list_active_rules,
     list_rules,
-    set_approval_status,
     set_rule_active,
     set_user_status,
     update_user_status,
@@ -54,6 +48,7 @@ class PersonalContextEvaluateRequest(BaseModel):
     action_type: str | None = None
     user_status: str | None = None
     availability: str | None = None
+    status_reason: str | None = None
     current_time: str | None = None
 
 
@@ -110,40 +105,6 @@ def deactivate_personal_context_rule(rule_id: int | str) -> dict[str, Any]:
     return _handle_service_call(lambda: set_rule_active(rule_id, False))
 
 
-@router.post(
-    "/approvals",
-    response_model=ApprovalRequest,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_pending_approval(request: ApprovalRequestCreate) -> dict[str, Any]:
-    return _handle_service_call(lambda: create_approval_request(request))
-
-
-@router.get("/approvals", response_model=list[ApprovalRequest])
-def get_approvals(
-    user_id: str | None = Query(default=None),
-    status: str | None = Query(default=None, pattern="^(pending|approved|rejected)$"),
-) -> list[dict[str, Any]]:
-    return _handle_service_call(
-        lambda: list_approvals(user_id=user_id, status=status)
-    )
-
-
-@router.get("/approvals/{approval_id}", response_model=ApprovalRequest)
-def get_one_approval_request(approval_id: int | str) -> dict[str, Any]:
-    return _handle_service_call(lambda: get_approval_request(approval_id))
-
-
-@router.post("/approvals/{approval_id}/approve", response_model=ApprovalRequest)
-def approve_request(approval_id: int | str) -> dict[str, Any]:
-    return _handle_service_call(lambda: set_approval_status(approval_id, "approved"))
-
-
-@router.post("/approvals/{approval_id}/reject", response_model=ApprovalRequest)
-def reject_request(approval_id: int | str) -> dict[str, Any]:
-    return _handle_service_call(lambda: set_approval_status(approval_id, "rejected"))
-
-
 @router.post("/status", response_model=UserStatus)
 def set_current_status(status_request: UserStatusSet) -> dict[str, Any]:
     return _handle_service_call(lambda: set_user_status(status_request))
@@ -176,89 +137,52 @@ def _evaluate_personal_context(
 ) -> dict[str, Any]:
     message_data = request.model_dump(exclude_none=True)
     message_data["action"] = message_data.get("action") or message_data.get("action_type")
-    message_data["topic"] = message_data.get("topic") or message_data.get("risk_level")
+    message_data["topic"] = message_data.get("topic")
 
     current_status = None
     if not message_data.get("user_status") and not message_data.get("availability"):
         current_status = get_current_user_status(request.user_id)
         message_data["user_status"] = current_status["status"]
         message_data["availability"] = current_status["status"]
+        message_data["status_reason"] = current_status.get("status_reason")
+    else:
+        supplied_status = (
+            message_data.get("user_status")
+            or message_data.get("availability")
+            or "available"
+        )
+        current_status = {
+            "id": None,
+            "user_id": request.user_id,
+            "status": supplied_status,
+            "status_reason": message_data.get("status_reason"),
+            "expires_at": None,
+            "is_active": True,
+        }
 
     rules = list_active_rules(user_id=request.user_id)
     result = evaluate_personal_context_rules(message_data, rules)
-    result = _enforce_high_risk_approval(message_data, result)
-    final_action = _final_action_for_decision(result["decision"])
-    personal_context = _personal_context_payload(result)
+    personal_context = {
+        **result,
+        "current_status": current_status,
+    }
     logging_warnings = _log_evaluation_activity(
         message_data=message_data,
         result=result,
-        final_action=final_action,
     )
 
     return {
-        **result,
-        "final_action": final_action,
+        **personal_context,
         "current_status": current_status,
         "personal_context": personal_context,
         "daily_report_logging_warnings": logging_warnings,
     }
 
 
-def _enforce_high_risk_approval(
-    message_data: dict[str, Any],
-    personal_context: dict[str, Any],
-) -> dict[str, Any]:
-    if not _is_high_risk(message_data.get("risk_level")):
-        return personal_context
-
-    matched_rules = list(personal_context.get("matched_rules", []))
-    matched_rules.append(
-        {
-            "id": "system_high_risk_gate",
-            "rule_name": "High risk messages require approval",
-            "rule_type": "system_governance",
-            "decision": "require_approval",
-            "priority": 999,
-        }
-    )
-    return {
-        "decision": "require_approval",
-        "matched_rules": matched_rules,
-        "winning_rule": matched_rules[-1],
-        "reason": "High-risk message requires approval before sending.",
-        "fallback_used": personal_context.get("fallback_used", False),
-    }
-
-
-def _personal_context_payload(result: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "decision": result["decision"],
-        "reason": result.get("reason"),
-        "matched_rules": result.get("matched_rules", []),
-        "winning_rule": result.get("winning_rule"),
-        "fallback_used": result.get("fallback_used", False),
-    }
-
-
-def _final_action_for_decision(decision: str) -> str:
-    return {
-        "auto_reply": "send",
-        "draft_only": "draft",
-        "require_approval": "approval_required",
-        "defer": "deferred",
-        "blocked": "blocked",
-    }.get(decision, "approval_required")
-
-
-def _is_high_risk(risk_level: str | None) -> bool:
-    return str(risk_level or "").strip().lower() in {"high", "high_risk", "critical"}
-
-
 def _log_evaluation_activity(
     *,
     message_data: dict[str, Any],
     result: dict[str, Any],
-    final_action: str,
 ) -> list[dict[str, str]]:
     logging_warnings: list[dict[str, str]] = []
     user_id = message_data.get("user_id") or "default_user"
@@ -274,10 +198,10 @@ def _log_evaluation_activity(
             reason=result.get("reason"),
             matched_rules=result.get("matched_rules", []),
             original_message=message_data.get("message"),
-            final_action=final_action,
             metadata={
-                "risk_level": message_data.get("risk_level"),
                 "action_type": action_type,
+                "context": result.get("context", []),
+                "current_status": message_data.get("user_status"),
                 "source": "personal_context_evaluate",
             },
         ),
@@ -285,50 +209,22 @@ def _log_evaluation_activity(
     _collect_logging_warning(
         logging_warnings,
         activity_logger.log_agent_activity(
-            status=_activity_status_for_final_action(final_action),
+            status="deferred" if result["decision"] == "defer" else "automatic",
             user_id=user_id,
             contact_id=contact_id,
             action_category=action_type,
             action_type=action_type,
-            mode="automatic" if final_action == "send" else None,
-            requires_approval=final_action == "approval_required",
+            mode="automatic" if result["decision"] == "auto_reply" else None,
+            requires_approval=False,
             description=result.get("reason"),
             metadata={
                 "pcm_decision": result["decision"],
-                "risk_level": message_data.get("risk_level"),
                 "source": "personal_context_evaluate",
             },
         ),
     )
-    if _is_high_risk(message_data.get("risk_level")):
-        _collect_logging_warning(
-            logging_warnings,
-            activity_logger.log_high_risk_alert(
-                risk_level=message_data.get("risk_level") or "high",
-                user_id=user_id,
-                contact_id=contact_id,
-                action_category=action_type,
-                message=message_data.get("message"),
-                reason=result.get("reason"),
-                metadata={
-                    "final_action": final_action,
-                    "matched_rules": result.get("matched_rules", []),
-                    "source": "personal_context_evaluate",
-                },
-            ),
-        )
 
     return logging_warnings
-
-
-def _activity_status_for_final_action(final_action: str) -> str:
-    return {
-        "send": "automatic",
-        "draft": "draft",
-        "approval_required": "pending",
-        "deferred": "deferred",
-        "blocked": "blocked",
-    }.get(final_action, "pending")
 
 
 def _collect_logging_warning(

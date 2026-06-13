@@ -3,65 +3,21 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, time, timezone
-from typing import Any, Literal
+from datetime import datetime, timezone
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.daily_activity_logger import log_approval_event
 from app.supabase_client import SupabaseConfigError, get_supabase_client
 
 
 LOGGER = logging.getLogger(__name__)
 
 TABLE_NAME = "personal_context_rules"
-APPROVAL_TABLE_NAME = "approvals"
 USER_STATUS_TABLE_NAME = "user_statuses"
 DEFAULT_DECISION = "auto_reply"
-ALLOWED_DECISIONS = {
-    "auto_reply",
-    "require_approval",
-    "draft_only",
-    "defer",
-    "blocked",
-}
+ALLOWED_DECISIONS = {"auto_reply", "defer"}
 AVAILABLE_STATUS = "available"
-SUPPORTED_USER_STATUSES = {
-    "available",
-    "busy",
-    "unavailable",
-    "traveling",
-    "in_meeting",
-    "do_not_disturb",
-}
-DECISION_PRIORITY = {
-    "auto_reply": 0,
-    "draft_only": 1,
-    "require_approval": 2,
-    "defer": 3,
-    "blocked": 4,
-}
-DECISION_ALIASES = {
-    "approval_required": "require_approval",
-    "needs_approval": "require_approval",
-    "approval": "require_approval",
-    "deferred": "defer",
-    "block": "blocked",
-}
-MONEY_TERMS = {
-    "money",
-    "cash",
-    "pay",
-    "payment",
-    "bank",
-    "transfer",
-    "loan",
-    "borrow",
-    "invoice",
-    "salary",
-    "refund",
-    "debt",
-}
 
 
 class PersonalContextError(RuntimeError):
@@ -123,60 +79,25 @@ class PersonalContextRule(PersonalContextRuleBase):
 
 class RuleEvaluationResult(BaseModel):
     decision: str
+    context: list[str]
     matched_rules: list[dict[str, Any]]
     winning_rule: dict[str, Any] | None = None
     reason: str
 
 
-class ApprovalRequestCreate(BaseModel):
-    user_id: str = Field(..., min_length=1)
-    contact_id: str | None = None
-    original_message: str = Field(..., min_length=1)
-    generated_reply: str = Field(..., min_length=1)
-    decision: str = Field(default="require_approval")
-    reason: str | None = None
-    matched_rules: list[dict[str, Any]] = Field(default_factory=list)
-
-
-class ApprovalRequest(BaseModel):
-    model_config = ConfigDict(extra="allow")
-
-    id: int | str
-    user_id: str
-    contact_id: str | None = None
-    original_message: str
-    generated_reply: str
-    decision: str
-    status: str
-    reason: str | None = None
-    matched_rules: list[dict[str, Any]] = Field(default_factory=list)
-    created_at: str | None = None
-    updated_at: str | None = None
-
-
 class UserStatusSet(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     user_id: str = Field(..., min_length=1)
-    status: Literal[
-        "available",
-        "busy",
-        "unavailable",
-        "traveling",
-        "in_meeting",
-        "do_not_disturb",
-    ] = AVAILABLE_STATUS
+    status: str = Field(default=AVAILABLE_STATUS, min_length=1, max_length=80)
     status_reason: str | None = Field(default=None, max_length=300)
     expires_at: str | None = None
 
 
 class UserStatusUpdate(BaseModel):
-    status: Literal[
-        "available",
-        "busy",
-        "unavailable",
-        "traveling",
-        "in_meeting",
-        "do_not_disturb",
-    ] | None = None
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    status: str | None = Field(default=None, min_length=1, max_length=80)
     status_reason: str | None = Field(default=None, max_length=300)
     expires_at: str | None = None
     is_active: bool | None = None
@@ -234,79 +155,6 @@ def delete_rule(rule_id: int | str) -> dict[str, Any]:
 def set_rule_active(rule_id: int | str, is_active: bool) -> dict[str, Any]:
     response = _table().update({"is_active": is_active}).eq("id", rule_id).execute()
     return _single_row(response, "Rule was not found.")
-
-
-def create_approval_request(request: ApprovalRequestCreate) -> dict[str, Any]:
-    data = request.model_dump(exclude_none=True)
-    data["status"] = "pending"
-    response = _approval_table().insert(data).execute()
-    created = _single_row(response, "Approval request was not created.")
-    log_approval_event(
-        status="pending",
-        user_id=created.get("user_id"),
-        contact_id=created.get("contact_id"),
-        approval_request_id=created.get("id"),
-        action_category=_approval_action_category(created),
-        original_message=created.get("original_message"),
-        generated_reply=created.get("generated_reply"),
-        reason=created.get("reason"),
-        metadata={
-            "decision": created.get("decision"),
-            "matched_rules": created.get("matched_rules", []),
-        },
-    )
-    return created
-
-
-def list_approvals(
-    user_id: str | None = None,
-    status: str | None = None,
-) -> list[dict[str, Any]]:
-    query = _approval_table().select("*").order("created_at", desc=True)
-    if user_id:
-        query = query.eq("user_id", user_id)
-    if status:
-        query = query.eq("status", status)
-    response = query.execute()
-    return _rows(response)
-
-
-def list_approval_requests(
-    user_id: str | None = None,
-    status: str | None = None,
-) -> list[dict[str, Any]]:
-    return list_approvals(user_id=user_id, status=status)
-
-
-def get_approval_request(approval_id: int | str) -> dict[str, Any]:
-    response = _approval_table().select("*").eq("id", approval_id).execute()
-    return _single_row(response, "Approval request was not found.")
-
-
-def set_approval_status(approval_id: int | str, status: str) -> dict[str, Any]:
-    if status not in {"approved", "rejected"}:
-        raise PersonalContextError("Approval status must be approved or rejected.")
-    existing = get_approval_request(approval_id)
-    if existing.get("status") != "pending":
-        raise PersonalContextError("Only pending approval requests can be updated.")
-    response = _approval_table().update({"status": status}).eq("id", approval_id).execute()
-    updated = _single_row(response, "Approval request was not found.")
-    log_approval_event(
-        status=status,
-        user_id=updated.get("user_id"),
-        contact_id=updated.get("contact_id"),
-        approval_request_id=updated.get("id"),
-        action_category=_approval_action_category(updated),
-        original_message=updated.get("original_message"),
-        generated_reply=updated.get("generated_reply"),
-        reason=updated.get("reason"),
-        metadata={
-            "decision": updated.get("decision"),
-            "matched_rules": updated.get("matched_rules", []),
-            "previous_status": existing.get("status"),
-        },
-    )
-    return updated
 
 
 def set_user_status(status: UserStatusSet) -> dict[str, Any]:
@@ -409,6 +257,7 @@ def evaluate_personal_context_rules(
     """Evaluate active personal context rules against one incoming message."""
 
     matched_rules: list[dict[str, Any]] = []
+    context = _status_context(message_data)
 
     for rule in rules:
         if not rule.get("is_active", True):
@@ -416,15 +265,19 @@ def evaluate_personal_context_rules(
         if not _rule_matches_message(rule, message_data):
             continue
 
-        decision = _decision_for_rule(rule, message_data)
-        if decision == DEFAULT_DECISION:
+        if not _status_condition_matches(rule.get("rule_value"), message_data):
             continue
+        decision = _decision_for_rule(rule)
+        rule_context = _context_for_rule(rule)
+        if rule_context:
+            context.append(rule_context)
         matched_rules.append(
             {
                 "id": rule.get("id"),
                 "rule_name": rule.get("rule_name"),
                 "rule_type": rule.get("rule_type"),
                 "decision": decision,
+                "context": rule_context,
                 "priority": _priority_for_rule(rule),
             }
         )
@@ -433,20 +286,25 @@ def evaluate_personal_context_rules(
         key=lambda matched_rule: matched_rule.get("priority", 0),
         reverse=True,
     )
-    winning_rule = matched_rules[0] if matched_rules else None
+    deferred_rules = [
+        matched_rule
+        for matched_rule in matched_rules
+        if matched_rule["decision"] == "defer"
+    ]
+    winning_rule = deferred_rules[0] if deferred_rules else None
     final_decision = (
-        winning_rule.get("decision", DEFAULT_DECISION)
-        if winning_rule
-        else DEFAULT_DECISION
+        "defer" if winning_rule else DEFAULT_DECISION
     )
 
-    reason = (
-        "Highest-priority matching rule selected."
-        if matched_rules
-        else "No personal context rule matched; auto reply is allowed."
-    )
+    if final_decision == "defer":
+        reason = "A matching personal context rule requested reevaluation later."
+    elif context:
+        reason = "Reply generation may continue using the current user context."
+    else:
+        reason = "No relevant personal context was found; reply generation may continue."
     return {
         "decision": final_decision,
+        "context": _deduplicate(context),
         "matched_rules": matched_rules,
         "winning_rule": winning_rule,
         "reason": reason,
@@ -457,15 +315,6 @@ def evaluate_personal_context_rules(
 def _table():
     try:
         return get_supabase_client().table(TABLE_NAME)
-    except SupabaseConfigError:
-        raise
-    except Exception as exc:  # pragma: no cover - depends on Supabase runtime
-        raise PersonalContextError(str(exc)) from exc
-
-
-def _approval_table():
-    try:
-        return get_supabase_client().table(APPROVAL_TABLE_NAME)
     except SupabaseConfigError:
         raise
     except Exception as exc:  # pragma: no cover - depends on Supabase runtime
@@ -499,14 +348,6 @@ def _single_row(response: Any, error_message: str) -> dict[str, Any]:
     return rows[0]
 
 
-def _approval_action_category(row: dict[str, Any]) -> str | None:
-    for rule in row.get("matched_rules", []) or []:
-        rule_type = rule.get("rule_type")
-        if rule_type:
-            return str(rule_type)
-    return row.get("decision")
-
-
 def _rule_matches_message(rule: dict[str, Any], message_data: dict[str, Any]) -> bool:
     if not _matches_optional_filter(rule.get("contact_id"), _contact_candidates(message_data)):
         return False
@@ -517,36 +358,67 @@ def _rule_matches_message(rule: dict[str, Any], message_data: dict[str, Any]) ->
     return True
 
 
-def _decision_for_rule(rule: dict[str, Any], message_data: dict[str, Any]) -> str:
+def _decision_for_rule(rule: dict[str, Any]) -> str:
     rule_type = _clean(rule.get("rule_type"))
     rule_value = rule.get("rule_value")
 
-    if rule_type in {
-        "require_approval",
-        "approval_required",
-        "needs_approval",
-        "approval",
-        "contact_requires_approval",
-    }:
-        return "require_approval"
-    if rule_type in {"blocked", "block"}:
-        return "blocked"
-    if rule_type in {"draft_only", "work_hours_draft"}:
-        return "draft_only" if _work_hours_match(rule_value, message_data) else DEFAULT_DECISION
-    if rule_type in {"defer", "deferred", "busy_status", "availability"}:
-        return "defer" if _busy_status_match(rule_value, message_data) else DEFAULT_DECISION
-    if rule_type in {"no_auto_send", "topic_requires_approval", "money_requires_approval"}:
-        return "require_approval"
-
-    decision = _normalize_decision(rule_value)
-    return decision if decision in ALLOWED_DECISIONS else "require_approval"
+    if isinstance(rule_value, dict):
+        decision = _clean(rule_value.get("decision"))
+    else:
+        decision = _clean(rule_value)
+    if not decision and rule_type == "defer":
+        decision = "defer"
+    return decision if decision in ALLOWED_DECISIONS else DEFAULT_DECISION
 
 
-def _normalize_decision(value: Any) -> str:
-    if isinstance(value, dict):
-        value = value.get("decision")
-    decision = _clean(value)
-    return DECISION_ALIASES.get(decision, decision)
+def _context_for_rule(rule: dict[str, Any]) -> str | None:
+    rule_value = rule.get("rule_value")
+    if isinstance(rule_value, dict):
+        value = rule_value.get("context") or rule_value.get("description")
+    elif _clean(rule_value) not in ALLOWED_DECISIONS:
+        value = rule_value
+    else:
+        value = None
+    text = str(value or "").strip()
+    return text or None
+
+
+def _status_condition_matches(rule_value: Any, message_data: dict[str, Any]) -> bool:
+    if not isinstance(rule_value, dict) or not rule_value.get("status"):
+        return True
+    current_status = _clean(
+        message_data.get("user_status") or message_data.get("availability")
+    )
+    expected_status = rule_value.get("status")
+    if isinstance(expected_status, list):
+        return current_status in {_clean(status) for status in expected_status}
+    return current_status == _clean(expected_status)
+
+
+def _status_context(message_data: dict[str, Any]) -> list[str]:
+    status = str(
+        message_data.get("user_status")
+        or message_data.get("availability")
+        or AVAILABLE_STATUS
+    ).strip()
+    reason = str(message_data.get("status_reason") or "").strip()
+    if not status or _clean(status) == AVAILABLE_STATUS:
+        return []
+    context = [f"The user's current status is {status.replace('_', ' ')}."]
+    if reason:
+        context.append(f"Status detail: {reason}")
+    return context
+
+
+def _deduplicate(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for value in values:
+        key = value.casefold()
+        if key not in seen:
+            seen.add(key)
+            result.append(value)
+    return result
 
 
 def _priority_for_rule(rule: dict[str, Any]) -> int:
@@ -572,52 +444,7 @@ def _contact_candidates(message_data: dict[str, Any]) -> list[Any]:
 
 
 def _topic_candidates(message_data: dict[str, Any]) -> list[Any]:
-    message = _clean(message_data.get("message"))
-    explicit_topic = message_data.get("topic")
-    candidates = [explicit_topic, message_data.get("risk_level")]
-    if any(term in message for term in MONEY_TERMS):
-        candidates.append("money")
-    return candidates
-
-
-def _work_hours_match(rule_value: Any, message_data: dict[str, Any]) -> bool:
-    if not rule_value:
-        return True
-    if isinstance(rule_value, dict):
-        window = rule_value.get("hours") or rule_value.get("window")
-    else:
-        window = str(rule_value)
-    if not window or "-" not in window:
-        return True
-
-    start_raw, end_raw = [part.strip() for part in window.split("-", 1)]
-    current_time = message_data.get("current_time")
-    now_time = _parse_time(current_time) if current_time else datetime.now().time()
-    start_time = _parse_time(start_raw)
-    end_time = _parse_time(end_raw)
-    if not start_time or not end_time:
-        return True
-    if start_time <= end_time:
-        return start_time <= now_time <= end_time
-    return now_time >= start_time or now_time <= end_time
-
-
-def _busy_status_match(rule_value: Any, message_data: dict[str, Any]) -> bool:
-    status = _clean(message_data.get("user_status") or message_data.get("availability"))
-    if status in {"busy", "do_not_disturb", "unavailable", "in_meeting"}:
-        return True
-    if isinstance(rule_value, dict):
-        expected = rule_value.get("status")
-    else:
-        expected = rule_value
-    return bool(expected) and _clean(expected) == status
-
-
-def _parse_time(value: Any) -> time | None:
-    try:
-        return datetime.strptime(str(value), "%H:%M").time()
-    except (TypeError, ValueError):
-        return None
+    return [message_data.get("topic")]
 
 
 def _clean(value: Any) -> str:
@@ -625,11 +452,8 @@ def _clean(value: Any) -> str:
 
 
 def _validate_status(status: str) -> None:
-    if status not in SUPPORTED_USER_STATUSES:
-        raise PersonalContextError(
-            "Unsupported status. Use one of: "
-            + ", ".join(sorted(SUPPORTED_USER_STATUSES))
-        )
+    if not str(status or "").strip():
+        raise PersonalContextError("Status must not be empty.")
 
 
 def _status_is_current(row: dict[str, Any]) -> bool:

@@ -82,6 +82,47 @@ class StylePatternExtractorTests(unittest.TestCase):
         self.assertTrue(behavior["asks_followup_often"])
         self.assertEqual(behavior["helpfulness_mode"], "assistant")
 
+    def test_casual_task_focused_replies_remain_friend_style(self):
+        patterns = extract_style_patterns(
+            [
+                "okay sounds good",
+                "sure, i'll do it tonight",
+                "lmk when you send it 😂",
+            ]
+        )
+
+        self.assertIn("casual", patterns["tone_indicators"])
+        self.assertEqual(
+            patterns["conversation_behavior"]["helpfulness_mode"], "friend"
+        )
+
+    def test_lowercase_slang_and_repeated_letters_are_casual_signals(self):
+        patterns = extract_style_patterns(
+            ["yeahhh i'll review it rn", "pls send the document when you can"]
+        )
+
+        self.assertIn("casual", patterns["tone_indicators"])
+        self.assertEqual(
+            patterns["conversation_behavior"]["helpfulness_mode"], "friend"
+        )
+
+    def test_strong_formal_evidence_is_professional(self):
+        patterns = extract_style_patterns(
+            ["Could you please review the attached document?", "Kindly confirm receipt."]
+        )
+
+        self.assertIn("formal", patterns["tone_indicators"])
+        self.assertEqual(
+            patterns["conversation_behavior"]["helpfulness_mode"], "professional"
+        )
+
+    def test_single_task_phrase_does_not_imply_professional(self):
+        patterns = extract_style_patterns(["I will send it tonight."])
+
+        self.assertEqual(
+            patterns["conversation_behavior"]["helpfulness_mode"], "friend"
+        )
+
 
 class StyleLearnRouteTests(unittest.TestCase):
     def setUp(self):

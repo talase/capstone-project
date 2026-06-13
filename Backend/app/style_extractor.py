@@ -40,6 +40,20 @@ FORMAL_MARKERS = (
     "would you",
     "could you",
 )
+STRONG_FORMAL_MARKERS = ("regards", "kindly", "sincerely")
+CASUAL_SLANG = (
+    "gonna",
+    "wanna",
+    "yep",
+    "yeah",
+    "nah",
+    "omg",
+    "btw",
+    "idk",
+    "imo",
+    "pls",
+    "thx",
+)
 WARM_MARKERS = ("love", "miss you", "thank", "thanks", "no worries")
 ASSISTANT_CLOSINGS = (
     "let me know if you need anything",
@@ -151,13 +165,35 @@ def extract_style_patterns(messages: list[str]) -> dict[str, Any]:
     }
 
     word_counts = [len(re.findall(r"\b[\w']+\b", message)) for message in clean_messages]
+    average_word_count = sum(word_counts) / len(word_counts)
     informal_greetings = {"hey", "heyy", "heyyy", "hi", "hii", "yo"}
+    slang_signal = any(_contains_phrase(combined, slang) for slang in CASUAL_SLANG)
+    lowercase_messages = [
+        message
+        for message in clean_messages
+        if any(character.isalpha() for character in message)
+        and message == message.lower()
+    ]
+    lowercase_texting = (
+        len(lowercase_messages) / len(clean_messages) >= 0.5
+        and average_word_count <= 10
+    )
     casual_signal = bool(
         informal_greetings.intersection(patterns["greetings"])
         or patterns["common_phrases"]
-        or re.search(r"\b(gonna|wanna|yep|yeah|nah|omg|btw)\b", combined)
+        or patterns["emoji_usage"]
+        or repeated_letters
+        or slang_signal
+        or lowercase_texting
     )
-    formal_signal = any(marker in combined for marker in FORMAL_MARKERS)
+    formal_marker_count = sum(
+        _contains_phrase(combined, marker) for marker in FORMAL_MARKERS
+    )
+    formal_signal = formal_marker_count > 0
+    strong_formal_signal = (
+        formal_marker_count >= 2
+        or any(_contains_phrase(combined, marker) for marker in STRONG_FORMAL_MARKERS)
+    )
     warm_signal = bool(patterns["emoji_usage"]) or any(
         marker in combined for marker in WARM_MARKERS
     )
@@ -179,14 +215,13 @@ def extract_style_patterns(messages: list[str]) -> dict[str, Any]:
         if detected:
             tone_indicators.append(tone)
     patterns["tone_indicators"] = tone_indicators
-    average_word_count = sum(word_counts) / len(word_counts)
     uses_assistant_closings = any(
         closing in combined for closing in ASSISTANT_CLOSINGS
     )
-    task_focused = any(
-        re.search(rf"(?<!\w){re.escape(marker)}(?!\w)", combined)
-        for marker in TASK_MARKERS
+    task_marker_count = sum(
+        _contains_phrase(combined, marker) for marker in TASK_MARKERS
     )
+    task_focused = task_marker_count >= 2
     supportive_signal = any(marker in combined for marker in SUPPORTIVE_MARKERS)
 
     if average_word_count <= 6:
@@ -205,7 +240,11 @@ def extract_style_patterns(messages: list[str]) -> dict[str, Any]:
 
     if uses_assistant_closings:
         helpfulness_mode = "assistant"
-    elif formal_signal or task_focused:
+    elif strong_formal_signal:
+        helpfulness_mode = "professional"
+    elif casual_signal:
+        helpfulness_mode = "friend"
+    elif task_focused:
         helpfulness_mode = "professional"
     else:
         helpfulness_mode = "friend"
@@ -224,6 +263,10 @@ def _phrase_pattern(phrase: str) -> str:
     """Match a phrase and casual elongation of its final letter."""
 
     return rf"(?<!\w){re.escape(phrase[:-1])}{re.escape(phrase[-1])}+(?!\w)"
+
+
+def _contains_phrase(text: str, phrase: str) -> bool:
+    return bool(re.search(rf"(?<!\w){re.escape(phrase)}(?!\w)", text))
 
 
 def _reply_text(message: str | dict[str, str]) -> str:

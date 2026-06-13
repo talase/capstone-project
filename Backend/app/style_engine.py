@@ -7,13 +7,16 @@ from pathlib import Path
 from typing import Any
 
 from app import daily_activity_logger as activity_logger
+from app.approval_service import (
+    ApprovalRequestCreate,
+    create_approval_request,
+    evaluate_risk_approval,
+)
 from app.buffer import StyleBuffer, choose_style_mode
 from app.config import MODEL, get_client, load_env_file
 from app.evaluator import evaluate_profiles
 from app.generate_data import generate_messages_per_contact
 from app.personal_context_service import (
-    ApprovalRequestCreate,
-    create_approval_request,
     evaluate_personal_context_rules,
     get_current_user_status,
     list_active_rules,
@@ -67,6 +70,7 @@ def generate_styled_reply(
     contact_profile: dict[str, Any],
     risk_level: str | None = None,
     action_type: str | None = None,
+    personal_context: dict[str, Any] | None = None,
 ) -> str:
     """Generate one reply using the selected style mode via OpenRouter."""
 
@@ -78,6 +82,7 @@ def generate_styled_reply(
         contact_profile=contact_profile,
         risk_level=risk_level,
         action_type=action_type,
+        personal_context=personal_context,
     )
     return result["reply"]
 
@@ -90,6 +95,7 @@ def generate_styled_reply_result(
     contact_profile: dict[str, Any],
     risk_level: str | None = None,
     action_type: str | None = None,
+    personal_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Generate one reply and include whether the LLM or fallback produced it."""
 
@@ -102,6 +108,7 @@ def generate_styled_reply_result(
         contact_profile=contact_profile,
         risk_level=risk_level,
         action_type=action_type,
+        personal_context=personal_context,
     )
 
     try:
@@ -168,44 +175,19 @@ def generate_style_adapted_response(
             "message": clean_message,
             "contact_id": clean_contact,
             "profile_contact": profile_contact,
-            "risk_level": risk_level,
-            "topic": risk_level,
             "action": action_type,
             "user_id": user_id,
-            # Temporary status is a governance signal. Rules can match it via
-            # rule_type=busy_status/availability and rule_value.status.
             "user_status": current_status["status"],
             "availability": current_status["status"],
+            "status_reason": current_status.get("status_reason"),
         }
     )
+    personal_context = {
+        **personal_context,
+        "current_status": current_status,
+    }
 
-    generation = generate_styled_reply_result(
-        incoming_message=clean_message,
-        contact_name=profile_contact,
-        mode=mode,
-        global_profile=global_profile,
-        contact_profile=contact_profile,
-        risk_level=risk_level,
-        action_type=action_type,
-    )
-    reply = generation["reply"]
     pcm_decision = personal_context["decision"]
-    final_action = _final_action_for_decision(pcm_decision)
-    _collect_logging_warning(
-        logging_warnings,
-        activity_logger.log_message_event(
-            direction="sent",
-            message=reply,
-            user_id=user_id,
-            contact_id=clean_contact,
-            metadata={
-                "generated_only": final_action != "send",
-                "generation_status": generation["generation_status"],
-                "llm_error": generation["llm_error"],
-                "final_action": final_action,
-            },
-        ),
-    )
     _collect_logging_warning(
         logging_warnings,
         activity_logger.log_personal_context_decision(
@@ -215,25 +197,88 @@ def generate_style_adapted_response(
             reason=personal_context["reason"],
             matched_rules=personal_context["matched_rules"],
             original_message=clean_message,
-            final_action=final_action,
             metadata={
-                "risk_level": risk_level,
                 "action_type": action_type,
+                "context": personal_context.get("context", []),
                 "current_status": current_status.get("status"),
             },
         ),
     )
+
+    if pcm_decision == "defer":
+        _collect_logging_warning(
+            logging_warnings,
+            activity_logger.log_agent_activity(
+                status="deferred",
+                user_id=user_id,
+                contact_id=clean_contact,
+                action_category=action_type,
+                action_type=action_type,
+                requires_approval=False,
+                description=personal_context["reason"],
+                metadata={"pcm_decision": pcm_decision, "style_mode": mode},
+            ),
+        )
+        return {
+            "reply": None,
+            "generated_reply": None,
+            "style_mode": mode,
+            "contact_id": clean_contact,
+            "profile_contact": profile_contact,
+            "global_confidence": global_confidence,
+            "contact_confidence": contact_confidence,
+            "generation_status": "deferred",
+            "llm_error": False,
+            "personal_context": personal_context,
+            "current_status": current_status,
+            "pcm_decision": pcm_decision,
+            "matched_rules": personal_context["matched_rules"],
+            "pcm_reason": personal_context["reason"],
+            "handling_status": "deferred",
+            "send_allowed": False,
+            "risk_approval": None,
+            "approval_request": None,
+            "daily_report_logging_warnings": logging_warnings,
+        }
+
+    generation = generate_styled_reply_result(
+        incoming_message=clean_message,
+        contact_name=profile_contact,
+        mode=mode,
+        global_profile=global_profile,
+        contact_profile=contact_profile,
+        risk_level=risk_level,
+        action_type=action_type,
+        personal_context=personal_context,
+    )
+    reply = generation["reply"]
+    risk_approval = evaluate_risk_approval(risk_level)
+    send_allowed = not risk_approval["required"]
+    if send_allowed:
+        _collect_logging_warning(
+            logging_warnings,
+            activity_logger.log_message_event(
+                direction="sent",
+                message=reply,
+                user_id=user_id,
+                contact_id=clean_contact,
+                metadata={
+                    "generation_status": generation["generation_status"],
+                    "llm_error": generation["llm_error"],
+                },
+            ),
+        )
     _collect_logging_warning(
         logging_warnings,
         activity_logger.log_agent_activity(
-            status=_activity_status_for_final_action(final_action),
+            status="automatic" if send_allowed else "pending",
             user_id=user_id,
             contact_id=clean_contact,
             action_category=action_type,
             action_type=action_type,
-            mode="automatic" if final_action == "send" else None,
-            requires_approval=final_action == "approval_required",
-            description=personal_context["reason"],
+            mode="automatic" if send_allowed else None,
+            requires_approval=risk_approval["required"],
+            description=risk_approval["reason"] or personal_context["reason"],
             metadata={
                 "pcm_decision": pcm_decision,
                 "risk_level": risk_level,
@@ -241,7 +286,7 @@ def generate_style_adapted_response(
             },
         ),
     )
-    if _is_high_risk(risk_level):
+    if risk_approval["required"]:
         _collect_logging_warning(
             logging_warnings,
             activity_logger.log_high_risk_alert(
@@ -250,22 +295,21 @@ def generate_style_adapted_response(
                 contact_id=clean_contact,
                 action_category=action_type,
                 message=clean_message,
-                reason=personal_context["reason"],
+                reason=risk_approval["reason"],
                 metadata={
-                    "final_action": final_action,
-                    "matched_rules": personal_context["matched_rules"],
+                    "source": "risk_approval",
                 },
             ),
         )
 
     approval_request = None
-    if pcm_decision == "require_approval":
+    if risk_approval["required"]:
         approval_request = _create_pending_approval_request(
             user_id=user_id,
             contact_id=clean_contact,
             original_message=clean_message,
             generated_reply=reply,
-            personal_context=personal_context,
+            reason=risk_approval["reason"],
         )
 
     return {
@@ -283,7 +327,13 @@ def generate_style_adapted_response(
         "pcm_decision": pcm_decision,
         "matched_rules": personal_context["matched_rules"],
         "pcm_reason": personal_context["reason"],
-        "final_action": final_action,
+        "handling_status": (
+            "awaiting_approval"
+            if risk_approval["required"]
+            else "ready_to_send"
+        ),
+        "send_allowed": send_allowed,
+        "risk_approval": risk_approval,
         "approval_request": approval_request,
         "daily_report_logging_warnings": logging_warnings,
     }
@@ -294,16 +344,16 @@ def _evaluate_personal_context(message_data: dict[str, Any]) -> dict[str, Any]:
 
     try:
         rules = list_active_rules(user_id=message_data.get("user_id"))
-        result = evaluate_personal_context_rules(message_data, rules)
-        return _enforce_high_risk_approval(message_data, result)
+        return evaluate_personal_context_rules(message_data, rules)
     except Exception as exc:
-        return _enforce_high_risk_approval(message_data, {
+        return {
             "decision": "auto_reply",
+            "context": [],
             "matched_rules": [],
             "winning_rule": None,
             "reason": f"Personal context rules unavailable: {exc}",
             "fallback_used": True,
-        })
+        }
 
 
 def _get_current_status(user_id: str) -> dict[str, Any]:
@@ -323,58 +373,6 @@ def _get_current_status(user_id: str) -> dict[str, Any]:
             "updated_at": None,
         }
 
-def _enforce_high_risk_approval(
-    message_data: dict[str, Any],
-    personal_context: dict[str, Any],
-) -> dict[str, Any]:
-    """Prevent high-risk messages from being sent automatically."""
-
-    if not _is_high_risk(message_data.get("risk_level")):
-        return personal_context
-
-    matched_rules = list(personal_context.get("matched_rules", []))
-    matched_rules.append(
-        {
-            "id": "system_high_risk_gate",
-            "rule_name": "High risk messages require approval",
-            "rule_type": "system_governance",
-            "decision": "require_approval",
-            "priority": 999,
-        }
-    )
-    return {
-        "decision": "require_approval",
-        "matched_rules": matched_rules,
-        "winning_rule": matched_rules[-1],
-        "reason": "High-risk message requires approval before sending.",
-        "fallback_used": personal_context.get("fallback_used", False),
-    }
-
-
-def _final_action_for_decision(decision: str) -> str:
-    return {
-        "auto_reply": "send",
-        "draft_only": "draft",
-        "require_approval": "approval_required",
-        "defer": "deferred",
-        "blocked": "blocked",
-    }.get(decision, "approval_required")
-
-
-def _activity_status_for_final_action(final_action: str) -> str:
-    return {
-        "send": "automatic",
-        "draft": "draft",
-        "approval_required": "pending",
-        "deferred": "deferred",
-        "blocked": "blocked",
-    }.get(final_action, "pending")
-
-
-def _is_high_risk(risk_level: str | None) -> bool:
-    return str(risk_level or "").strip().lower() in {"high", "high_risk", "critical"}
-
-
 def _collect_logging_warning(
     warnings: list[dict[str, str]],
     result: activity_logger.LogResult,
@@ -389,7 +387,7 @@ def _create_pending_approval_request(
     contact_id: str,
     original_message: str,
     generated_reply: str,
-    personal_context: dict[str, Any],
+    reason: str | None,
 ) -> dict[str, Any] | None:
     """Persist an approval request, but never block the response if storage fails."""
 
@@ -400,9 +398,7 @@ def _create_pending_approval_request(
                 contact_id=contact_id,
                 original_message=original_message,
                 generated_reply=generated_reply,
-                decision=personal_context["decision"],
-                reason=personal_context["reason"],
-                matched_rules=personal_context["matched_rules"],
+                reason=reason,
             )
         )
     except Exception as exc:
