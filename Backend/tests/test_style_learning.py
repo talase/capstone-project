@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -10,6 +10,9 @@ from app.routes.style import router as style_router
 from app.style_learning_service import (
     _build_training_pairs,
     _fetch_conversation_messages,
+    _log_fetched_message_diagnostics,
+    _mark_messages_processed,
+    StyleLearningError,
     process_pending_style_learning,
 )
 from app.style_extractor import build_extraction_prompt, extract_style_patterns
@@ -245,7 +248,7 @@ class StyleLearnRouteTests(unittest.TestCase):
                 {
                     "contact_id": "manager",
                     "available_messages": 12,
-                    "reason": "less than 20 messages",
+                    "reason": "requires 20 or more messages",
                 }
             ],
         }
@@ -264,13 +267,13 @@ class PendingStyleLearningTests(unittest.TestCase):
     @patch("app.style_learning_service._mark_messages_processed")
     @patch("app.style_learning_service.learn_style_messages")
     @patch("app.style_learning_service._fetch_conversation_messages")
-    def test_processes_pairs_and_marks_only_outgoing_replies(
+    def test_processes_pairs_and_marks_both_messages(
         self,
         fetch_messages,
         learn_messages,
         mark_processed,
     ):
-        friend_rows, friend_outgoing_ids = _conversation_rows("friend", 20, 1)
+        friend_rows, _ = _conversation_rows("friend", 20, 1)
         manager_rows, _ = _conversation_rows("manager", 19, 1001)
         fetch_messages.return_value = [
             *friend_rows,
@@ -291,7 +294,7 @@ class PendingStyleLearningTests(unittest.TestCase):
                 {
                     "contact_id": "manager",
                     "available_messages": 19,
-                    "reason": "less than 20 messages",
+                    "reason": "requires 20 or more messages",
                 }
             ],
         )
@@ -321,19 +324,12 @@ class PendingStyleLearningTests(unittest.TestCase):
         )
         self.assertEqual(
             mark_processed.call_args_list[0].args,
-            (friend_outgoing_ids, "global_style_processed"),
+            ([row["id"] for row in friend_rows], "global_style_processed"),
         )
         self.assertEqual(
             mark_processed.call_args_list[1].args,
-            (friend_outgoing_ids, "contact_style_processed"),
+            ([row["id"] for row in friend_rows], "contact_style_processed"),
         )
-        incoming_ids = {row["id"] for row in friend_rows if row["direction"] == "incoming"}
-        marked_ids = {
-            message_id
-            for call in mark_processed.call_args_list
-            for message_id in call.args[0]
-        }
-        self.assertTrue(incoming_ids.isdisjoint(marked_ids))
 
     @patch("app.style_learning_service._mark_messages_processed")
     @patch("app.style_learning_service.learn_style_messages")
@@ -344,7 +340,7 @@ class PendingStyleLearningTests(unittest.TestCase):
         learn_messages,
         mark_processed,
     ):
-        rows, outgoing_ids = _conversation_rows(
+        rows, _ = _conversation_rows(
             "friend",
             20,
             1,
@@ -363,7 +359,7 @@ class PendingStyleLearningTests(unittest.TestCase):
         )
         learn_messages.assert_called_once()
         mark_processed.assert_called_once_with(
-            outgoing_ids,
+            [row["id"] for row in rows],
             "contact_style_processed",
         )
 
@@ -389,6 +385,7 @@ class PendingStyleLearningTests(unittest.TestCase):
         )
 
         self.assertEqual([pair.outgoing_id for pair in pairs], [3, 5])
+        self.assertEqual([pair.incoming_id for pair in pairs], [2, 4])
         self.assertEqual(
             [pair.learning_input() for pair in pairs],
             [
@@ -403,7 +400,7 @@ class PendingStyleLearningTests(unittest.TestCase):
             ],
         )
 
-    def test_only_valid_outgoing_pairs_count_toward_threshold(self):
+    def test_single_incoming_message_is_not_reused_for_multiple_outgoing_rows(self):
         rows = [
             *[
                 _message_row(index, "friend", "outgoing", f"no context {index}")
@@ -421,7 +418,116 @@ class PendingStyleLearningTests(unittest.TestCase):
             processed_flag="contact_style_processed",
         )
 
-        self.assertEqual(len(pairs), 49)
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0].incoming_id, 21)
+        self.assertEqual(pairs[0].outgoing_id, 22)
+
+    def test_processed_incoming_row_is_not_reused_as_pair_context(self):
+        rows = [
+            _message_row(
+                1,
+                "friend",
+                "incoming",
+                "previously used context",
+                global_processed=True,
+                contact_processed=True,
+            ),
+            _message_row(2, "friend", "outgoing", "new reply"),
+        ]
+
+        pairs = _build_training_pairs(
+            rows,
+            processed_flag="contact_style_processed",
+        )
+
+        self.assertEqual(pairs, [])
+
+    def test_pending_diagnostics_report_counts_and_exact_skip_reasons(self):
+        rows = [
+            _message_row(1, "friend", "incoming", "question"),
+            _message_row(
+                2,
+                "friend",
+                "outgoing",
+                "processed reply",
+                global_processed=True,
+            ),
+            _message_row(3, "friend", "unknown", "unsupported"),
+            _message_row(4, "friend", "outgoing", ""),
+            _message_row(5, "second", "outgoing", "reply without context"),
+        ]
+
+        with self.assertLogs("app.style_learning_service", level="WARNING") as logs:
+            _log_fetched_message_diagnostics(rows)
+            pairs = _build_training_pairs(
+                rows,
+                processed_flag="global_style_processed",
+            )
+
+        output = "\n".join(logs.output)
+        self.assertEqual(pairs, [])
+        self.assertIn(
+            "contact_id=friend fetched=4 rows_after_structural_filter=2 "
+            "incoming=1 outgoing=1",
+            output,
+        )
+        self.assertIn(
+            "global_style_processed={'true': 1, 'false': 3, "
+            "'null_or_missing': 0}",
+            output,
+        )
+        self.assertIn("row_id=2 reason=global_style_processed is true", output)
+        self.assertIn("row_id=3 reason=unsupported direction", output)
+        self.assertIn("row_id=4 reason=empty message_text", output)
+        self.assertIn(
+            "row_id=5 reason=no unprocessed, unconsumed preceding incoming "
+            "message",
+            output,
+        )
+        self.assertIn(
+            "flag=global_style_processed contact_id=second "
+            "incoming_remaining_after_filtering=0 "
+            "outgoing_remaining_after_filtering=1 valid_pair_count=0 "
+            "unmatched_unprocessed_outgoing_count=1",
+            output,
+        )
+        self.assertIn(
+            "unmatched_unprocessed_outgoing_reasons="
+            "{'no unprocessed, unconsumed preceding incoming message': 1}",
+            output,
+        )
+        self.assertIn(
+            "unmatched_unprocessed_outgoing_ids="
+            "{'no unprocessed, unconsumed preceding incoming message': [5]}",
+            output,
+        )
+
+    @patch("app.style_learning_service.get_supabase_client")
+    def test_processed_update_sends_and_confirms_both_pair_ids(self, get_client):
+        query = MagicMock()
+        query.update.return_value = query
+        query.in_.return_value = query
+        query.execute.return_value = _FakeResponse([{"id": 1}, {"id": 2}])
+        get_client.return_value.table.return_value = query
+
+        _mark_messages_processed([1, 2], "contact_style_processed")
+
+        query.update.assert_called_once_with({"contact_style_processed": True})
+        query.in_.assert_called_once_with("id", [1, 2])
+
+    @patch("app.style_learning_service.get_supabase_client")
+    def test_processed_update_fails_when_supabase_omits_incoming_id(
+        self,
+        get_client,
+    ):
+        query = MagicMock()
+        query.update.return_value = query
+        query.in_.return_value = query
+        query.execute.return_value = _FakeResponse([{"id": 2}])
+        get_client.return_value.table.return_value = query
+
+        with self.assertRaisesRegex(StyleLearningError, "missing ids: \\[1\\]"):
+            _mark_messages_processed([1, 2], "contact_style_processed")
 
     @patch("app.style_learning_service.get_supabase_client")
     def test_conversation_query_filters_user_and_orders_oldest_first(self, get_client):
@@ -430,13 +536,19 @@ class PendingStyleLearningTests(unittest.TestCase):
         )
         get_client.return_value.table.return_value = query
 
-        rows = _fetch_conversation_messages()
+        with self.assertLogs("app.style_learning_service", level="WARNING") as logs:
+            rows = _fetch_conversation_messages()
 
         self.assertEqual(rows[0]["id"], 1)
         self.assertFalse(any(call[0] == "eq" for call in query.calls))
         self.assertIn(("order", "created_at", False), query.calls)
         self.assertIn(("order", "id", False), query.calls)
         self.assertIn(("range", 0, 999), query.calls)
+        self.assertIn(
+            "FROM public.messages ORDER BY created_at ASC, id ASC "
+            "LIMIT 1000 OFFSET 0",
+            "\n".join(logs.output),
+        )
 
 
 class StylePromptTests(unittest.TestCase):

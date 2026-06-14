@@ -17,9 +17,8 @@ from app.config import MODEL, get_client, load_env_file
 from app.evaluator import evaluate_profiles
 from app.generate_data import generate_messages_per_contact
 from app.personal_context_service import (
-    evaluate_personal_context_rules,
+    evaluate_personal_context,
     get_current_user_status,
-    list_active_rules,
 )
 from app.profile_store import load_global_profile, load_profile, resolve_profile_contact
 from app.prompt_templates import build_prompt
@@ -178,14 +177,8 @@ def generate_style_adapted_response(
             "action": action_type,
             "user_id": user_id,
             "user_status": current_status["status"],
-            "availability": current_status["status"],
-            "status_reason": current_status.get("status_reason"),
         }
     )
-    personal_context = {
-        **personal_context,
-        "current_status": current_status,
-    }
 
     pcm_decision = personal_context["decision"]
     _collect_logging_warning(
@@ -195,12 +188,13 @@ def generate_style_adapted_response(
             user_id=user_id,
             contact_id=clean_contact,
             reason=personal_context["reason"],
-            matched_rules=personal_context["matched_rules"],
+            final_action=personal_context["final_action"],
             original_message=clean_message,
             metadata={
                 "action_type": action_type,
                 "context": personal_context.get("context", []),
-                "current_status": current_status.get("status"),
+                "current_status": personal_context["current_status"],
+                "final_action": personal_context["final_action"],
             },
         ),
     )
@@ -232,8 +226,8 @@ def generate_style_adapted_response(
             "personal_context": personal_context,
             "current_status": current_status,
             "pcm_decision": pcm_decision,
-            "matched_rules": personal_context["matched_rules"],
             "pcm_reason": personal_context["reason"],
+            "final_action": personal_context["final_action"],
             "handling_status": "deferred",
             "send_allowed": False,
             "risk_approval": None,
@@ -325,8 +319,8 @@ def generate_style_adapted_response(
         "personal_context": personal_context,
         "current_status": current_status,
         "pcm_decision": pcm_decision,
-        "matched_rules": personal_context["matched_rules"],
         "pcm_reason": personal_context["reason"],
+        "final_action": personal_context["final_action"],
         "handling_status": (
             "awaiting_approval"
             if risk_approval["required"]
@@ -340,20 +334,9 @@ def generate_style_adapted_response(
 
 
 def _evaluate_personal_context(message_data: dict[str, Any]) -> dict[str, Any]:
-    """Load and evaluate active personal context rules without blocking replies."""
+    """Evaluate PCM from the already-loaded current user status."""
 
-    try:
-        rules = list_active_rules(user_id=message_data.get("user_id"))
-        return evaluate_personal_context_rules(message_data, rules)
-    except Exception as exc:
-        return {
-            "decision": "auto_reply",
-            "context": [],
-            "matched_rules": [],
-            "winning_rule": None,
-            "reason": f"Personal context rules unavailable: {exc}",
-            "fallback_used": True,
-        }
+    return evaluate_personal_context(message_data)
 
 
 def _get_current_status(user_id: str) -> dict[str, Any]:
@@ -366,8 +349,6 @@ def _get_current_status(user_id: str) -> dict[str, Any]:
             "id": None,
             "user_id": user_id,
             "status": "available",
-            "status_reason": f"Status unavailable: {exc}",
-            "expires_at": None,
             "is_active": True,
             "created_at": None,
             "updated_at": None,

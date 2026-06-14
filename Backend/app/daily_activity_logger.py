@@ -138,7 +138,7 @@ def log_personal_context_decision(
     user_id: str | None = None,
     contact_id: str | None = None,
     reason: str | None = None,
-    matched_rules: list[dict[str, Any]] | None = None,
+    final_action: str | None = None,
     original_message: str | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> LogResult:
@@ -149,7 +149,7 @@ def log_personal_context_decision(
             "contact_id": _clean_contact_id(contact_id),
             "decision": decision,
             "reason": reason,
-            "matched_rules": matched_rules or [],
+            "final_action": final_action,
             "original_message": original_message,
             "metadata": metadata or {},
         },

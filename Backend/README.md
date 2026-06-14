@@ -40,14 +40,7 @@ SUPABASE_KEY=your_publishable_fallback_key
 - `GET /reports/daily` - generate an end-of-day activity report from Supabase logs
 - `POST /style/process` - generate a style-adapted response and evaluate PCM
 - `POST /calendar/process` - process a calendar request
-- `POST /personal-context/rules` - create a PCM rule
-- `GET /personal-context/rules` - list PCM rules
-- `GET /personal-context/rules/active` - list active PCM rules
-- `PUT /personal-context/rules/{rule_id}` - update a PCM rule
-- `DELETE /personal-context/rules/{rule_id}` - delete a PCM rule
-- `PATCH /personal-context/rules/{rule_id}/activate` - activate a PCM rule
-- `PATCH /personal-context/rules/{rule_id}/deactivate` - deactivate a PCM rule
-- `POST /personal-context/evaluate` - resolve context and `auto_reply`/`defer`
+- `POST /personal-context/evaluate` - return the current status with an `auto_reply` decision
 - `POST /personal-context/status` - set current user status
 - `GET /personal-context/status` - get current user status
 - `PATCH /personal-context/status` - update current user status
@@ -77,7 +70,7 @@ Example request to `POST /style/process`:
 ```
 
 Run the Supabase migrations through
-`Backend/supabase/migrations/010_simplify_personal_context_memory.sql` before
+`Backend/supabase/migrations/011_status_only_personal_context.sql` before
 using the simplified PCM behavior.
 
 Run `Backend/supabase/migrations/002_daily_report_logs.sql` in Supabase before

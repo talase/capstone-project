@@ -8,9 +8,10 @@ from app.style_engine import generate_style_adapted_response
 class DailyActivityLoggingIntegrationTests(unittest.TestCase):
     def test_auto_reply_passes_personal_context_to_generation(self):
         personal_context = {
+            "current_status": {"status": "Traveling with limited signal."},
             "decision": "auto_reply",
-            "context": ["The user's current status is traveling."],
-            "matched_rules": [],
+            "final_action": "auto_reply",
+            "context": ["The user's current status is: Traveling with limited signal."],
             "reason": "Reply generation may continue using the current user context.",
         }
         with (
@@ -41,18 +42,22 @@ class DailyActivityLoggingIntegrationTests(unittest.TestCase):
         self.assertTrue(result["send_allowed"])
         self.assertEqual(result["handling_status"], "ready_to_send")
         self.assertEqual(result["pcm_decision"], "auto_reply")
-        self.assertNotIn("final_action", result)
+        self.assertEqual(result["final_action"], "auto_reply")
         prompt_context = generate_reply.call_args.kwargs["personal_context"]
         self.assertEqual(prompt_context["context"], personal_context["context"])
-        self.assertEqual(prompt_context["current_status"]["status"], "traveling")
+        self.assertEqual(
+            prompt_context["current_status"],
+            {"status": "Traveling with limited signal."},
+        )
         self.assertEqual(log_message.call_count, 2)
 
     def test_defer_stops_before_generation(self):
         personal_context = {
+            "current_status": {"status": "in_meeting"},
             "decision": "defer",
+            "final_action": "defer",
             "context": ["The user is in a meeting."],
-            "matched_rules": [{"id": 1, "decision": "defer"}],
-            "reason": "A matching personal context rule requested reevaluation later.",
+            "reason": "The current status requested reevaluation later.",
         }
         with (
             self._base_patches(personal_context),
@@ -79,9 +84,10 @@ class DailyActivityLoggingIntegrationTests(unittest.TestCase):
 
     def test_high_risk_approval_does_not_change_pcm_decision(self):
         personal_context = {
+            "current_status": {"status": "available"},
             "decision": "auto_reply",
+            "final_action": "auto_reply",
             "context": [],
-            "matched_rules": [],
             "reason": "No relevant personal context was found.",
         }
         with (
@@ -145,8 +151,7 @@ class DailyActivityLoggingIntegrationTests(unittest.TestCase):
                     patch(
                         "app.style_engine._get_current_status",
                         return_value={
-                            "status": "traveling",
-                            "status_reason": "Limited signal",
+                            "status": "Traveling with limited signal.",
                         },
                     ),
                     patch(
