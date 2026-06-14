@@ -4,7 +4,6 @@ from unittest.mock import patch
 from app.daily_activity_logger import (
     log_approval_event,
     log_message_event,
-    log_personal_context_decision,
     log_rag_access,
 )
 
@@ -46,23 +45,6 @@ class DailyActivityLoggerTests(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertEqual(fake_client.table_name, "rag_access_logs")
         self.assertEqual(fake_client.inserted["file_name"], "notes.pdf")
-
-    def test_pcm_log_uses_final_action_without_rule_matches(self):
-        fake_client = _FakeSupabaseClient()
-
-        with patch(
-            "app.daily_activity_logger.get_supabase_client",
-            return_value=fake_client,
-        ):
-            result = log_personal_context_decision(
-                decision="auto_reply",
-                final_action="auto_reply",
-                reason="The user is available.",
-            )
-
-        self.assertTrue(result.ok)
-        self.assertEqual(fake_client.inserted["final_action"], "auto_reply")
-        self.assertNotIn("matched_rules", fake_client.inserted)
 
     def test_log_approval_event_preserves_uuid_request_id_in_metadata(self):
         fake_client = _FakeSupabaseClient()

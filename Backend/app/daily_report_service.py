@@ -13,7 +13,6 @@ MESSAGES_TABLE = "messages"
 ACTIVITY_LOGS_TABLE = "agent_activity_logs"
 APPROVALS_TABLE = "approvals"
 HIGH_RISK_ALERTS_TABLE = "high_risk_alerts"
-PERSONAL_CONTEXT_DECISION_LOGS_TABLE = "personal_context_decision_logs"
 REMINDER_LOGS_TABLE = "reminder_logs"
 SCHEDULED_MESSAGE_LOGS_TABLE = "scheduled_message_logs"
 RAG_ACCESS_LOGS_TABLE = "rag_access_logs"
@@ -27,7 +26,6 @@ REPORT_TABLES = (
     REMINDER_LOGS_TABLE,
     SCHEDULED_MESSAGE_LOGS_TABLE,
     RAG_ACCESS_LOGS_TABLE,
-    PERSONAL_CONTEXT_DECISION_LOGS_TABLE,
 )
 
 
@@ -45,14 +43,6 @@ def get_daily_report(
     records = fetch_records_for_date(selected_date, user_id=user_id)
     print("daily report date:", selected_date.isoformat())
     print("daily report user_id:", user_id)
-    print("PCM rows count:", len(records.get("personal_context_decision_logs", [])))
-    print(
-        "PCM decisions:",
-        [
-            row.get("decision")
-            for row in records.get("personal_context_decision_logs", [])[:20]
-        ],
-    )
     return build_daily_report(selected_date, records)
 
 
@@ -107,7 +97,6 @@ def build_daily_report(
     reminders = records.get(REMINDER_LOGS_TABLE, [])
     scheduled_messages = records.get(SCHEDULED_MESSAGE_LOGS_TABLE, [])
     rag_file_access = records.get(RAG_ACCESS_LOGS_TABLE, [])
-    personal_context_decisions = records.get(PERSONAL_CONTEXT_DECISION_LOGS_TABLE, [])
 
     messages_received = [
         row for row in messages if _clean(row.get("direction"))
@@ -123,8 +112,8 @@ def build_daily_report(
     ]
     auto_replies = [
         row
-        for row in personal_context_decisions
-        if _clean(row.get("decision")) == "auto_reply"
+        for row in activity_logs
+        if _is_auto_reply(row)
     ]
     print("auto_replies count:", len(auto_replies))
     user_approved_actions = [
@@ -163,7 +152,6 @@ def build_daily_report(
         "high_risk_alerts": high_risk_alerts,
         "reminders": reminders,
         "scheduled_messages": scheduled_messages,
-        "personal_context_decisions": personal_context_decisions,
         "rag_file_access": rag_file_access,
         "needs_attention": needs_attention,
     }
@@ -206,6 +194,12 @@ def _is_automatic_action(row: dict[str, Any]) -> bool:
         or mode in {"automatic", "auto"}
         or (requires_approval is False and status in {"completed", "sent", "executed"})
     )
+
+
+def _is_auto_reply(row: dict[str, Any]) -> bool:
+    metadata = row.get("metadata")
+    source = metadata.get("source") if isinstance(metadata, dict) else None
+    return _status(row) == "automatic" and _clean(source) == "style_response"
 
 
 def _status(row: dict[str, Any]) -> str:

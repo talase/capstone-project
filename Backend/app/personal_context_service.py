@@ -13,7 +13,6 @@ from app.supabase_client import SupabaseConfigError, get_supabase_client
 LOGGER = logging.getLogger(__name__)
 
 USER_STATUS_TABLE_NAME = "user_statuses"
-DEFAULT_DECISION = "auto_reply"
 AVAILABLE_STATUS = "available"
 
 
@@ -43,6 +42,11 @@ class UserStatus(BaseModel):
     is_active: bool = True
     created_at: str | None = None
     updated_at: str | None = None
+
+
+class PersonalContext(BaseModel):
+    current_status: dict[str, str]
+    context: list[str] = Field(default_factory=list)
 
 
 def set_user_status(status: UserStatusSet) -> dict[str, Any]:
@@ -128,25 +132,13 @@ def clear_user_status(user_id: str) -> dict[str, Any]:
     return set_user_status(UserStatusSet(user_id=user_id))
 
 
-def evaluate_personal_context(message_data: dict[str, Any]) -> dict[str, Any]:
-    """Evaluate PCM using only the current status text."""
+def build_personal_context(status: str | None) -> dict[str, Any]:
+    """Build prompt context from the user's current status."""
 
-    status_text = str(
-        message_data.get("user_status")
-        or AVAILABLE_STATUS
-    ).strip()
-    context = _status_context(status_text)
-    if _clean(status_text) == AVAILABLE_STATUS:
-        reason = "The user is available; reply generation may continue."
-    else:
-        reason = "Reply generation may continue using the current status as context."
+    status_text = str(status or AVAILABLE_STATUS).strip() or AVAILABLE_STATUS
     return {
         "current_status": {"status": status_text},
-        "decision": DEFAULT_DECISION,
-        "reason": reason,
-        "final_action": DEFAULT_DECISION,
-        "context": context,
-        "fallback_used": False,
+        "context": _status_context(status_text),
     }
 
 

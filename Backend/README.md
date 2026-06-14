@@ -40,7 +40,7 @@ SUPABASE_KEY=your_publishable_fallback_key
 - `GET /reports/daily` - generate an end-of-day activity report from Supabase logs
 - `POST /style/process` - generate a style-adapted response and evaluate PCM
 - `POST /calendar/process` - process a calendar request
-- `POST /personal-context/evaluate` - return the current status with an `auto_reply` decision
+- `POST /personal-context/evaluate` - return the current status as prompt context
 - `POST /personal-context/status` - set current user status
 - `GET /personal-context/status` - get current user status
 - `PATCH /personal-context/status` - update current user status
@@ -70,7 +70,7 @@ Example request to `POST /style/process`:
 ```
 
 Run the Supabase migrations through
-`Backend/supabase/migrations/011_status_only_personal_context.sql` before
+`Backend/supabase/migrations/012_remove_legacy_pcm_decisions.sql` before
 using the simplified PCM behavior.
 
 Run `Backend/supabase/migrations/002_daily_report_logs.sql` in Supabase before
@@ -81,7 +81,7 @@ using the daily report endpoint.
 `GET /reports/daily` returns a structured activity report for the selected
 calendar date. It summarizes messages received and sent, automatic actions,
 approved and rejected actions, pending approvals, high-risk alerts, reminders,
-scheduled messages, Personal Context Memory decisions, and RAG file access.
+scheduled messages, and RAG file access.
 
 Example request:
 
@@ -102,34 +102,25 @@ not block response generation or approval updates.
 
 ## Personal Context Memory
 
-PCM stores user-defined statuses and contextual rules. Status values are open
-strings, so values such as `busy`, `traveling`, `at_work`, or future custom
-statuses are supported.
-
-PCM returns only two decisions:
-
-- `auto_reply` - continue normally and let reply generation use relevant context.
-- `defer` - postpone handling until the message is reevaluated.
-
-Example context rule:
+PCM stores only the user's current free-text status. Values such as `busy`,
+`traveling`, `at_work`, or future custom statuses are supported. The evaluate
+endpoint returns the status and the prompt-ready context derived from it:
 
 ```json
 {
-  "user_id": "default_user",
-  "rule_name": "Busy reply context",
-  "rule_type": "status_context",
-  "rule_value": {
-    "status": "busy",
-    "context": "The user is busy and may reply later.",
-    "decision": "auto_reply"
-  }
+  "current_status": {
+    "status": "busy finishing a project"
+  },
+  "context": [
+    "The user's current status is: busy finishing a project"
+  ]
 }
 ```
 
-Risk approval does not change `pcm_decision`. `/style/process` exposes
-`send_allowed`, `risk_approval.required`, and `handling_status` as the separate
-delivery gate. `handling_status` is `ready_to_send`, `awaiting_approval`, or
-`deferred`.
+PCM does not make execution or delivery decisions. `/style/process` exposes
+`send_allowed`, `risk_approval.required`, and `handling_status` through the
+separate risk-approval flow. `handling_status` is `ready_to_send` or
+`awaiting_approval`.
 
 Example response:
 
@@ -161,7 +152,6 @@ Example response:
   "high_risk_alerts": [],
   "reminders": [],
   "scheduled_messages": [],
-  "personal_context_decisions": [],
   "rag_file_access": [],
   "needs_attention": []
 }

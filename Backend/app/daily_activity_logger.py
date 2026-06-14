@@ -132,30 +132,6 @@ def log_high_risk_alert(
     )
 
 
-def log_personal_context_decision(
-    *,
-    decision: str,
-    user_id: str | None = None,
-    contact_id: str | None = None,
-    reason: str | None = None,
-    final_action: str | None = None,
-    original_message: str | None = None,
-    metadata: dict[str, Any] | None = None,
-) -> LogResult:
-    return _safe_insert(
-        "personal_context_decision_logs",
-        {
-            "user_id": user_id or DEFAULT_USER_ID,
-            "contact_id": _clean_contact_id(contact_id),
-            "decision": decision,
-            "reason": reason,
-            "final_action": final_action,
-            "original_message": original_message,
-            "metadata": metadata or {},
-        },
-    )
-
-
 def log_reminder_created(
     *,
     reminder_text: str,

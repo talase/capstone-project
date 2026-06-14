@@ -12,8 +12,8 @@ from app.personal_context_routes import (
 from app.personal_context_service import (
     UserStatus,
     UserStatusSet,
+    build_personal_context,
     clear_user_status,
-    evaluate_personal_context,
     get_current_user_status,
     set_user_status,
 )
@@ -29,36 +29,24 @@ class PersonalContextServiceTests(unittest.TestCase):
 
         self.assertNotIn("status_reason", status.model_dump())
 
-    def test_available_status_auto_replies_without_context(self):
-        result = evaluate_personal_context({"user_status": "available"})
+    def test_available_status_has_no_prompt_context(self):
+        result = build_personal_context("available")
 
         self.assertEqual(result["current_status"], {"status": "available"})
-        self.assertEqual(result["decision"], "auto_reply")
-        self.assertEqual(result["final_action"], "auto_reply")
         self.assertEqual(result["context"], [])
-        self.assertNotIn("status_reason", result)
+        self.assertEqual(set(result), {"current_status", "context"})
 
-    def test_free_text_status_auto_replies_with_status_context(self):
+    def test_free_text_status_is_added_to_prompt_context(self):
         status_text = (
             "I have an appointment tomorrow at the hospital and I won't be "
             "available. If anyone asks for a meeting tomorrow, say sorry I'm "
             "at the hospital."
         )
-        result = evaluate_personal_context(
-            {
-                "user_status": status_text,
-                "topic": "ignored",
-                "contact_id": "ignored",
-                "action": "ignored",
-            }
-        )
+        result = build_personal_context(status_text)
 
         self.assertEqual(result["current_status"], {"status": status_text})
-        self.assertEqual(result["decision"], "auto_reply")
         self.assertIn(status_text, result["context"][0])
-        self.assertNotIn("matched_rules", result)
-        self.assertNotIn("winning_rule", result)
-        self.assertNotIn("status_reason", result)
+        self.assertEqual(set(result), {"current_status", "context"})
 
     def test_latest_active_status_is_used_even_when_expires_at_is_past(self):
         fake_table = _FakeStatusTable()
@@ -101,22 +89,17 @@ class PersonalContextServiceTests(unittest.TestCase):
                     "status": "traveling",
                 },
             ),
-            patch("app.personal_context_routes._log_evaluation_activity", return_value=[]),
         ):
             response = _evaluate_personal_context(
-                PersonalContextEvaluateRequest(user_id="u1", message="Where are you?")
+                PersonalContextEvaluateRequest(user_id="u1")
             )
 
         self.assertEqual(response["current_status"], {"status": "traveling"})
-        self.assertEqual(response["decision"], "auto_reply")
-        self.assertEqual(response["final_action"], "auto_reply")
         self.assertEqual(
-            set(response),
-            {"current_status", "decision", "reason", "final_action"},
+            response["context"],
+            ["The user's current status is: traveling"],
         )
-        self.assertNotIn("personal_context", response)
-        self.assertNotIn("matched_rules", response)
-        self.assertNotIn("status_reason", response)
+        self.assertEqual(set(response), {"current_status", "context"})
 
     def test_pcm_rule_routes_are_removed(self):
         app = FastAPI()
