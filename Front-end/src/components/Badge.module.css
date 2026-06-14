@@ -1,0 +1,44 @@
+/* Styles scoped to Badge.tsx. Class names here are local — the
+   bundler rewrites them to unique strings, so ".badge" never
+   clashes with a ".badge" defined elsewhere. */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.low {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.medium {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.high {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.neutral {
+  background: var(--surface-2);
+  color: var(--text-muted);
+}

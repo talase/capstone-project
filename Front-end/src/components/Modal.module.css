@@ -1,0 +1,33 @@
+/* Styles scoped to Modal.tsx */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: rgba(8, 11, 18, 0.55);
+  backdrop-filter: blur(2px);
+  animation: fade-in 160ms var(--ease);
+}
+
+.dialog {
+  width: min(440px, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+  animation: fade-in-up 200ms var(--ease);
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 650;
+}
