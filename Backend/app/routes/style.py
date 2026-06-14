@@ -72,11 +72,22 @@ class SkippedContactStyleUpdate(BaseModel):
     reason: str
 
 
+class StyleLearningPendingCounts(BaseModel):
+    learnable_outgoing_turns_before: int
+    learned_outgoing_turns: int
+    learnable_outgoing_turns_after: int
+    context_only_incoming_before: int
+    context_only_incoming_processed: int
+    context_only_incoming_after: int
+
+
 class StyleLearnPendingResponse(BaseModel):
     global_updated: bool
     global_message_count: int
     contacts_updated: list[ContactStyleUpdate]
     skipped_contacts: list[SkippedContactStyleUpdate]
+    global_pending: StyleLearningPendingCounts
+    contact_pending: dict[str, StyleLearningPendingCounts]
 
 
 class StyleProfileFile(BaseModel):

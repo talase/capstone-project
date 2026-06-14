@@ -13,6 +13,7 @@ from app.style_learning_service import (
     _log_fetched_message_diagnostics,
     _mark_messages_processed,
     StyleLearningError,
+    learn_style_messages,
     process_pending_style_learning,
 )
 from app.style_extractor import build_extraction_prompt, extract_style_patterns
@@ -242,15 +243,33 @@ class StyleLearnRouteTests(unittest.TestCase):
     def test_pending_endpoint_returns_batch_summary(self, process_pending):
         process_pending.return_value = {
             "global_updated": True,
-            "global_message_count": 20,
-            "contacts_updated": [{"contact_id": "friend", "message_count": 20}],
+            "global_message_count": 50,
+            "contacts_updated": [{"contact_id": "friend", "message_count": 50}],
             "skipped_contacts": [
                 {
                     "contact_id": "manager",
-                    "available_messages": 12,
-                    "reason": "requires 20 or more messages",
+                    "available_messages": 49,
+                    "reason": "requires 50 or more messages",
                 }
             ],
+            "global_pending": {
+                "learnable_outgoing_turns_before": 50,
+                "learned_outgoing_turns": 50,
+                "learnable_outgoing_turns_after": 0,
+                "context_only_incoming_before": 3,
+                "context_only_incoming_processed": 3,
+                "context_only_incoming_after": 0,
+            },
+            "contact_pending": {
+                "friend": {
+                    "learnable_outgoing_turns_before": 50,
+                    "learned_outgoing_turns": 50,
+                    "learnable_outgoing_turns_after": 0,
+                    "context_only_incoming_before": 0,
+                    "context_only_incoming_processed": 0,
+                    "context_only_incoming_after": 0,
+                }
+            },
         }
 
         response = self.client.post(
@@ -267,14 +286,147 @@ class PendingStyleLearningTests(unittest.TestCase):
     @patch("app.style_learning_service._mark_messages_processed")
     @patch("app.style_learning_service.learn_style_messages")
     @patch("app.style_learning_service._fetch_conversation_messages")
+    def test_logs_exact_reason_when_forty_nine_turns_are_below_threshold(
+        self,
+        fetch_messages,
+        learn_messages,
+        mark_processed,
+    ):
+        rows, _ = _conversation_rows("friend", 49, 1)
+        fetch_messages.return_value = rows
+
+        with self.assertLogs("app.style_learning_service", level="WARNING") as logs:
+            result = process_pending_style_learning("user-1")
+
+        output = "\n".join(logs.output)
+        learn_messages.assert_not_called()
+        mark_processed.assert_not_called()
+        self.assertIn(
+            "Global style learning threshold check: turn_count=49 threshold=50",
+            output,
+        )
+        self.assertIn(
+            "Skipping global learning: only 49 turns, threshold=50; "
+            "profile_generation_attempted=false",
+            output,
+        )
+        self.assertIn(
+            "Contact style learning threshold check: contact_id=friend "
+            "turn_count=49 threshold=50",
+            output,
+        )
+        self.assertIn(
+            "Skipping contact learning: contact_id=friend only 49 turns, "
+            "threshold=50; profile_generation_attempted=false",
+            output,
+        )
+        self.assertEqual(
+            result["global_pending"]["learned_outgoing_turns"],
+            0,
+        )
+
+    @patch(
+        "app.style_learning_service.extract_style_profile",
+        side_effect=RuntimeError("model unavailable"),
+    )
+    @patch("app.style_learning_service._fetch_conversation_messages")
+    def test_logs_profile_generation_failure(
+        self,
+        fetch_messages,
+        extract_profile,
+    ):
+        rows, _ = _conversation_rows("friend", 50, 1)
+        fetch_messages.return_value = rows
+
+        with self.assertLogs("app.style_learning_service", level="WARNING") as logs:
+            with self.assertRaisesRegex(StyleLearningError, "model unavailable"):
+                process_pending_style_learning("user-1")
+
+        output = "\n".join(logs.output)
+        extract_profile.assert_called_once()
+        self.assertIn("Global learning attempted:", output)
+        self.assertIn(
+            "Global learning attempted but profile generation failed",
+            output,
+        )
+
+    @patch(
+        "app.style_learning_service.update_profile",
+        side_effect=RuntimeError("database unavailable"),
+    )
+    @patch("app.style_learning_service.extract_style_profile")
+    @patch("app.style_learning_service.load_profile")
+    @patch("app.style_learning_service._fetch_conversation_messages")
+    def test_logs_database_update_failure(
+        self,
+        fetch_messages,
+        load_profile,
+        extract_profile,
+        update_profile,
+    ):
+        rows, _ = _conversation_rows("friend", 50, 1)
+        fetch_messages.return_value = rows
+        load_profile.return_value = neutral_profile()
+        extract_profile.return_value = neutral_profile(
+            message_count=50,
+            batch_count=1,
+        )
+
+        with self.assertLogs("app.style_learning_service", level="WARNING") as logs:
+            with self.assertRaisesRegex(
+                StyleLearningError,
+                "database unavailable",
+            ):
+                process_pending_style_learning("user-1")
+
+        output = "\n".join(logs.output)
+        update_profile.assert_called_once()
+        self.assertIn(
+            "Global learning attempted but database update failed",
+            output,
+        )
+
+    @patch("app.style_learning_service.update_profile")
+    @patch("app.style_learning_service.extract_style_profile")
+    @patch("app.style_learning_service.load_profile")
+    def test_logs_when_profile_is_unchanged_without_skipping(
+        self,
+        load_profile,
+        extract_profile,
+        update_profile,
+    ):
+        existing = neutral_profile(message_count=20, batch_count=1)
+        load_profile.return_value = existing
+        extract_profile.return_value = neutral_profile(
+            message_count=1,
+            batch_count=1,
+        )
+        update_profile.return_value = existing
+
+        with self.assertLogs("app.style_learning_service", level="WARNING") as logs:
+            result = learn_style_messages(
+                ["hello"],
+                contact_id="friend",
+                user_id="user-1",
+            )
+
+        self.assertEqual(result, existing)
+        self.assertIn(
+            "profile_unchanged=True unchanged_profile_skipped=false",
+            "\n".join(logs.output),
+        )
+
+    @patch("app.style_learning_service._mark_messages_processed")
+    @patch("app.style_learning_service.learn_style_messages")
+    @patch("app.style_learning_service._fetch_conversation_messages")
     def test_processes_pairs_and_marks_both_messages(
         self,
         fetch_messages,
         learn_messages,
         mark_processed,
     ):
-        friend_rows, _ = _conversation_rows("friend", 20, 1)
-        manager_rows, _ = _conversation_rows("manager", 19, 1001)
+        friend_rows, _ = _conversation_rows("friend", 50, 1)
+        manager_rows, _ = _conversation_rows("manager", 49, 1001)
         fetch_messages.return_value = [
             *friend_rows,
             *manager_rows,
@@ -283,20 +435,31 @@ class PendingStyleLearningTests(unittest.TestCase):
         result = process_pending_style_learning("user-1")
 
         self.assertTrue(result["global_updated"])
-        self.assertEqual(result["global_message_count"], 20)
+        self.assertEqual(result["global_message_count"], 50)
         self.assertEqual(
             result["contacts_updated"],
-            [{"contact_id": "friend", "message_count": 20}],
+            [{"contact_id": "friend", "message_count": 50}],
         )
         self.assertEqual(
             result["skipped_contacts"],
             [
                 {
                     "contact_id": "manager",
-                    "available_messages": 19,
-                    "reason": "requires 20 or more messages",
+                    "available_messages": 49,
+                    "reason": "requires 50 or more messages",
                 }
             ],
+        )
+        self.assertEqual(
+            result["global_pending"],
+            {
+                "learnable_outgoing_turns_before": 99,
+                "learned_outgoing_turns": 50,
+                "learnable_outgoing_turns_after": 49,
+                "context_only_incoming_before": 0,
+                "context_only_incoming_processed": 0,
+                "context_only_incoming_after": 0,
+            },
         )
         self.assertEqual(learn_messages.call_count, 2)
         self.assertEqual(
@@ -314,7 +477,7 @@ class PendingStyleLearningTests(unittest.TestCase):
             },
         )
         global_learning_input = learn_messages.call_args_list[0].args[0]
-        self.assertEqual(len(global_learning_input), 20)
+        self.assertEqual(len(global_learning_input), 50)
         self.assertEqual(
             global_learning_input[0],
             {
@@ -342,7 +505,7 @@ class PendingStyleLearningTests(unittest.TestCase):
     ):
         rows, _ = _conversation_rows(
             "friend",
-            20,
+            50,
             1,
             global_processed=True,
             contact_processed=False,
@@ -355,15 +518,112 @@ class PendingStyleLearningTests(unittest.TestCase):
         self.assertEqual(result["global_message_count"], 0)
         self.assertEqual(
             result["contacts_updated"],
-            [{"contact_id": "friend", "message_count": 20}],
+            [{"contact_id": "friend", "message_count": 50}],
         )
         learn_messages.assert_called_once()
-        mark_processed.assert_called_once_with(
-            [row["id"] for row in rows],
-            "contact_style_processed",
+        self.assertEqual(
+            mark_processed.call_args_list[0].args,
+            (
+                [row["id"] for row in rows if row["direction"] == "incoming"],
+                "global_style_processed",
+            ),
+        )
+        self.assertEqual(
+            mark_processed.call_args_list[1].args,
+            ([row["id"] for row in rows], "contact_style_processed"),
         )
 
-    def test_builds_pairs_from_closest_previous_incoming_and_skips_missing_context(self):
+    @patch("app.style_learning_service._mark_messages_processed")
+    @patch("app.style_learning_service.learn_style_messages")
+    @patch("app.style_learning_service._fetch_conversation_messages")
+    def test_incoming_only_messages_are_retired_without_style_learning(
+        self,
+        fetch_messages,
+        learn_messages,
+        mark_processed,
+    ):
+        rows = [
+            _message_row(1, "friend", "incoming", "Hello?"),
+            _message_row(2, "friend", "incoming", "Are you there?"),
+            _message_row(3, "friend", "incoming", ""),
+            _message_row(4, "", "incoming", "No contact metadata"),
+        ]
+        fetch_messages.return_value = rows
+
+        result = process_pending_style_learning("user-1")
+
+        learn_messages.assert_not_called()
+        self.assertEqual(
+            mark_processed.call_args_list[0].args,
+            ([1, 2, 3, 4], "global_style_processed"),
+        )
+        self.assertEqual(
+            mark_processed.call_args_list[1].args,
+            ([1, 2, 3], "contact_style_processed"),
+        )
+        self.assertEqual(
+            mark_processed.call_args_list[2].args,
+            ([4], "contact_style_processed"),
+        )
+        self.assertFalse(result["global_updated"])
+        self.assertEqual(result["skipped_contacts"], [])
+        self.assertEqual(
+            result["global_pending"],
+            {
+                "learnable_outgoing_turns_before": 0,
+                "learned_outgoing_turns": 0,
+                "learnable_outgoing_turns_after": 0,
+                "context_only_incoming_before": 4,
+                "context_only_incoming_processed": 4,
+                "context_only_incoming_after": 0,
+            },
+        )
+        self.assertEqual(
+            result["contact_pending"]["friend"],
+            {
+                "learnable_outgoing_turns_before": 0,
+                "learned_outgoing_turns": 0,
+                "learnable_outgoing_turns_after": 0,
+                "context_only_incoming_before": 3,
+                "context_only_incoming_processed": 3,
+                "context_only_incoming_after": 0,
+            },
+        )
+        self.assertEqual(
+            result["contact_pending"]["<missing>"][
+                "context_only_incoming_processed"
+            ],
+            1,
+        )
+
+    @patch("app.style_learning_service._mark_messages_processed")
+    @patch(
+        "app.style_learning_service.learn_style_messages",
+        side_effect=RuntimeError("learning failed"),
+    )
+    @patch("app.style_learning_service._fetch_conversation_messages")
+    def test_failed_learning_does_not_retire_context_only_incoming(
+        self,
+        fetch_messages,
+        learn_messages,
+        mark_processed,
+    ):
+        rows, _ = _conversation_rows("friend", 50, 1)
+        rows.extend(
+            [
+                _message_row(100, "incoming-only", "incoming", "Hello?"),
+                _message_row(101, "incoming-only", "incoming", "Anyone there?"),
+            ]
+        )
+        fetch_messages.return_value = rows
+
+        with self.assertRaisesRegex(StyleLearningError, "learning failed"):
+            process_pending_style_learning("user-1")
+
+        learn_messages.assert_called_once()
+        mark_processed.assert_not_called()
+
+    def test_normal_incoming_outgoing_pair_and_contextless_outgoing(self):
         rows = [
             _message_row(1, "friend", "outgoing", "reply without context"),
             _message_row(2, "friend", "incoming", "first question"),
@@ -384,11 +644,15 @@ class PendingStyleLearningTests(unittest.TestCase):
             processed_flag="global_style_processed",
         )
 
-        self.assertEqual([pair.outgoing_id for pair in pairs], [3, 5])
-        self.assertEqual([pair.incoming_id for pair in pairs], [2, 4])
+        self.assertEqual([pair.outgoing_ids for pair in pairs], [(1,), (3,), (5,)])
+        self.assertEqual([pair.incoming_ids for pair in pairs], [(), (2,), (4,)])
         self.assertEqual(
             [pair.learning_input() for pair in pairs],
             [
+                {
+                    "incoming_message": "",
+                    "user_reply": "reply without context",
+                },
                 {
                     "incoming_message": "first question",
                     "user_reply": "first reply",
@@ -400,17 +664,11 @@ class PendingStyleLearningTests(unittest.TestCase):
             ],
         )
 
-    def test_single_incoming_message_is_not_reused_for_multiple_outgoing_rows(self):
+    def test_incoming_then_multiple_outgoing_messages_combines_reply(self):
         rows = [
-            *[
-                _message_row(index, "friend", "outgoing", f"no context {index}")
-                for index in range(1, 21)
-            ],
-            _message_row(21, "friend", "incoming", "now there is context"),
-            *[
-                _message_row(index, "friend", "outgoing", f"valid reply {index}")
-                for index in range(22, 71)
-            ],
+            _message_row(1, "friend", "incoming", "Are you free?"),
+            _message_row(2, "friend", "outgoing", "Yep."),
+            _message_row(3, "friend", "outgoing", "After 3."),
         ]
 
         pairs = _build_training_pairs(
@@ -419,10 +677,63 @@ class PendingStyleLearningTests(unittest.TestCase):
         )
 
         self.assertEqual(len(pairs), 1)
-        self.assertEqual(pairs[0].incoming_id, 21)
-        self.assertEqual(pairs[0].outgoing_id, 22)
+        self.assertEqual(pairs[0].incoming_ids, (1,))
+        self.assertEqual(pairs[0].outgoing_ids, (2, 3))
+        self.assertEqual(
+            pairs[0].learning_input(),
+            {
+                "incoming_message": "Are you free?",
+                "user_reply": "Yep.\nAfter 3.",
+            },
+        )
 
-    def test_processed_incoming_row_is_not_reused_as_pair_context(self):
+    def test_multiple_incoming_messages_then_outgoing_combines_context(self):
+        rows = [
+            _message_row(1, "friend", "incoming", "Are you free?"),
+            _message_row(2, "friend", "incoming", "Maybe after work?"),
+            _message_row(3, "friend", "outgoing", "Yep, after 3."),
+        ]
+
+        pairs = _build_training_pairs(
+            rows,
+            processed_flag="contact_style_processed",
+        )
+
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0].incoming_ids, (1, 2))
+        self.assertEqual(pairs[0].outgoing_ids, (3,))
+        self.assertEqual(
+            pairs[0].learning_input(),
+            {
+                "incoming_message": "Are you free?\nMaybe after work?",
+                "user_reply": "Yep, after 3.",
+            },
+        )
+
+    def test_outgoing_messages_before_later_incoming_use_surrounding_context(self):
+        rows = [
+            _message_row(1, "friend", "outgoing", "I sent the document."),
+            _message_row(2, "friend", "outgoing", "Please check page two."),
+            _message_row(3, "friend", "incoming", "Got it, thanks."),
+        ]
+
+        pairs = _build_training_pairs(
+            rows,
+            processed_flag="contact_style_processed",
+        )
+
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0].incoming_ids, (3,))
+        self.assertEqual(pairs[0].outgoing_ids, (1, 2))
+        self.assertEqual(
+            pairs[0].learning_input(),
+            {
+                "incoming_message": "Got it, thanks.",
+                "user_reply": "I sent the document.\nPlease check page two.",
+            },
+        )
+
+    def test_processed_incoming_row_is_not_reused_but_outgoing_still_learns(self):
         rows = [
             _message_row(
                 1,
@@ -440,7 +751,31 @@ class PendingStyleLearningTests(unittest.TestCase):
             processed_flag="contact_style_processed",
         )
 
-        self.assertEqual(pairs, [])
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0].incoming_ids, ())
+        self.assertEqual(pairs[0].outgoing_ids, (2,))
+        self.assertEqual(pairs[0].user_reply, "new reply")
+
+    @patch("app.style_learning_service._mark_messages_processed")
+    @patch(
+        "app.style_learning_service.learn_style_messages",
+        side_effect=RuntimeError("learning failed"),
+    )
+    @patch("app.style_learning_service._fetch_conversation_messages")
+    def test_failed_learning_does_not_mark_messages_processed(
+        self,
+        fetch_messages,
+        learn_messages,
+        mark_processed,
+    ):
+        rows, _ = _conversation_rows("friend", 50, 1)
+        fetch_messages.return_value = rows
+
+        with self.assertRaisesRegex(StyleLearningError, "learning failed"):
+            process_pending_style_learning("user-1")
+
+        learn_messages.assert_called_once()
+        mark_processed.assert_not_called()
 
     def test_pending_diagnostics_report_counts_and_exact_skip_reasons(self):
         rows = [
@@ -465,7 +800,9 @@ class PendingStyleLearningTests(unittest.TestCase):
             )
 
         output = "\n".join(logs.output)
-        self.assertEqual(pairs, [])
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0].incoming_ids, ())
+        self.assertEqual(pairs[0].outgoing_ids, (5,))
         self.assertIn(
             "contact_id=friend fetched=4 rows_after_structural_filter=2 "
             "incoming=1 outgoing=1",
@@ -480,27 +817,12 @@ class PendingStyleLearningTests(unittest.TestCase):
         self.assertIn("row_id=3 reason=unsupported direction", output)
         self.assertIn("row_id=4 reason=empty message_text", output)
         self.assertIn(
-            "row_id=5 reason=no unprocessed, unconsumed preceding incoming "
-            "message",
-            output,
-        )
-        self.assertIn(
             "flag=global_style_processed contact_id=second "
             "incoming_remaining_after_filtering=0 "
-            "outgoing_remaining_after_filtering=1 valid_pair_count=0 "
-            "unmatched_unprocessed_outgoing_count=1",
+            "outgoing_remaining_after_filtering=1 valid_turn_count=1",
             output,
         )
-        self.assertIn(
-            "unmatched_unprocessed_outgoing_reasons="
-            "{'no unprocessed, unconsumed preceding incoming message': 1}",
-            output,
-        )
-        self.assertIn(
-            "unmatched_unprocessed_outgoing_ids="
-            "{'no unprocessed, unconsumed preceding incoming message': [5]}",
-            output,
-        )
+        self.assertIn("incoming_ids=[] outgoing_ids=[5]", output)
 
     @patch("app.style_learning_service.get_supabase_client")
     def test_processed_update_sends_and_confirms_both_pair_ids(self, get_client):

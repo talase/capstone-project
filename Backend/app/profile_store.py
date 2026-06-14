@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,7 @@ CONTACT_MAP_PATH = PROJECT_ROOT / "contact_map.json"
 TRAITS = ("formality", "politeness", "verbosity", "optimism")
 DEFAULT_USER_ID = "default_user"
 STYLE_PROFILES_TABLE = "style_profiles"
+LOGGER = logging.getLogger(__name__)
 
 
 def neutral_profile(message_count: int = 0, batch_count: int = 0) -> dict[str, Any]:
@@ -286,8 +288,26 @@ def save_profile(
     user_id: str = DEFAULT_USER_ID,
 ) -> Path:
     if _save_profile_to_supabase(profile, contact, user_id):
+        LOGGER.warning(
+            "Style profile database update succeeded: contact_id=%s "
+            "user_id=%s",
+            resolve_profile_contact(contact),
+            user_id,
+        )
         return profile_path(resolve_profile_contact(contact))
-    return _save_profile_to_file(profile, contact)
+    LOGGER.warning(
+        "Style profile database update failed: contact_id=%s user_id=%s; "
+        "attempting local file fallback",
+        resolve_profile_contact(contact),
+        user_id,
+    )
+    path = _save_profile_to_file(profile, contact)
+    LOGGER.warning(
+        "Style profile local file fallback succeeded: contact_id=%s path=%s",
+        resolve_profile_contact(contact),
+        path,
+    )
+    return path
 
 
 def _save_profile_to_file(profile: dict[str, Any], contact: str | None = None) -> Path:
@@ -430,7 +450,14 @@ def _save_profile_to_supabase(
         return True
     except TypeError:
         return _save_profile_to_supabase_without_upsert_options(payload)
-    except Exception:
+    except Exception as exc:
+        LOGGER.warning(
+            "Style profile Supabase upsert failed: contact_id=%s user_id=%s "
+            "error=%s",
+            resolve_profile_contact(contact),
+            user_id,
+            exc,
+        )
         return False
 
 
@@ -453,7 +480,14 @@ def _save_profile_to_supabase_without_upsert_options(payload: dict[str, Any]) ->
         else:
             _style_profiles_table().insert(payload).execute()
         return True
-    except Exception:
+    except Exception as exc:
+        LOGGER.warning(
+            "Style profile Supabase legacy update failed: contact_id=%s "
+            "user_id=%s error=%s",
+            payload.get("contact_id"),
+            payload.get("user_id"),
+            exc,
+        )
         return False
 
 
