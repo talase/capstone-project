@@ -17,9 +17,8 @@ from app.config import MODEL, get_client, load_env_file
 from app.evaluator import evaluate_profiles
 from app.generate_data import generate_messages_per_contact
 from app.personal_context_service import (
-    evaluate_personal_context_rules,
+    build_personal_context,
     get_current_user_status,
-    list_active_rules,
 )
 from app.profile_store import load_global_profile, load_profile, resolve_profile_contact
 from app.prompt_templates import build_prompt
@@ -170,76 +169,7 @@ def generate_style_adapted_response(
     global_confidence = int(global_profile.get("overall_confidence", 0) or 0)
     contact_confidence = int(contact_profile.get("overall_confidence", 0) or 0)
     current_status = _get_current_status(user_id)
-    personal_context = _evaluate_personal_context(
-        {
-            "message": clean_message,
-            "contact_id": clean_contact,
-            "profile_contact": profile_contact,
-            "action": action_type,
-            "user_id": user_id,
-            "user_status": current_status["status"],
-            "availability": current_status["status"],
-            "status_reason": current_status.get("status_reason"),
-        }
-    )
-    personal_context = {
-        **personal_context,
-        "current_status": current_status,
-    }
-
-    pcm_decision = personal_context["decision"]
-    _collect_logging_warning(
-        logging_warnings,
-        activity_logger.log_personal_context_decision(
-            decision=pcm_decision,
-            user_id=user_id,
-            contact_id=clean_contact,
-            reason=personal_context["reason"],
-            matched_rules=personal_context["matched_rules"],
-            original_message=clean_message,
-            metadata={
-                "action_type": action_type,
-                "context": personal_context.get("context", []),
-                "current_status": current_status.get("status"),
-            },
-        ),
-    )
-
-    if pcm_decision == "defer":
-        _collect_logging_warning(
-            logging_warnings,
-            activity_logger.log_agent_activity(
-                status="deferred",
-                user_id=user_id,
-                contact_id=clean_contact,
-                action_category=action_type,
-                action_type=action_type,
-                requires_approval=False,
-                description=personal_context["reason"],
-                metadata={"pcm_decision": pcm_decision, "style_mode": mode},
-            ),
-        )
-        return {
-            "reply": None,
-            "generated_reply": None,
-            "style_mode": mode,
-            "contact_id": clean_contact,
-            "profile_contact": profile_contact,
-            "global_confidence": global_confidence,
-            "contact_confidence": contact_confidence,
-            "generation_status": "deferred",
-            "llm_error": False,
-            "personal_context": personal_context,
-            "current_status": current_status,
-            "pcm_decision": pcm_decision,
-            "matched_rules": personal_context["matched_rules"],
-            "pcm_reason": personal_context["reason"],
-            "handling_status": "deferred",
-            "send_allowed": False,
-            "risk_approval": None,
-            "approval_request": None,
-            "daily_report_logging_warnings": logging_warnings,
-        }
+    personal_context = build_personal_context(current_status.get("status"))
 
     generation = generate_styled_reply_result(
         incoming_message=clean_message,
@@ -278,9 +208,9 @@ def generate_style_adapted_response(
             action_type=action_type,
             mode="automatic" if send_allowed else None,
             requires_approval=risk_approval["required"],
-            description=risk_approval["reason"] or personal_context["reason"],
+            description=risk_approval["reason"],
             metadata={
-                "pcm_decision": pcm_decision,
+                "source": "style_response",
                 "risk_level": risk_level,
                 "style_mode": mode,
             },
@@ -324,9 +254,6 @@ def generate_style_adapted_response(
         "llm_error": generation["llm_error"],
         "personal_context": personal_context,
         "current_status": current_status,
-        "pcm_decision": pcm_decision,
-        "matched_rules": personal_context["matched_rules"],
-        "pcm_reason": personal_context["reason"],
         "handling_status": (
             "awaiting_approval"
             if risk_approval["required"]
@@ -339,23 +266,6 @@ def generate_style_adapted_response(
     }
 
 
-def _evaluate_personal_context(message_data: dict[str, Any]) -> dict[str, Any]:
-    """Load and evaluate active personal context rules without blocking replies."""
-
-    try:
-        rules = list_active_rules(user_id=message_data.get("user_id"))
-        return evaluate_personal_context_rules(message_data, rules)
-    except Exception as exc:
-        return {
-            "decision": "auto_reply",
-            "context": [],
-            "matched_rules": [],
-            "winning_rule": None,
-            "reason": f"Personal context rules unavailable: {exc}",
-            "fallback_used": True,
-        }
-
-
 def _get_current_status(user_id: str) -> dict[str, Any]:
     """Return current user status, falling back to available if storage is unavailable."""
 
@@ -366,8 +276,6 @@ def _get_current_status(user_id: str) -> dict[str, Any]:
             "id": None,
             "user_id": user_id,
             "status": "available",
-            "status_reason": f"Status unavailable: {exc}",
-            "expires_at": None,
             "is_active": True,
             "created_at": None,
             "updated_at": None,

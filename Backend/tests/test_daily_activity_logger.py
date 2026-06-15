@@ -1,7 +1,11 @@
 import unittest
 from unittest.mock import patch
 
-from app.daily_activity_logger import log_approval_event, log_message_event, log_rag_access
+from app.daily_activity_logger import (
+    log_approval_event,
+    log_message_event,
+    log_rag_access,
+)
 
 
 class DailyActivityLoggerTests(unittest.TestCase):

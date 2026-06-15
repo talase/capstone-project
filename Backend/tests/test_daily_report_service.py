@@ -75,23 +75,31 @@ class DailyReportServiceTests(unittest.TestCase):
             [{"category": "request_to_send_message", "count": 1}],
         )
 
-    def test_auto_replies_are_counted_from_personal_context_decisions(self):
+    def test_auto_replies_are_counted_from_style_response_activity(self):
         records = _empty_records()
-        records["agent_activity_logs"] = [{"id": 1, "status": "automatic"}]
-        records["personal_context_decision_logs"] = [
-            {"id": 2, "decision": " auto_reply "},
-            {"id": 3, "decision": "AUTO_REPLY"},
-            {"id": 4, "decision": "ask"},
+        records["agent_activity_logs"] = [
+            {
+                "id": 1,
+                "status": "automatic",
+                "metadata": {"source": "style_response"},
+            },
+            {
+                "id": 2,
+                "status": "automatic",
+                "metadata": {"source": "scheduler"},
+            },
+            {
+                "id": 3,
+                "status": "pending",
+                "metadata": {"source": "style_response"},
+            },
         ]
 
         report = build_daily_report(REPORT_DATE, records)
 
-        self.assertEqual(report["summary"]["auto_replies"], 2)
-        self.assertEqual(report["summary"]["automatic_actions"], 1)
-        self.assertEqual(
-            report["personal_context_decisions"],
-            records["personal_context_decision_logs"],
-        )
+        self.assertEqual(report["summary"]["auto_replies"], 1)
+        self.assertEqual(report["summary"]["automatic_actions"], 2)
+        self.assertNotIn("personal_context_decisions", report)
 
     def test_pending_approvals_appear_in_needs_attention(self):
         records = _empty_records()
