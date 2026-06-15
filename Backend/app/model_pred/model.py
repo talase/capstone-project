@@ -165,6 +165,3 @@ def classify_message(payload: ClassifyMessageRequest) -> ClassifyMessageResponse
 
 print("MODEL_DIR =", MODEL_DIR)
 print("EXISTS =", MODEL_DIR.exists())
-
-# Trigger async model load on startup so it runs in the background
-load_detector_in_background()
