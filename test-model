@@ -1,0 +1,73 @@
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from peft import PeftModel, PeftConfig
+import torch
+ 
+class TextEmotionDetector:
+    def __init__(self, model_path="C:/Users/LENOVO/AntigravityProjects/capstone-project/Backend/app/model_pred/model_weights_6"):
+        # Initialize tokenizer and model
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+ 
+        
+        # Load PEFT config first
+        peft_config = PeftConfig.from_pretrained(model_path)
+ 
+        # Load the base model WITHOUT quantization or device_map for now
+        base_model = AutoModelForSequenceClassification.from_pretrained(
+            peft_config.base_model_name_or_path,
+            problem_type="multi_label_classification",
+            torch_dtype=torch.bfloat16,
+            num_labels=7,
+        )
+ 
+        # Replace the base model's score layer with a new one that has the correct number of labels
+        base_model.score = torch.nn.Linear(
+            base_model.score.in_features,
+            7,
+            bias=False
+        ).to(dtype=torch.bfloat16)
+ 
+        # Load the adapter on top of the base model
+        self.model = PeftModel.from_pretrained(base_model, model_path).to(dtype=torch.bfloat16)
+        self.model.eval()
+        
+        # Define  labels
+        self.emotion_labels = ['agreement_confirmation', 'book_or_reschedule_meeting', 'emergency_response', 'money_request', 'request_sending_non_sensitive_file', 'request_sending_sensitive_file', 'request_to_send_message_to_someone_else']
+ 
+    def predict_action_from_text(self, text):
+        """
+        Predict action from input text
+        Args:
+            text (str): Input text to analyze
+        Returns:
+            tuple: (predicted_emotion, confidence_score)
+        """
+        # Tokenize input text
+        inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=128)
+        
+        # Get prediction
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            predictions = outputs.logits
+            
+ 
+        probabilities = torch.sigmoid(predictions)
+        
+        return self.emotion_labels, probabilities
+ 
+# Example usage
+if __name__ == "__main__":
+    detector = TextEmotionDetector()
+    
+ 
+    while True:
+        text = input("Enter text: ")
+        categories, probabilities = detector.predict_action_from_text(text)
+ 
+        probs = probabilities[0].float().tolist()
+ 
+        print(f"Text: {text}")
+        print("\nClass probabilities:")
+ 
+        for label, prob in zip(categories, probs):
+            print(f"{label}: {prob:.6f}")
+ 
