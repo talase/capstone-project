@@ -5,7 +5,8 @@ from __future__ import annotations
 import os
 import re
 from datetime import datetime, timezone
-from pathlib import Path
+from mimetypes import guess_type
+from pathlib import Path, PurePosixPath
 from urllib.parse import quote
 
 import requests
@@ -53,6 +54,16 @@ class FileRagProcessResponse(BaseModel):
     reason: str | None = None
 
 
+class DashboardStoredFile(BaseModel):
+    file_name: str
+    storage_path: str
+    is_sensitive: bool = False
+    created_at: str | None = None
+    updated_at: str | None = None
+    size: int | None = None
+    content_type: str | None = None
+
+
 TEST_N8N_FILE_PAYLOAD = {
     "file_name": "test.pdf",
     "file_type": "pdf",
@@ -85,6 +96,11 @@ def _safe_filename(filename: str) -> str:
     safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", original_name)
     safe_name = safe_name.strip("._")
     return safe_name or "uploaded_file"
+
+
+def _dashboard_display_name(storage_name: str) -> str:
+    match = re.match(r"^\d{8}T\d{6}Z_(.+)$", storage_name)
+    return match.group(1) if match else storage_name
 
 
 def _detect_file_type(filename: str, content_type: str | None) -> str:
@@ -175,6 +191,32 @@ def _build_content_disposition(file_name: str) -> str:
     safe_name = _safe_filename(file_name)
     encoded_name = quote(safe_name)
     return f"attachment; filename=\"{safe_name}\"; filename*=UTF-8''{encoded_name}"
+
+
+def _dashboard_storage_path(storage_path: str) -> str:
+    clean_path = storage_path.strip().replace("\\", "/")
+    path_parts = PurePosixPath(clean_path).parts
+    if (
+        len(path_parts) != 2
+        or path_parts[0] != "dashboard_uploads"
+        or path_parts[1] in {"", ".", ".."}
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only files in the dashboard_uploads folder can be accessed.",
+        )
+    return clean_path
+
+
+def _storage_object_value(item: object, key: str) -> object | None:
+    if isinstance(item, dict):
+        return item.get(key)
+    return getattr(item, key, None)
+
+
+def _storage_object_metadata(item: object) -> dict[str, object]:
+    metadata = _storage_object_value(item, "metadata")
+    return metadata if isinstance(metadata, dict) else {}
 
 
 def _extract_signed_url(signed_response: object) -> str | None:
@@ -352,6 +394,174 @@ async def upload_dashboard_file(
         "file_name": file_name,
         "storage_path": storage_path,
         "message": "File uploaded and sent for processing",
+    }
+
+
+@router.get("/dashboard-uploads", response_model=list[DashboardStoredFile])
+def list_dashboard_uploads() -> list[DashboardStoredFile]:
+    """List files persisted in the dashboard uploads storage folder."""
+
+    try:
+        client = get_supabase_service_client()
+        bucket_name = get_storage_bucket_name()
+        objects = client.storage.from_(bucket_name).list(
+            "dashboard_uploads",
+            {
+                "limit": 100,
+                "offset": 0,
+                "sortBy": {"column": "created_at", "order": "desc"},
+            },
+        )
+        file_rows = (
+            client.table("files")
+            .select("storage_path,is_sensitive")
+            .like("storage_path", "dashboard_uploads/%")
+            .execute()
+            .data
+            or []
+        )
+    except SupabaseStorageConfigError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+    except Exception as exc:  # noqa: BLE001 - Supabase SDK raises varied errors
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Could not list dashboard files from Supabase: {exc}",
+        ) from exc
+
+    sensitivity_by_path = {
+        str(row["storage_path"]): bool(row.get("is_sensitive", False))
+        for row in file_rows
+        if isinstance(row, dict) and row.get("storage_path")
+    }
+
+    files: list[DashboardStoredFile] = []
+    for item in objects or []:
+        name = _storage_object_value(item, "name")
+        if not isinstance(name, str) or not name.strip():
+            continue
+
+        metadata = _storage_object_metadata(item)
+        size = metadata.get("size")
+        content_type = metadata.get("mimetype") or metadata.get("contentType")
+        storage_path = f"dashboard_uploads/{name}"
+
+        files.append(
+            DashboardStoredFile(
+                file_name=_dashboard_display_name(name),
+                storage_path=storage_path,
+                is_sensitive=sensitivity_by_path.get(storage_path, False),
+                created_at=_storage_object_value(item, "created_at"),
+                updated_at=_storage_object_value(item, "updated_at"),
+                size=size if isinstance(size, int) else None,
+                content_type=content_type if isinstance(content_type, str) else None,
+            )
+        )
+
+    return files
+
+
+@router.get("/dashboard-download")
+def download_dashboard_file(storage_path: str = Query(default="")) -> Response:
+    """Download one file from the dashboard uploads storage folder."""
+
+    clean_storage_path = _dashboard_storage_path(storage_path)
+    file_name = _dashboard_display_name(PurePosixPath(clean_storage_path).name)
+    file_bytes = _download_storage_file_bytes(clean_storage_path)
+    content_type = guess_type(file_name)[0] or "application/octet-stream"
+
+    return Response(
+        content=file_bytes,
+        media_type=content_type,
+        headers={
+            "Content-Disposition": _build_content_disposition(file_name),
+        },
+    )
+
+
+@router.delete("/dashboard-upload")
+def delete_dashboard_file(
+    storage_path: str = Query(default=""),
+) -> dict[str, str | int | None]:
+    """Delete a dashboard file, its metadata row, and its RAG document chunks."""
+
+    clean_storage_path = _dashboard_storage_path(storage_path)
+
+    try:
+        client = get_supabase_service_client()
+        bucket_name = get_storage_bucket_name()
+
+        file_rows = (
+            client.table("files")
+            .select("id")
+            .eq("storage_path", clean_storage_path)
+            .limit(1)
+            .execute()
+            .data
+            or []
+        )
+        file_id = str(file_rows[0]["id"]) if file_rows else None
+
+        documents_by_path = (
+            client.table("file_rag_documents")
+            .delete()
+            .eq("metadata->>storage_path", clean_storage_path)
+            .execute()
+            .data
+            or []
+        )
+        deleted_document_ids = {
+            str(row["id"])
+            for row in documents_by_path
+            if isinstance(row, dict) and row.get("id") is not None
+        }
+
+        if file_id:
+            documents_by_file_id = (
+                client.table("file_rag_documents")
+                .delete()
+                .eq("metadata->>file_id", file_id)
+                .execute()
+                .data
+                or []
+            )
+            deleted_document_ids.update(
+                str(row["id"])
+                for row in documents_by_file_id
+                if isinstance(row, dict) and row.get("id") is not None
+            )
+
+        deleted_file_rows = (
+            client.table("files")
+            .delete()
+            .eq("storage_path", clean_storage_path)
+            .execute()
+            .data
+            or []
+        )
+
+        # Storage is removed last so a database failure leaves the operation
+        # retryable with the original object still present.
+        client.storage.from_(bucket_name).remove([clean_storage_path])
+    except SupabaseStorageConfigError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+    except Exception as exc:  # noqa: BLE001 - Supabase SDK raises varied errors
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Could not completely delete dashboard file from Supabase: {exc}",
+        ) from exc
+
+    return {
+        "storage_path": clean_storage_path,
+        "file_id": file_id,
+        "deleted_file_rows": len(deleted_file_rows),
+        "deleted_rag_documents": len(deleted_document_ids),
+        "message": "File, metadata, and RAG documents deleted.",
     }
 
 

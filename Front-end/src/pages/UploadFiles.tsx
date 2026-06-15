@@ -9,29 +9,70 @@
    listed for the current session.
    ============================================================ */
 
-import { useRef, useState, type DragEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type DragEvent,
+} from "react";
 import { PageHeader } from "../components/PageHeader";
 import { Card } from "../components/Card";
 import { Badge } from "../components/Badge";
-import { UploadIcon, FileIcon, CheckIcon } from "../components/icons";
-import { uploadDashboardFile, ApiError } from "../services/api";
-import type { UploadResult } from "../types";
+import { Modal } from "../components/Modal";
+import { UploadIcon, FileIcon } from "../components/icons";
+import {
+  ApiError,
+  deleteDashboardFile,
+  downloadDashboardFile,
+  getDashboardFiles,
+  uploadDashboardFile,
+} from "../services/api";
+import type { DashboardStoredFile } from "../types";
 import styles from "./UploadFiles.module.css";
-
-interface Uploaded {
-  name: string;
-  path: string;
-  sensitive: boolean;
-}
 
 function UploadFiles() {
   const [file, setFile] = useState<File | null>(null);
   const [sensitive, setSensitive] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<Uploaded[]>([]);
+  const [storedFiles, setStoredFiles] = useState<DashboardStoredFile[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
+  const [filesError, setFilesError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] =
+    useState<DashboardStoredFile | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const refreshFiles = useCallback(async () => {
+    setFilesError(null);
+    try {
+      setStoredFiles(await getDashboardFiles());
+    } catch (err) {
+      setFilesError(messageFor(err));
+    } finally {
+      setLoadingFiles(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getDashboardFiles()
+      .then((files) => {
+        if (active) setStoredFiles(files);
+      })
+      .catch((err) => {
+        if (active) setFilesError(messageFor(err));
+      })
+      .finally(() => {
+        if (active) setLoadingFiles(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   function pick(selected: File | null) {
     setFile(selected);
@@ -43,14 +84,11 @@ function UploadFiles() {
     setBusy(true);
     setError(null);
     try {
-      const result: UploadResult = await uploadDashboardFile(file, sensitive);
-      setDone((current) => [
-        { name: result.file_name, path: result.storage_path, sensitive },
-        ...current,
-      ]);
+      await uploadDashboardFile(file, sensitive);
       setFile(null);
       setSensitive(false);
       if (inputRef.current) inputRef.current.value = "";
+      await refreshFiles();
     } catch (err) {
       setError(messageFor(err));
     } finally {
@@ -63,6 +101,46 @@ function UploadFiles() {
     setDragging(false);
     const dropped = event.dataTransfer.files?.[0];
     if (dropped) pick(dropped);
+  }
+
+  async function handleDownload(item: DashboardStoredFile) {
+    setDownloading(item.storage_path);
+    setFilesError(null);
+    try {
+      const blob = await downloadDashboardFile(item.storage_path);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = item.file_name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setFilesError(messageFor(err));
+    } finally {
+      setDownloading(null);
+    }
+  }
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+
+    setDeleting(true);
+    setFilesError(null);
+    try {
+      await deleteDashboardFile(deleteTarget.storage_path);
+      setStoredFiles((current) =>
+        current.filter(
+          (item) => item.storage_path !== deleteTarget.storage_path
+        )
+      );
+      setDeleteTarget(null);
+    } catch (err) {
+      setFilesError(messageFor(err));
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (
@@ -142,27 +220,88 @@ function UploadFiles() {
         </div>
       </Card>
 
-      {done.length > 0 && (
-        <Card
-          title="Uploaded this session"
-          subtitle={`${done.length} file${done.length > 1 ? "s" : ""} sent for processing`}
-        >
+      <Card
+        title="Stored files"
+        subtitle="Files saved in Supabase remain available after you leave or refresh this page."
+        action={
+          <button
+            className={styles.secondary}
+            onClick={() => void refreshFiles()}
+            disabled={loadingFiles}
+          >
+            Refresh
+          </button>
+        }
+      >
+        {loadingFiles ? (
+          <p className={styles.muted}>Loading stored files...</p>
+        ) : filesError ? (
+          <p className={styles.error}>{filesError}</p>
+        ) : storedFiles.length === 0 ? (
+          <p className={styles.muted}>No dashboard files have been uploaded yet.</p>
+        ) : (
           <ul className={styles.list}>
-            {done.map((item, index) => (
-              <li key={index} className={styles.row}>
-                <span className={styles.rowName}>
-                  <span className={styles.ok}>
-                    <CheckIcon size={14} />
+            {storedFiles.map((item) => (
+              <li key={item.storage_path} className={styles.row}>
+                <div className={styles.fileInfo}>
+                  <span className={styles.rowName}>
+                    <FileIcon size={15} />
+                    {item.file_name}
+                    {item.is_sensitive && <Badge tone="high">Sensitive</Badge>}
                   </span>
-                  <FileIcon size={15} />
-                  {item.name}
-                </span>
-                {item.sensitive && <Badge tone="high">Sensitive</Badge>}
-                <span className={styles.path}>{item.path}</span>
+                  <span className={styles.details}>
+                    {item.size != null && formatSize(item.size)}
+                    {item.size != null && item.created_at && " · "}
+                    {item.created_at && formatTime(item.created_at)}
+                  </span>
+                </div>
+                <div className={styles.rowActions}>
+                  <button
+                    className={styles.download}
+                    onClick={() => void handleDownload(item)}
+                    disabled={downloading === item.storage_path}
+                  >
+                    {downloading === item.storage_path
+                      ? "Downloading..."
+                      : "Download"}
+                  </button>
+                  <button
+                    className={styles.delete}
+                    onClick={() => setDeleteTarget(item)}
+                  >
+                    Delete
+                  </button>
+                </div>
+                <span className={styles.path}>{item.storage_path}</span>
               </li>
             ))}
           </ul>
-        </Card>
+        )}
+      </Card>
+
+      {deleteTarget && (
+        <Modal title="Delete stored file" onClose={() => setDeleteTarget(null)}>
+          <p className={styles.dialogText}>
+            Permanently delete <strong>{deleteTarget.file_name}</strong> from
+            Supabase Storage? This cannot be undone.
+          </p>
+          <div className={styles.dialogActions}>
+            <button
+              className={styles.secondary}
+              onClick={() => setDeleteTarget(null)}
+              disabled={deleting}
+            >
+              Cancel
+            </button>
+            <button
+              className={styles.deleteSolid}
+              onClick={() => void handleDelete()}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete file"}
+            </button>
+          </div>
+        </Modal>
       )}
     </>
   );
@@ -181,6 +320,11 @@ function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatTime(value: string): string {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
 }
 
 export default UploadFiles;

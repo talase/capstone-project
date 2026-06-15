@@ -19,6 +19,7 @@ import Approvals from "./pages/Approvals";
 import Governance from "./pages/Governance";
 import History from "./pages/History";
 import PersonalContext from "./pages/PersonalContext";
+import Contacts from "./pages/Contacts";
 import UploadFiles from "./pages/UploadFiles";
 import styles from "./App.module.css";
 
@@ -36,6 +37,7 @@ function Shell() {
             <Route path="/governance" element={<Governance />} />
             <Route path="/history" element={<History />} />
             <Route path="/context" element={<PersonalContext />} />
+            <Route path="/contacts" element={<Contacts />} />
             <Route path="/upload" element={<UploadFiles />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

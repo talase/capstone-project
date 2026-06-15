@@ -1,127 +1,209 @@
-/* ============================================================
-   Aegis - Governance page
-   ------------------------------------------------------------
-   Lets the user configure how every assistant action is handled.
-   Actions are grouped by risk tier (Low / Medium / High). Each
-   action now offers all three modes - Automatic, Approval
-   Required, Locked - so the user is in full control across every
-   tier, not just the medium one.
-
-   Each action has a survey-recommended `defaultMode` (from
-   data/governance.ts). That option is labelled "(default)" in the
-   dropdown, and a "Changed" tag appears when the user picks
-   something other than the default. Choices are saved to
-   localStorage and "Reset to default" restores every survey value.
-   ============================================================ */
-
-import { useEffect, useState } from "react";
-import { PageHeader } from "../components/PageHeader";
+import { useCallback, useEffect, useState } from "react";
+import { Badge } from "../components/Badge";
 import { Card } from "../components/Card";
-import { Badge, riskTone } from "../components/Badge";
-import { governanceActions } from "../data/governance";
-import type { AutomationMode, GovernanceAction, RiskLevel } from "../types";
+import { PageHeader } from "../components/PageHeader";
+import { LockIcon } from "../components/icons";
+import {
+  ApiError,
+  getActionSettings,
+  updateActionSetting,
+} from "../services/api";
+import type { ActionRiskLevel, ActionSetting } from "../types";
 import styles from "./Governance.module.css";
 
-const STORAGE_KEY = "aegis-governance";
-const riskOrder: RiskLevel[] = ["Low", "Medium", "High"];
-// Every action can be set to any of these three modes.
-const allModes: AutomationMode[] = ["Automatic", "Approval Required", "Locked"];
+const riskLevels: ActionRiskLevel[] = ["low", "medium", "high"];
 
-/** Load saved mode choices and layer them on top of the canonical list. */
-function loadActions(): GovernanceAction[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return governanceActions;
-
-    const saved = JSON.parse(raw) as Partial<GovernanceAction>[];
-    const savedModeById = new Map(saved.map((a) => [a.id, a.mode]));
-
-    return governanceActions.map((action) => {
-      const savedMode = savedModeById.get(action.id);
-      // Restore a saved choice only if it is a valid mode; otherwise keep
-      // the canonical default. defaultMode always comes from the code.
-      return savedMode && allModes.includes(savedMode)
-        ? { ...action, mode: savedMode }
-        : action;
-    });
-  } catch {
-    return governanceActions;
-  }
-}
+const riskDetails: Record<
+  ActionRiskLevel,
+  { title: string; behavior: string }
+> = {
+  low: {
+    title: "Low risk",
+    behavior:
+      "The assistant may perform this action automatically when any contact requests it.",
+  },
+  medium: {
+    title: "Medium risk",
+    behavior:
+      "The assistant pauses the action and asks for your approval through the n8n workflow.",
+  },
+  high: {
+    title: "High risk",
+    behavior:
+      "The assistant informs you about the request, but it never performs the action.",
+  },
+};
 
 function Governance() {
-  const [actions, setActions] = useState<GovernanceAction[]>(loadActions);
+  const [settings, setSettings] = useState<ActionSetting[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Persist on every change.
+  const refreshSettings = useCallback(async () => {
+    setRefreshing(true);
+    setError(null);
+    try {
+      setSettings(await getActionSettings());
+    } catch (err) {
+      setError(messageFor(err));
+    } finally {
+      setRefreshing(false);
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(actions));
-  }, [actions]);
+    let active = true;
+    getActionSettings()
+      .then((items) => {
+        if (active) setSettings(items);
+      })
+      .catch((err) => {
+        if (active) setError(messageFor(err));
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
-  function updateMode(id: number, mode: AutomationMode) {
-    setActions((current) =>
-      current.map((a) => (a.id === id ? { ...a, mode } : a))
-    );
-  }
+  async function changeRisk(
+    setting: ActionSetting,
+    riskLevel: ActionRiskLevel
+  ) {
+    if (!setting.is_editable || setting.risk_level === riskLevel) return;
 
-  function reset() {
-    setActions(governanceActions);
-    localStorage.removeItem(STORAGE_KEY);
+    setSavingId(setting.id);
+    setError(null);
+    try {
+      const updated = await updateActionSetting(setting.id, riskLevel);
+      setSettings((current) =>
+        current.map((item) => (item.id === updated.id ? updated : item))
+      );
+    } catch (err) {
+      setError(messageFor(err));
+    } finally {
+      setSavingId(null);
+    }
   }
 
   return (
     <>
       <PageHeader
         title="Governance"
-        subtitle="Choose how the assistant handles each action."
+        subtitle="Control whether each assistant action runs automatically, requires your approval, or is completely blocked."
         action={
-          <button className={styles.reset} onClick={reset}>
-            Reset to default
+          <button
+            className={styles.refresh}
+            onClick={() => void refreshSettings()}
+            disabled={refreshing}
+          >
+            {refreshing ? "Refreshing..." : "Refresh"}
           </button>
         }
       />
 
-      <div className={styles.groups}>
-        {riskOrder.map((risk) => {
-          const group = actions.filter((a) => a.risk === risk);
-          return (
-            <Card key={risk} title={`${risk} risk`} subtitle={`${group.length} actions`}>
-              <div className={styles.list}>
-                {group.map((action) => (
-                  <div key={action.id} className={styles.row}>
-                    <div className={styles.info}>
-                      <div className={styles.name}>
-                        <span>{action.action}</span>
-                        <Badge tone={riskTone(action.risk)}>{action.risk}</Badge>
-                        {action.mode !== action.defaultMode && (
-                          <span className={styles.changed}>Changed</span>
-                        )}
-                      </div>
-                      <p className={styles.desc}>{action.description}</p>
-                    </div>
+      <div className={styles.riskGuide}>
+        {riskLevels.map((risk) => (
+          <div key={risk} className={`${styles.guideItem} ${styles[risk]}`}>
+            <Badge tone={risk}>{riskDetails[risk].title}</Badge>
+            <p>{riskDetails[risk].behavior}</p>
+          </div>
+        ))}
+      </div>
 
+      <Card
+        title="Action settings"
+        subtitle="Changes are saved directly to the action_settings table."
+      >
+        {loading ? (
+          <p className={styles.muted}>Loading action settings...</p>
+        ) : error && settings.length === 0 ? (
+          <p className={styles.error}>{error}</p>
+        ) : settings.length === 0 ? (
+          <p className={styles.muted}>
+            No action settings were found for this user.
+          </p>
+        ) : (
+          <>
+            {error && <p className={styles.error}>{error}</p>}
+            <div className={styles.list}>
+              {settings.map((setting) => (
+                <div key={setting.id} className={styles.row}>
+                  <div className={styles.info}>
+                    <div className={styles.name}>
+                      <span>{formatActionType(setting.action_type)}</span>
+                      {!setting.is_editable && (
+                        <span className={styles.fixed}>
+                          <LockIcon size={12} />
+                          Fixed by system
+                        </span>
+                      )}
+                    </div>
+                    <p className={styles.actionType}>{setting.action_type}</p>
+                    {setting.description && (
+                      <p className={styles.desc}>{setting.description}</p>
+                    )}
+                    <p className={styles.currentBehavior}>
+                      {riskDetails[setting.risk_level].behavior}
+                    </p>
+                  </div>
+
+                  <div className={styles.control}>
+                    <Badge tone={setting.risk_level}>
+                      {riskDetails[setting.risk_level].title}
+                    </Badge>
                     <select
                       className={styles.select}
-                      value={action.mode}
-                      onChange={(e) =>
-                        updateMode(action.id, e.target.value as AutomationMode)
+                      value={setting.risk_level}
+                      disabled={
+                        !setting.is_editable || savingId === setting.id
+                      }
+                      aria-label={`Risk level for ${formatActionType(
+                        setting.action_type
+                      )}`}
+                      onChange={(event) =>
+                        void changeRisk(
+                          setting,
+                          event.target.value as ActionRiskLevel
+                        )
                       }
                     >
-                      {allModes.map((m) => (
-                        <option key={m} value={m}>
-                          {m}
-                          {m === action.defaultMode ? "  (default)" : ""}
+                      {riskLevels.map((risk) => (
+                        <option key={risk} value={risk}>
+                          {riskDetails[risk].title}
                         </option>
                       ))}
                     </select>
+                    {savingId === setting.id && (
+                      <span className={styles.saving}>Saving...</span>
+                    )}
                   </div>
-                ))}
-              </div>
-            </Card>
-          );
-        })}
-      </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </Card>
     </>
   );
+}
+
+function formatActionType(value: string): string {
+  return value
+    .split("_")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function messageFor(err: unknown): string {
+  if (err instanceof ApiError) return err.message;
+  return "Could not load the action settings. Please try again.";
 }
 
 export default Governance;

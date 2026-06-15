@@ -128,6 +128,15 @@ export const UserIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const UsersIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="9" cy="8" r="3.5" />
+    <path d="M2.5 20c0-3.5 2.9-5.8 6.5-5.8s6.5 2.3 6.5 5.8" />
+    <path d="M16 5.2a3.2 3.2 0 0 1 0 6.2" />
+    <path d="M17.5 14.5c2.4.7 4 2.6 4 5.5" />
+  </Svg>
+);
+
 export const UploadIcon = (p: IconProps) => (
   <Svg {...p}>
     <path d="M12 15V4" />

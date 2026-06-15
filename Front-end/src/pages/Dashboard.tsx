@@ -1,113 +1,186 @@
-/* ============================================================
-   Aegis · Dashboard page
-   ------------------------------------------------------------
-   The landing overview. It summarises the live state of the
-   console: how many actions are pending approval, how many
-   decisions have been logged, and how the governance policy is
-   currently configured. It then previews the most recent decisions
-   (mirroring the History page) and explains the three risk tiers.
-   All counts are derived from the shared data with useMemo, so the
-   overview stays in sync with the other pages.
-   ============================================================ */
-
-import { useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { Card } from "../components/Card";
 import { PageHeader } from "../components/PageHeader";
 import { StatCard } from "../components/StatCard";
-import { Card } from "../components/Card";
-import { Badge } from "../components/Badge";
-import { BoltIcon, LockIcon, HistoryIcon, InboxIcon } from "../components/icons";
 import {
-  governanceActions,
-  decisionLogs,
-  pendingApprovals,
-} from "../data/governance";
+  FileIcon,
+  HistoryIcon,
+  InboxIcon,
+  UsersIcon,
+} from "../components/icons";
+import { ApiError, getDashboardSummary } from "../services/api";
+import type { DashboardSummary } from "../types";
 import styles from "./Dashboard.module.css";
 
-function Dashboard() {
-  // Live counts that mirror the other pages.
-  const stats = useMemo(
-    () => ({
-      pending: pendingApprovals.length,
-      decisions: decisionLogs.length,
-      locked: governanceActions.filter((a) => a.mode === "Locked").length,
-      automatic: governanceActions.filter((a) => a.mode === "Automatic").length,
-    }),
-    []
-  );
+const approvalStatuses = [
+  { key: "approvals_pending", label: "Pending" },
+  { key: "approvals_approved", label: "Approved" },
+  { key: "approvals_rejected", label: "Rejected" },
+  { key: "approvals_executed", label: "Executed" },
+  { key: "approvals_blocked", label: "Blocked high risk" },
+] as const;
 
-  const riskTiers = [
-    {
-      tone: "low" as const,
-      title: "Low risk",
-      text: "Everyday chat and safe replies are handled automatically, with no interruption.",
-    },
-    {
-      tone: "medium" as const,
-      title: "Medium risk",
-      text: "Meetings, forwarded messages and non-sensitive files are proposed and wait for your approval.",
-    },
-    {
-      tone: "high" as const,
-      title: "High risk",
-      text: "Money, agreements, emergencies and sensitive files are locked — always blocked until you confirm.",
-    },
-  ];
+function Dashboard() {
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const refreshSummary = useCallback(async () => {
+    setRefreshing(true);
+    setError(null);
+    try {
+      setSummary(await getDashboardSummary());
+    } catch (err) {
+      setError(messageFor(err));
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getDashboardSummary()
+      .then((data) => {
+        if (active) setSummary(data);
+      })
+      .catch((err) => {
+        if (active) setError(messageFor(err));
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const value = (count?: number) => (loading ? "..." : (count ?? 0));
 
   return (
     <>
       <PageHeader
         title="Dashboard"
-        subtitle="An overview of how the assistant is handling incoming messages and the governance rules currently in effect."
+        subtitle="Live activity and stored-data totals from the assistant."
+        action={
+          <button
+            className={styles.refresh}
+            onClick={() => void refreshSummary()}
+            disabled={refreshing}
+          >
+            {refreshing ? "Refreshing..." : "Refresh"}
+          </button>
+        }
       />
+
+      {error && <p className={styles.error}>{error}</p>}
 
       <div className={styles.stats}>
         <StatCard
-          label="Pending approvals"
-          value={stats.pending}
+          label="Incoming messages"
+          value={value(summary?.incoming_messages)}
+          accent="brand"
+          icon={<InboxIcon />}
+          hint="Direction is incoming in the messages table"
+        />
+        <StatCard
+          label="Outgoing messages"
+          value={value(summary?.outgoing_messages)}
+          accent="low"
+          icon={<HistoryIcon />}
+          hint="Direction is outgoing in the messages table"
+        />
+        <StatCard
+          label="Approval records"
+          value={value(summary?.approvals_total)}
           accent="medium"
           icon={<InboxIcon />}
-          hint="Waiting for your decision"
+          hint={
+            summary
+              ? `${summary.approvals_pending} pending · ${summary.approvals_executed} executed`
+              : "Rows in the approvals table"
+          }
         />
         <StatCard
-          label="Decisions logged"
-          value={stats.decisions}
+          label="Contacts"
+          value={value(summary?.contacts_total)}
           accent="brand"
-          icon={<HistoryIcon />}
-          hint="Recent governed messages"
+          icon={<UsersIcon />}
+          hint="Saved contacts"
         />
         <StatCard
-          label="Locked actions"
-          value={stats.locked}
+          label="Uploaded files"
+          value={value(summary?.uploaded_files_total)}
           accent="high"
-          icon={<LockIcon />}
-          hint="Always blocked until confirmed"
-        />
-        <StatCard
-          label="Automatic actions"
-          value={stats.automatic}
-          accent="low"
-          icon={<BoltIcon />}
-          hint="Run without approval"
+          icon={<FileIcon />}
+          hint={
+            summary
+              ? `${summary.sensitive_files} sensitive · ${summary.non_sensitive_files} non-sensitive`
+              : "Files in dashboard uploads"
+          }
         />
       </div>
 
       <div className={styles.panels}>
         <Card
-          title="How governance works"
-          subtitle="Every detected action is sorted into one of three risk tiers."
+          title="Approval activity"
+          subtitle="Current status totals from the approvals table."
         >
-          <div className={styles.tiers}>
-            {riskTiers.map((tier) => (
-              <div key={tier.title} className={styles.tier}>
-                <Badge tone={tier.tone}>{tier.title}</Badge>
-                <p>{tier.text}</p>
+          <div className={styles.statusList}>
+            {approvalStatuses.map((item) => {
+              const count = summary?.[item.key] ?? 0;
+              const total = summary?.approvals_total ?? 0;
+              return (
+                <div key={item.key} className={styles.statusRow}>
+                  <div className={styles.statusMeta}>
+                    <span>{item.label}</span>
+                    <strong>{value(count)}</strong>
+                  </div>
+                  <div className={styles.track}>
+                    <span
+                      className={styles.fill}
+                      style={{
+                        width: `${total > 0 ? (count / total) * 100 : 0}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        <Card
+          title="Actions recorded"
+          subtitle="Action types detected in the approvals table."
+        >
+          <div className={styles.actionList}>
+            {(summary?.actions_by_type ?? []).map((action) => (
+              <div key={action.action_type} className={styles.actionRow}>
+                <span>{formatLabel(action.action_type)}</span>
+                <strong>{action.count}</strong>
               </div>
             ))}
+            {!loading && (summary?.actions_by_type.length ?? 0) === 0 && (
+              <p className={styles.empty}>No approval actions recorded.</p>
+            )}
           </div>
         </Card>
       </div>
     </>
   );
+}
+
+function formatLabel(value: string): string {
+  return value
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function messageFor(err: unknown): string {
+  if (err instanceof ApiError) return err.message;
+  return "Could not load the dashboard summary. Please try again.";
 }
 
 export default Dashboard;

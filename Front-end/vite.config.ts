@@ -16,7 +16,41 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         "/personal-context": { target: backend, changeOrigin: true },
-        "/files": { target: backend, changeOrigin: true },
+        "^/api/contacts(?:/[^/?]+)?$": {
+          target: backend,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        "^/api/action-settings(?:/[^/?]+)?(?:\\?.*)?$": {
+          target: backend,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        "^/api/message-history(?:\\?.*)?$": {
+          target: backend,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        "^/api/dashboard-approvals(?:/[^/?]+)?(?:\\?.*)?$": {
+          target: backend,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        "^/api/dashboard-summary(?:\\?.*)?$": {
+          target: backend,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        "^/files/upload-dashboard$": { target: backend, changeOrigin: true },
+        "^/files/dashboard-uploads$": { target: backend, changeOrigin: true },
+        "^/files/dashboard-download(?:\\?.*)?$": {
+          target: backend,
+          changeOrigin: true,
+        },
+        "^/files/dashboard-upload(?:\\?.*)?$": {
+          target: backend,
+          changeOrigin: true,
+        },
       },
     },
   };

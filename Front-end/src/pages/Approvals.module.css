@@ -1,8 +1,18 @@
-/* Styles scoped to Approvals.tsx */
+.headerActions,
+.counter,
+.titleLine,
+.actions,
+.dialogActions,
+.fileName {
+  display: flex;
+  align-items: center;
+}
+
+.headerActions {
+  gap: var(--space-3);
+}
 
 .counter {
-  display: inline-flex;
-  align-items: center;
   gap: var(--space-2);
   padding: 7px var(--space-3);
   border: 1px solid var(--border);
@@ -13,146 +23,222 @@
   font-weight: 600;
 }
 
-.summary {
-  margin-bottom: var(--space-4);
-  font-size: 13.5px;
-  color: var(--text-muted);
-}
-.summary strong {
+.refresh {
+  padding: 7px var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
   color: var(--text);
+  background: var(--surface);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.refresh:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* ---- Risk sections ---- */
-.sections {
+.filters {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  background: var(--surface-2);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.filter span {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  color: var(--text-faint);
+  background: var(--surface);
+  font-size: 11px;
+  text-align: center;
+}
+.activeFilter {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.error {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  color: var(--danger);
+  background: var(--danger-soft);
+  font-size: 13.5px;
+}
+
+.list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-}
-
-.sectionHead {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  color: var(--text-muted);
-}
-.sectionHeadHigh {
-  color: var(--danger);
-}
-.sectionTitle {
-  font-size: 12.5px;
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: inherit;
-}
-
-/* ---- Queue list ---- */
-.list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-4);
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  background: var(--surface);
+  gap: var(--space-4);
+  padding: var(--space-5);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  background: var(--surface);
   box-shadow: var(--shadow-sm);
-  animation: fade-in-up 240ms var(--ease);
-}
-
-/* High-risk card emphasis: a red left edge sets it apart at a glance. */
-.highCard {
-  border-left: 3px solid var(--danger);
-}
-.lockNote {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--danger);
+  animation: fade-in-up 220ms var(--ease);
 }
 
 .cardHead {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
-.who {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.titleLine {
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
-
-.contact {
-  font-size: 15px;
+.titleLine h2 {
+  margin-right: var(--space-1);
+  font-size: 17px;
   font-weight: 650;
 }
 
-.time {
-  font-size: 12px;
+.contactLine {
+  margin-top: 5px;
   color: var(--text-faint);
-}
-
-.message {
-  font-size: 14.5px;
-  color: var(--text);
-  font-style: italic;
-}
-
-.intent {
   font-size: 12.5px;
-  color: var(--text-faint);
-}
-.intent span {
-  color: var(--text-muted);
-  font-weight: 600;
-  font-style: normal;
 }
 
-/* ---- Proposed action box ---- */
-.proposal {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
+.status,
+.actionType {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 650;
 }
-.proposalLabel {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--accent);
-  margin-bottom: 4px;
+.status {
+  padding: 4px 9px;
 }
-.proposal p {
-  font-size: 14px;
-  color: var(--text);
+.statusPending {
+  color: #9a6700;
+  background: #fff3cd;
 }
-/* High-risk variant tints the proposal box red to match the card. */
-.proposalHigh {
-  border-left-color: var(--danger);
+.statusPositive {
+  color: var(--ok);
+  background: var(--ok-soft);
 }
-.proposalHigh .proposalLabel {
+.statusNegative {
   color: var(--danger);
+  background: var(--danger-soft);
+}
+.actionType {
+  align-self: flex-start;
+  padding: 5px 10px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  text-align: right;
 }
 
-/* ---- Approve / Reject buttons ---- */
-.actions {
-  display: flex;
+.request,
+.textBlock {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+.request {
+  border-left: 3px solid var(--accent);
+}
+.request > span,
+.textBlock > span,
+.detail > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-faint);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.request p,
+.textBlock p {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-3);
-  margin-top: auto;
-  padding-top: var(--space-2);
+}
+
+.detail {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.detail > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 550;
+}
+.detail small {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+.detail code,
+.cardFooter code {
+  overflow: hidden;
+  color: var(--text-faint);
+  font-size: 10.5px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fileName {
+  gap: 6px;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.actions,
+.dialogActions {
+  gap: var(--space-2);
 }
 
 .approve,
@@ -163,99 +249,68 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  flex: 1;
   padding: 9px var(--space-4);
   border-radius: var(--radius-sm);
   font-size: 13.5px;
   font-weight: 600;
-  transition: transform var(--transition), opacity var(--transition),
-    background var(--transition), border-color var(--transition);
 }
-.approve:hover,
-.reject:hover,
-.cancel:hover,
-.dangerSolid:hover {
-  transform: translateY(-1px);
-}
-
 .approve {
   border: none;
   color: #fff;
   background: var(--ok);
 }
-.approve:hover {
-  opacity: 0.92;
-}
-.approve:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.approve:disabled:hover {
-  transform: none;
-  opacity: 0.5;
-}
-
 .reject {
-  background: transparent;
-  color: var(--danger);
   border: 1px solid var(--border-strong);
+  color: var(--danger);
+  background: transparent;
 }
 .reject:hover {
   border-color: var(--danger);
   background: var(--danger-soft);
 }
-
-/* Neutral cancel button (used in the confirm pop-up). */
 .cancel {
-  background: var(--surface-2);
-  color: var(--text-muted);
   border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  background: var(--surface-2);
 }
-.cancel:hover {
-  background: var(--surface-hover);
-  color: var(--text);
-}
-
-/* Solid danger button for the final "Confirm reject" action. */
 .dangerSolid {
   border: none;
   color: #fff;
   background: var(--danger);
 }
-.dangerSolid:hover {
-  opacity: 0.92;
+.approve:disabled,
+.cancel:disabled,
+.dangerSolid:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* ---- Confirmation dialog body (rendered inside the Modal) ---- */
-.dialogContext {
-  font-size: 13px;
+.dialogContext,
+.dialogText {
   color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 .dialogContext strong {
   color: var(--text);
-  font-weight: 650;
-}
-.dialogText {
-  font-size: 14px;
-  color: var(--text-muted);
 }
 .confirmLabel {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
   color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 .textarea {
   width: 100%;
+  min-height: 92px;
   resize: vertical;
-  min-height: 64px;
   padding: var(--space-3);
-  border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
-  background: var(--surface-2);
+  border-radius: var(--radius-sm);
   color: var(--text);
-  font-size: 14px;
+  background: var(--surface-2);
+  font: inherit;
   line-height: 1.5;
 }
 .textarea:focus {
@@ -263,46 +318,53 @@
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-ring);
 }
-.confirmQuestion {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--danger);
+.dialogActions {
+  justify-content: flex-end;
 }
 
-/* ---- Empty / all-caught-up state ---- */
 .empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   gap: var(--space-2);
   padding: var(--space-10) var(--space-4);
-  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  color: var(--text-muted);
+  background: var(--surface);
+  text-align: center;
 }
 .emptyMark {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-1);
   border-radius: 50%;
   color: var(--ok);
   background: var(--ok-soft);
-  margin-bottom: var(--space-2);
-}
-.empty p {
-  font-size: 17px;
-  font-weight: 650;
-}
-.empty span {
-  font-size: 14px;
-  color: var(--text-muted);
 }
 
-@media (max-width: 760px) {
-  .list {
+@media (max-width: 980px) {
+  .details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .headerActions,
+  .cardHead,
+  .cardFooter {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .details {
     grid-template-columns: 1fr;
+  }
+  .actions {
+    width: 100%;
+  }
+  .actions button {
+    flex: 1;
   }
 }

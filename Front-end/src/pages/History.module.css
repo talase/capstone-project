@@ -1,5 +1,11 @@
 /* Styles scoped to History.tsx */
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .filters {
   display: flex;
   gap: var(--space-1);
@@ -30,6 +36,24 @@
   box-shadow: var(--shadow-sm);
 }
 
+.refresh {
+  padding: 7px var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  background: var(--surface);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.refresh:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ---- Grid "table" ---- */
 .table {
   display: flex;
@@ -38,7 +62,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 2.4fr 1fr 1.6fr 0.9fr 1.5fr 1fr;
+  grid-template-columns: 2.2fr 1fr 0.8fr 1.7fr 0.8fr 0.8fr 1.2fr;
   gap: var(--space-4);
   align-items: center;
   padding: var(--space-4) 0;
@@ -62,12 +86,29 @@
   color: var(--text);
   font-weight: 500;
 }
-.decision {
+.actions,
+.status {
   color: var(--text-muted);
+}
+.direction {
+  display: inline-flex;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 11.5px;
+  font-weight: 650;
 }
 .time {
   color: var(--text-faint);
   font-size: 12.5px;
+}
+
+.error {
+  margin-bottom: var(--space-3);
+  color: var(--danger);
+  font-size: 13.5px;
 }
 
 .empty {
@@ -79,6 +120,10 @@
 
 /* ---- Responsive: stack each row into a labelled card ---- */
 @media (max-width: 860px) {
+  .headerActions {
+    align-items: flex-end;
+    flex-direction: column;
+  }
   .head {
     display: none;
   }
@@ -92,6 +137,9 @@
     justify-content: space-between;
     gap: var(--space-4);
   }
+  .row .direction {
+    display: inline-flex;
+  }
   .row span::before {
     content: attr(data-label);
     font-size: 11px;
@@ -102,5 +150,12 @@
   }
   .message {
     font-weight: 600;
+  }
+}
+
+@media (max-width: 520px) {
+  .filters {
+    max-width: 100%;
+    overflow-x: auto;
   }
 }

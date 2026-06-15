@@ -12,10 +12,34 @@
    absolute backend URL instead (e.g. in production).
    ============================================================ */
 
-import type { UserStatus, UploadResult } from "../types";
+import type {
+  ActionRiskLevel,
+  ActionSetting,
+  Contact,
+  ContactInput,
+  DashboardApproval,
+  DashboardSummary,
+  DashboardStoredFile,
+  MessageHistoryItem,
+  UserStatus,
+  UploadResult,
+} from "../types";
 
 // Empty base => same-origin (the Vite proxy forwards to the backend).
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
+const CONTACTS_PATH = API_BASE ? "/contacts" : "/api/contacts";
+const ACTION_SETTINGS_PATH = API_BASE
+  ? "/action-settings"
+  : "/api/action-settings";
+const MESSAGE_HISTORY_PATH = API_BASE
+  ? "/message-history"
+  : "/api/message-history";
+const DASHBOARD_APPROVALS_PATH = API_BASE
+  ? "/dashboard-approvals"
+  : "/api/dashboard-approvals";
+const DASHBOARD_SUMMARY_PATH = API_BASE
+  ? "/dashboard-summary"
+  : "/api/dashboard-summary";
 
 // The backend keys context/status by user id; the demo uses its default user.
 const USER_ID = "default_user";
@@ -116,6 +140,127 @@ export async function uploadDashboardFile(
   }
   if (!response.ok) throw new ApiError(await readError(response), response.status);
   return (await response.json()) as UploadResult;
+}
+
+/** List files that remain available in the dashboard's Supabase folder. */
+export function getDashboardFiles(): Promise<DashboardStoredFile[]> {
+  return requestJson("/files/dashboard-uploads", { method: "GET" });
+}
+
+/** Download one persisted dashboard file through the backend. */
+export async function downloadDashboardFile(
+  storagePath: string
+): Promise<Blob> {
+  let response: Response;
+  try {
+    const query = new URLSearchParams({ storage_path: storagePath });
+    response = await fetch(
+      `${API_BASE}/files/dashboard-download?${query.toString()}`
+    );
+  } catch {
+    throw new ApiError("Could not reach the backend. Is it running?");
+  }
+  if (!response.ok) throw new ApiError(await readError(response), response.status);
+  return response.blob();
+}
+
+/** Permanently delete one file from the dashboard's Supabase folder. */
+export function deleteDashboardFile(
+  storagePath: string
+): Promise<{ storage_path: string; message: string }> {
+  const query = new URLSearchParams({ storage_path: storagePath });
+  return requestJson(`/files/dashboard-upload?${query.toString()}`, {
+    method: "DELETE",
+  });
+}
+
+/* ---- Contacts ------------------------------------------------------------ */
+
+export function getContacts(): Promise<Contact[]> {
+  return requestJson(CONTACTS_PATH, { method: "GET" });
+}
+
+export function createContact(contact: ContactInput): Promise<Contact> {
+  return requestJson(CONTACTS_PATH, {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: JSON.stringify(contact),
+  });
+}
+
+export function updateContact(
+  contactId: string,
+  contact: ContactInput
+): Promise<Contact> {
+  return requestJson(`${CONTACTS_PATH}/${encodeURIComponent(contactId)}`, {
+    method: "PATCH",
+    headers: JSON_HEADERS,
+    body: JSON.stringify(contact),
+  });
+}
+
+export function deleteContact(
+  contactId: string
+): Promise<{ message: string }> {
+  return requestJson(`${CONTACTS_PATH}/${encodeURIComponent(contactId)}`, {
+    method: "DELETE",
+  });
+}
+
+/* ---- Action settings ----------------------------------------------------- */
+
+export function getActionSettings(): Promise<ActionSetting[]> {
+  const query = new URLSearchParams({ user_id: USER_ID });
+  return requestJson(`${ACTION_SETTINGS_PATH}?${query.toString()}`, {
+    method: "GET",
+  });
+}
+
+export function updateActionSetting(
+  settingId: string,
+  riskLevel: ActionRiskLevel
+): Promise<ActionSetting> {
+  const query = new URLSearchParams({ user_id: USER_ID });
+  return requestJson(
+    `${ACTION_SETTINGS_PATH}/${encodeURIComponent(settingId)}?${query.toString()}`,
+    {
+      method: "PATCH",
+      headers: JSON_HEADERS,
+      body: JSON.stringify({ risk_level: riskLevel }),
+    }
+  );
+}
+
+/* ---- Message history ----------------------------------------------------- */
+
+export function getMessageHistory(limit = 100): Promise<MessageHistoryItem[]> {
+  const query = new URLSearchParams({ limit: String(limit) });
+  return requestJson(`${MESSAGE_HISTORY_PATH}?${query.toString()}`, {
+    method: "GET",
+  });
+}
+
+/* ---- Approvals ----------------------------------------------------------- */
+
+export function getDashboardApprovals(
+  limit = 200
+): Promise<DashboardApproval[]> {
+  const query = new URLSearchParams({
+    user_id: USER_ID,
+    limit: String(limit),
+  });
+  return requestJson(`${DASHBOARD_APPROVALS_PATH}?${query.toString()}`, {
+    method: "GET",
+  });
+}
+
+/* ---- Dashboard summary --------------------------------------------------- */
+
+export function getDashboardSummary(): Promise<DashboardSummary> {
+  const query = new URLSearchParams({ user_id: USER_ID });
+  return requestJson(`${DASHBOARD_SUMMARY_PATH}?${query.toString()}`, {
+    method: "GET",
+  });
 }
 
 export { API_BASE };

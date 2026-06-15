@@ -1,4 +1,4 @@
-# from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
@@ -14,20 +14,24 @@ from app.model_pred.model import router as model_pred_router
 # from app.routes.scheduler import router as scheduler_router
 from app.routes.files import router as files_router
 from app.routes.contacts import router as contacts_router
-# from app.supabase_client import log_supabase_startup_config
+from app.routes.action_settings import router as action_settings_router
+from app.routes.message_history import router as message_history_router
+from app.routes.dashboard_approvals import router as dashboard_approvals_router
+from app.routes.dashboard_summary import router as dashboard_summary_router
+from app.supabase_client import log_supabase_startup_config
 
 
 load_env_file()
 
 
-# @asynccontextmanager
-# async def lifespan(_app: FastAPI):
-#     log_supabase_startup_config()
-#     yield
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    log_supabase_startup_config()
+    yield
 
 
-# app = FastAPI(lifespan=lifespan)
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
+# app = FastAPI()
 #app.include_router(calendar_router)
 # app.include_router(style_router)
 # app.include_router(reports_router)
@@ -37,6 +41,10 @@ app.include_router(model_pred_router)
 # app.include_router(scheduler_router)
 app.include_router(files_router)
 app.include_router(contacts_router)
+app.include_router(action_settings_router)
+app.include_router(message_history_router)
+app.include_router(dashboard_approvals_router)
+app.include_router(dashboard_summary_router)
 
 
 

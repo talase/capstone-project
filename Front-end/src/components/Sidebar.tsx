@@ -16,6 +16,7 @@ import {
   ShieldIcon,
   HistoryIcon,
   UserIcon,
+  UsersIcon,
   UploadIcon,
   SunIcon,
   MoonIcon,
@@ -29,6 +30,7 @@ const navItems = [
   { to: "/governance", label: "Governance", icon: <ShieldIcon />, end: false },
   { to: "/history", label: "History", icon: <HistoryIcon />, end: false },
   { to: "/context", label: "Personal Context", icon: <UserIcon />, end: false },
+  { to: "/contacts", label: "Contacts", icon: <UsersIcon />, end: false },
   { to: "/upload", label: "Upload Files", icon: <UploadIcon />, end: false },
 ];
 
