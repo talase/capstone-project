@@ -30,7 +30,7 @@ class ClassifyMessageResponse(BaseModel):
     probabilities: dict[str, float]
 
 
-class TextEmotionDetector:
+class TextActionDetector:
     def __init__(self, model_path=MODEL_DIR):
         # Initialize tokenizer and model
         self.tokenizer = AutoTokenizer.from_pretrained(str(model_path))
@@ -59,7 +59,7 @@ class TextEmotionDetector:
         self.model.eval()
         
         # Define labels
-        self.emotion_labels = ['agreement_confirmation', 'book_or_reschedule_meeting', 'emergency_response', 'money_request', 'request_sending_non_sensitive_file', 'request_sending_sensitive_file', 'request_to_send_message_to_someone_else']
+        self.action_labels = ['agreement_confirmation', 'book_or_reschedule_meeting', 'emergency_response', 'money_request', 'request_sending_non_sensitive_file', 'request_sending_sensitive_file', 'request_to_send_message_to_someone_else']
 
     def predict_action_from_text(self, text):
         """
@@ -67,7 +67,7 @@ class TextEmotionDetector:
         Args:
             text (str): Input text to analyze
         Returns:
-            tuple: (predicted_emotion, confidence_score)
+            tuple: (predicted_actions, confidence_score)
         """
         # Tokenize input text
         inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=128)
@@ -80,11 +80,11 @@ class TextEmotionDetector:
 
         probabilities = torch.sigmoid(predictions)
         
-        return self.emotion_labels, probabilities
+        return self.action_labels, probabilities
 
 
 # Thread-safe global variables for async loading
-_detector: TextEmotionDetector | None = None
+_detector: TextActionDetector | None = None
 _is_loading = False
 _lock = threading.Lock()
 
@@ -99,7 +99,7 @@ def load_detector_in_background():
         global _detector, _is_loading
         try:
             print("Warming up/loading the text action detector model in the background...")
-            loaded_detector = TextEmotionDetector()
+            loaded_detector = TextActionDetector()
             with _lock:
                 _detector = loaded_detector
             print("Model loaded successfully and API is ready!")
@@ -113,11 +113,11 @@ def load_detector_in_background():
     thread.start()
 
 
-def get_detector() -> TextEmotionDetector:
+def get_detector() -> TextActionDetector:
     global _detector
     if _detector is None:
         # Load synchronously if requested outside of routes
-        _detector = TextEmotionDetector()
+        _detector = TextActionDetector()
     return _detector
 
 

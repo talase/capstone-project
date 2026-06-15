@@ -2,7 +2,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from peft import PeftModel, PeftConfig
 import torch
  
-class TextEmotionDetector:
+class TextActionDetector:
     def __init__(self, model_path="C:/Users/LENOVO/AntigravityProjects/capstone-project/Backend/app/model_pred/model_weights_6"):
         # Initialize tokenizer and model
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -31,7 +31,7 @@ class TextEmotionDetector:
         self.model.eval()
         
         # Define  labels
-        self.emotion_labels = ['agreement_confirmation', 'book_or_reschedule_meeting', 'emergency_response', 'money_request', 'request_sending_non_sensitive_file', 'request_sending_sensitive_file', 'request_to_send_message_to_someone_else']
+        self.action_labels = ['agreement_confirmation', 'book_or_reschedule_meeting', 'emergency_response', 'money_request', 'request_sending_non_sensitive_file', 'request_sending_sensitive_file', 'request_to_send_message_to_someone_else']
  
     def predict_action_from_text(self, text):
         """
@@ -39,7 +39,7 @@ class TextEmotionDetector:
         Args:
             text (str): Input text to analyze
         Returns:
-            tuple: (predicted_emotion, confidence_score)
+            tuple: (predicted_actions, confidence_score)
         """
         # Tokenize input text
         inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=128)
@@ -52,11 +52,11 @@ class TextEmotionDetector:
  
         probabilities = torch.sigmoid(predictions)
         
-        return self.emotion_labels, probabilities
+        return self.action_labels, probabilities
  
 # Example usage
 if __name__ == "__main__":
-    detector = TextEmotionDetector()
+    detector = TextActionDetector()
     
  
     while True:
