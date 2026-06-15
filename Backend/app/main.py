@@ -8,7 +8,7 @@ from app.config import load_env_file
 # from app.approval_routes import router as approval_router
 # from app.personal_context_routes import router as personal_context_router
 from app.model_pred.model import router as model_pred_router
-# from app.routes.calendar import router as calendar_router
+from app.routes.calendar import router as calendar_router
 # from app.routes.reports import router as reports_router
 # from app.routes.style import router as style_router
 # from app.routes.scheduler import router as scheduler_router
@@ -32,7 +32,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 # app = FastAPI()
-#app.include_router(calendar_router)
+app.include_router(calendar_router)
 # app.include_router(style_router)
 # app.include_router(reports_router)
 # app.include_router(personal_context_router)

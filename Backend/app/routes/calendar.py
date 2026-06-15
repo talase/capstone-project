@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
+import logging
 from typing import List, Optional, Union
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.services.calendar_service import (
+    CalendarConfigurationError,
     check_availability,
     create_event,
     delete_event,
@@ -13,6 +15,7 @@ from app.services.calendar_service import (
 )
 
 router = APIRouter()
+LOGGER = logging.getLogger(__name__)
 
 
 class CalendarRequest(BaseModel):
@@ -157,8 +160,15 @@ async def process_calendar(data: CalendarRequest):
     except HTTPException:
         raise
 
+    except CalendarConfigurationError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=str(exc),
+        ) from exc
+
     except Exception as exc:
+        LOGGER.exception("Unexpected error while processing calendar request")
         raise HTTPException(
             status_code=500,
-            detail="Unexpected error while processing calendar request.",
+            detail=f"Unexpected error while processing calendar request: {type(exc).__name__}",
         ) from exc
