@@ -1,0 +1,87 @@
+/* ============================================================
+   Aegis · Design Tokens
+   ------------------------------------------------------------
+   Every colour, spacing value, radius and shadow used across the
+   app is defined here as a CSS variable. Components never hard-code
+   a colour — they reference a token (e.g. var(--accent)). That way
+   the whole look can be re-themed from one place, and light/dark
+   mode is just a different set of values for the same names.
+   ============================================================ */
+
+:root {
+  /* ---- Brand accent (shared by both themes) ---- */
+  --accent: #4f46e5;            /* primary indigo */
+  --accent-strong: #4338ca;     /* hover / pressed */
+  --accent-soft: rgba(79, 70, 229, 0.12);   /* tinted backgrounds */
+  --accent-ring: rgba(79, 70, 229, 0.35);    /* focus rings */
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+
+  /* ---- Status / risk hues (shared) ---- */
+  --ok: #0ea478;        /* low risk / success */
+  --ok-soft: rgba(14, 164, 120, 0.14);
+  --warn: #d97706;      /* medium risk / caution */
+  --warn-soft: rgba(217, 119, 6, 0.15);
+  --danger: #dc2626;    /* high risk / locked */
+  --danger-soft: rgba(220, 38, 38, 0.14);
+
+  /* ---- Spacing scale (4px base grid) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ---- Corner radii ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  /* ---- Typography ---- */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 180ms var(--ease);
+
+  /* ---- Layout constants ---- */
+  --sidebar-width: 256px;
+  --content-max: 1180px;
+}
+
+/* ---- Light theme (default) ---- */
+:root,
+[data-theme="light"] {
+  --bg: #f5f6fa;
+  --bg-accent: radial-gradient(900px 480px at 100% -8%, rgba(99, 102, 241, 0.10), transparent 60%);
+  --surface: #ffffff;
+  --surface-2: #f4f6fb;
+  --surface-hover: #eceff7;
+  --border: #e6e9f1;
+  --border-strong: #d6dbe7;
+  --text: #161a23;
+  --text-muted: #5b6473;
+  --text-faint: #8b93a4;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 8px 24px -12px rgba(16, 24, 40, 0.18);
+}
+
+/* ---- Dark theme ---- */
+[data-theme="dark"] {
+  --bg: #0b0e16;
+  --bg-accent: radial-gradient(900px 480px at 100% -8%, rgba(99, 102, 241, 0.16), transparent 60%);
+  --surface: #141925;
+  --surface-2: #1a2030;
+  --surface-hover: #232b3d;
+  --border: #262d3d;
+  --border-strong: #36405440;
+  --text: #eef1f7;
+  --text-muted: #99a2b3;
+  --text-faint: #6b7384;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+}

@@ -1,0 +1,28 @@
+/* Layout styles scoped to App.tsx */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  min-width: 0; /* lets grids inside shrink instead of overflowing */
+  padding: var(--space-8);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  animation: fade-in-up 300ms var(--ease);
+}
+
+@media (max-width: 760px) {
+  .layout {
+    flex-direction: column;
+  }
+  .main {
+    padding: var(--space-5) var(--space-4);
+  }
+}

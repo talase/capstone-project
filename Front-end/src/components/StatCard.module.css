@@ -1,0 +1,84 @@
+/* Styles scoped to StatCard.tsx */
+
+.card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--strip, var(--accent));
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  color: var(--ink, var(--accent));
+  background: var(--tint, var(--accent-soft));
+  flex-shrink: 0;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--text-muted);
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hint {
+  margin-top: var(--space-2);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+/* Accent variants set the local custom properties used above. */
+.brand {
+  --strip: var(--accent-gradient);
+  --ink: var(--accent);
+  --tint: var(--accent-soft);
+}
+.low {
+  --strip: var(--ok);
+  --ink: var(--ok);
+  --tint: var(--ok-soft);
+}
+.medium {
+  --strip: var(--warn);
+  --ink: var(--warn);
+  --tint: var(--warn-soft);
+}
+.high {
+  --strip: var(--danger);
+  --ink: var(--danger);
+  --tint: var(--danger-soft);
+}

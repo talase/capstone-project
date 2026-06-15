@@ -1,0 +1,160 @@
+/* Styles scoped to Sidebar.tsx */
+
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6) var(--space-4);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+/* ---- Brand ---- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  color: #fff;
+  background: var(--accent-gradient);
+  box-shadow: 0 6px 16px -6px var(--accent-ring);
+  flex-shrink: 0;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.brandText strong {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.brandText small {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+/* ---- Navigation ---- */
+.navLabel {
+  padding: 0 var(--space-3) var(--space-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 10px var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--text-muted);
+  transition: background var(--transition), color var(--transition);
+}
+
+.link:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.active,
+.active:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---- Footer / theme toggle ---- */
+.footer {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 10px var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 550;
+  transition: background var(--transition), color var(--transition),
+    border-color var(--transition);
+}
+
+.themeToggle:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+/* ---- Responsive: collapse to a top bar on narrow screens ---- */
+@media (max-width: 760px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
+  .brand {
+    margin-bottom: 0;
+  }
+  .navLabel {
+    display: none;
+  }
+  .nav {
+    flex-direction: row;
+    flex: 1;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .link span {
+    display: none;
+  }
+  .footer {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .themeToggle span {
+    display: none;
+  }
+  .themeToggle {
+    width: auto;
+  }
+}

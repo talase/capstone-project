@@ -1,0 +1,49 @@
+/* Styles scoped to Dashboard.tsx */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* The two summary cards, stacked with the same rhythm as other pages. */
+.panels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ---- Risk-tier explainer ---- */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+.tier {
+  padding: var(--space-4);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.tier p {
+  margin-top: var(--space-3);
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+/* Responsive — breakpoints aligned with the rest of the app. */
+@media (max-width: 760px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tiers {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}
