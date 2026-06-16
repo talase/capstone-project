@@ -32,7 +32,7 @@ const navItems = [
   { to: "/history", label: "History", icon: <HistoryIcon />, end: false },
   { to: "/context", label: "Personal Context", icon: <UserIcon />, end: false },
   { to: "/contacts", label: "Contacts", icon: <UsersIcon />, end: false },
-  { to: "/schedule", label: "Schedule Message", icon: <ClockIcon />, end: false },
+  { to: "/scheduled-messages", label: "Scheduled Messages", icon: <ClockIcon />, end: false },
   { to: "/upload", label: "Upload Files", icon: <UploadIcon />, end: false },
 ];
 

@@ -40,6 +40,7 @@ function Shell() {
             <Route path="/context" element={<PersonalContext />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/schedule" element={<ScheduleMessage />} />
+            <Route path="/scheduled-messages" element={<ScheduleMessage />} />
             <Route path="/upload" element={<UploadFiles />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
