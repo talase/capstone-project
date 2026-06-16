@@ -21,6 +21,7 @@ import History from "./pages/History";
 import PersonalContext from "./pages/PersonalContext";
 import Contacts from "./pages/Contacts";
 import UploadFiles from "./pages/UploadFiles";
+import ScheduleMessage from "./pages/ScheduleMessage";
 import styles from "./App.module.css";
 
 function Shell() {
@@ -38,6 +39,7 @@ function Shell() {
             <Route path="/history" element={<History />} />
             <Route path="/context" element={<PersonalContext />} />
             <Route path="/contacts" element={<Contacts />} />
+            <Route path="/schedule" element={<ScheduleMessage />} />
             <Route path="/upload" element={<UploadFiles />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

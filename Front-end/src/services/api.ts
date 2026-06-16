@@ -21,6 +21,8 @@ import type {
   DashboardSummary,
   DashboardStoredFile,
   MessageHistoryItem,
+  ScheduleMessageInput,
+  ScheduleMessageResult,
   UserStatus,
   UploadResult,
 } from "../types";
@@ -40,6 +42,9 @@ const DASHBOARD_APPROVALS_PATH = API_BASE
 const DASHBOARD_SUMMARY_PATH = API_BASE
   ? "/dashboard-summary"
   : "/api/dashboard-summary";
+const SCHEDULE_MESSAGE_PATH = API_BASE
+  ? "/schedule-message"
+  : "/api/schedule-message";
 
 // The backend keys context/status by user id; the demo uses its default user.
 const USER_ID = "default_user";
@@ -260,6 +265,18 @@ export function getDashboardSummary(): Promise<DashboardSummary> {
   const query = new URLSearchParams({ user_id: USER_ID });
   return requestJson(`${DASHBOARD_SUMMARY_PATH}?${query.toString()}`, {
     method: "GET",
+  });
+}
+
+/* ---- Scheduled messages -------------------------------------------------- */
+
+export function scheduleMessage(
+  message: ScheduleMessageInput
+): Promise<ScheduleMessageResult> {
+  return requestJson(SCHEDULE_MESSAGE_PATH, {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: JSON.stringify(message),
   });
 }
 

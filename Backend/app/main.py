@@ -11,7 +11,7 @@ from app.model_pred.model import router as model_pred_router
 from app.routes.calendar import router as calendar_router
 # from app.routes.reports import router as reports_router
 # from app.routes.style import router as style_router
-# from app.routes.scheduler import router as scheduler_router
+from app.routes.scheduler import router as scheduler_router
 from app.routes.files import router as files_router
 from app.routes.contacts import router as contacts_router
 from app.routes.action_settings import router as action_settings_router
@@ -38,7 +38,7 @@ app.include_router(calendar_router)
 # app.include_router(personal_context_router)
 # app.include_router(approval_router)
 app.include_router(model_pred_router)
-# app.include_router(scheduler_router)
+app.include_router(scheduler_router)
 app.include_router(files_router)
 app.include_router(contacts_router)
 app.include_router(action_settings_router)

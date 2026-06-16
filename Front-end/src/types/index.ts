@@ -201,3 +201,17 @@ export interface DashboardSummary {
   non_sensitive_files: number;
   actions_by_type: DashboardActionCount[];
 }
+
+export interface ScheduleMessageInput {
+  phone: string;
+  message: string;
+  scheduled_time: string;
+  contact_id?: string | null;
+}
+
+export interface ScheduleMessageResult {
+  status: string;
+  message: string;
+  scheduled_time: string;
+  contact_id?: string | null;
+}

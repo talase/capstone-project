@@ -41,6 +41,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
+        "^/api/schedule-message$": {
+          target: backend,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
         "^/files/upload-dashboard$": { target: backend, changeOrigin: true },
         "^/files/dashboard-uploads$": { target: backend, changeOrigin: true },
         "^/files/dashboard-download(?:\\?.*)?$": {
